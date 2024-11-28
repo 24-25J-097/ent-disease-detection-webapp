@@ -1,7 +1,6 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
 import SideMenu from "@/components/dashboard/theme/navigations/SideMenu";
 import {ChildrenProps} from "@/types/Common";
 import MobileMenu from "@/components/dashboard/theme/navigations/MobileMenu";
@@ -10,17 +9,20 @@ import {Role} from "@/enums/access";
 import {AdminMenuItems} from "@/data/dashboard/admin-menu-items";
 import {MenuItem} from "@/types/Navigations";
 import {MenuItems} from "@/data/dashboard/menu-items";
+import {DoctorMenuItems} from '@/data/dashboard/doctor-menu-items';
+import {useSelector} from 'react-redux';
 
 const DashboardMenus = ({children}: ChildrenProps) => {
 
-    // const role = useSelector((state: any) => state.auth.role); // TODO:
-    const role = "admin";
+    const role = useSelector((state: any) => state.auth.role);
 
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
 
     useEffect(() => {
         if (role == Role.ADMIN) {
             setMenuItems(AdminMenuItems);
+        }else if (role == Role.DOCTOR) {
+            setMenuItems(DoctorMenuItems);
         } else {
             setMenuItems(MenuItems);
         }

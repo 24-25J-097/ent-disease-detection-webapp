@@ -3,17 +3,16 @@ import {GetLucideReactIconProps} from "@/types/Common";
 import {
     Activity, BriefcaseBusiness,
     Calendar,
-    ChevronDown,
-    CreditCard,
-    Edit,
+    ChevronDown, ClipboardPlus,
+    CreditCard, Edit,
     FileText,
     HardDrive,
     Home,
     Inbox,
     Layout, LockKeyholeOpen,
-    MessageSquare,
+    MessageSquare, ScanEye,
     ShoppingBag,
-    Sidebar,
+    Sidebar, SquareActivity,
     Trello,
     Users,
     Zap
@@ -58,6 +57,12 @@ const GetLucideReactIcon: React.FC<GetLucideReactIconProps> = ({ icon, className
             return (<><Zap className={className || "stroke-1.5 w-5 h-5"} /></>);
         case "ChevronDown":
             return (<><ChevronDown className={className || "stroke-1.5 w-5 h-5"} /></>);
+        case "SquareActivity":
+            return (<><SquareActivity className={className || "stroke-1.5 w-5 h-5"} /></>);
+        case "ScanEye":
+            return (<><ScanEye className={className || "stroke-1.5 w-5 h-5"} /></>);
+        case "ClipboardPlus":
+            return (<><ClipboardPlus className={className || "stroke-1.5 w-5 h-5"} /></>);
         default:
             return (<></>);
     }
