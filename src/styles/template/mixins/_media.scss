@@ -1,0 +1,29 @@
+
+$screens: (
+        sm: 640px,
+        md: 768px,
+        lg: 1024px,
+        xl: 1280px,
+        '2xl': 1536px,
+);
+
+/* Breakpoint up */
+@mixin media-breakpoint-up($screen) {
+  @media (min-width: #{map-get($screens, $screen)}) {
+    @content;
+  }
+}
+
+/* Breakpoint down */
+@mixin media-breakpoint-down($screen) {
+  @media (max-width: #{map-get($screens, $screen)}) {
+    @content;
+  }
+}
+
+/* Breakpoint only */
+@mixin media-breakpoint-only($screen) {
+  @media (width: #{map-get($screens, $screen)}) {
+    @content;
+  }
+}
