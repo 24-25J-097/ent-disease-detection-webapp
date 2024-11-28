@@ -3,14 +3,14 @@
 import {NextPage} from "next";
 import serviceUtils from "@/services/api-service/ServiceUtils";
 
-const UserDashboard: NextPage = () => {
+const RadiologistDashboard: NextPage = () => {
 
     return (
         <>
             <div className="grid grid-cols-12 gap-6">
                 <div>
-                    <h1>User Dashboard</h1>
-                    <p>Welcome, User!</p>
+                    <h1>Radiologist Dashboard</h1>
+                    <p>Welcome, Radiologist!</p>
                     <p>Token: {serviceUtils.getAccessToken()}</p>
                     <p>Role: {serviceUtils.getUserRole()}</p>
                 </div>
@@ -19,4 +19,4 @@ const UserDashboard: NextPage = () => {
     );
 };
 
-export default UserDashboard;
+export default RadiologistDashboard;

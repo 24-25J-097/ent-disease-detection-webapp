@@ -2,16 +2,16 @@
 
 import {NextPage} from "next";
 
-const DoctorDashboard: NextPage = () => {
+const StudentDashboard: NextPage = () => {
 
     return (
         <>
             <div>
-                <h1>Doctor Dashboard</h1>
-                <p>Welcome, Doctor!</p>
+                <h1>Student Dashboard</h1>
+                <p>Welcome, Student!</p>
             </div>
         </>
     );
 };
 
-export default DoctorDashboard;
+export default StudentDashboard;
