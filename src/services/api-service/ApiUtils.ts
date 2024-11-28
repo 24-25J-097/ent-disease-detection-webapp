@@ -4,19 +4,16 @@ export class ApiUtils {
 
     public static webUrl: string = process.env.NEXT_PUBLIC_WEB_URL || this.apiUrl;
 
-    public static publicUrl(path: string, apiVersion?: string): string {
-        const version = apiVersion || process.env.NEXT_PUBLIC_API_VERSION;
-        return this.apiUrl + `/api/${version}/` + path;
+    public static publicUrl(path: string): string {
+        return this.apiUrl + `/api/public/` + path;
     }
 
-    public static authUrl(path: string, apiVersion?: string): string {
-        const version = apiVersion || process.env.NEXT_PUBLIC_API_VERSION;
-        return this.apiUrl + `/api/${version}/auth/` + path;
+    public static authUrl(path: string): string {
+        return this.apiUrl + `/api/auth/` + path;
     }
 
-    public static adminUrl(path: string, apiVersion?: string): string {
-        const version = apiVersion || process.env.NEXT_PUBLIC_API_VERSION;
-        return this.apiUrl + `/api/${version}/admin/` + path;
+    public static adminUrl(path: string): string {
+        return this.apiUrl + `/api/admin/` + path;
     }
 
 }

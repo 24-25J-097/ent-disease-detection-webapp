@@ -16,6 +16,7 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     const fetchUser = useCallback(async () => {
         try {
             const response = await AuthService.getOwnUser();
+            console.log('Fetched user data:', response.data);
             return response.data;
         } catch (error) {
             throw error;
@@ -26,11 +27,9 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
         revalidateOnFocus: false,
     });
 
-    const user = userData ? userData["user"] : null;
+    const user = userData ? userData : null;
 
     const register = useCallback(async ({userSignUpData}: IApiRequest) => {
-        await AuthService.csrf();
-
         try {
             const response = await AuthService.register(userSignUpData);
             if (response.success) {
@@ -48,8 +47,6 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     }, [dispatch, mutate]);
 
     const login = useCallback(async ({userLoginData}: IApiRequest) => {
-        await AuthService.csrf();
-
         try {
             const response = await AuthService.login(userLoginData);
             if (response.success) {
@@ -68,19 +65,18 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
 
     const logout = useCallback(async () => {
         try {
-            const response = await AuthService.logout();
-            if (response.success) {
-                dispatch(clearUserSession());
-            }
+            // const response = await AuthService.logout();
+            // if (response.success) {
+            //     dispatch(clearUserSession());
+            // }
+            dispatch(clearUserSession());
+            await router.push('/login');
         } catch (error) {
             throw error;
         }
-        router.push('/login');
     }, [dispatch, router]);
 
     const forgotPassword = useCallback(async ({forgotPswData}: IApiRequest) => {
-        await AuthService.csrf();
-
         try {
             const response = await AuthService.forgetPasswordSendEmail(forgotPswData);
             if (response.success) {
@@ -92,8 +88,6 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     }, []);
 
     const resetPassword = useCallback(async ({resetPswData}: IApiRequest) => {
-        await AuthService.csrf();
-
         try {
             const response = await AuthService.resetPasswordByEmail(resetPswData);
             if (response.success) {

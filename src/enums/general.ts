@@ -9,6 +9,12 @@ export enum Source {
   APP = 2
 }
 
+export enum SignedUpAs {
+  EMAIL = "EMAIL",
+  GOOGLE = "GOOGLE",
+  FACEBOOK = "FACEBOOK",
+}
+
 export enum SmsGateway {
   NONE = 0,
   MOBITEL = 1,

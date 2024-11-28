@@ -17,16 +17,14 @@ export class AuthService {
     };
 
     public static async register(userSignUpData: UserSignUpData): Promise<AppResponse<AuthResponse>> {
-        const userData = convertToAPIObj(userSignUpData);
         const ep = ApiUtils.publicUrl("register");
-        const res = await AuthService.api().post<UserSignUpData, AxiosAppResponse<AuthResponse>>(ep, userData);
+        const res = await AuthService.api().post<UserSignUpData, AxiosAppResponse<AuthResponse>>(ep, userSignUpData);
         return res.data;
     }
 
     public static async login(userLoginData: UserLoginData): Promise<AppResponse<AuthResponse>> {
-        const userData = convertToAPIObj(userLoginData);
         const ep = ApiUtils.publicUrl("login");
-        const res = await AuthService.api().post<UserLoginData, AxiosAppResponse<AuthResponse>>(ep, userData);
+        const res = await AuthService.api().post<UserLoginData, AxiosAppResponse<AuthResponse>>(ep, userLoginData);
         return res.data;
     }
 
@@ -37,7 +35,7 @@ export class AuthService {
     }
 
     public static async getOwnUser(): Promise<AppResponse<any>> {
-        const ep = ApiUtils.publicUrl("own-user");
+        const ep = ApiUtils.authUrl("me");
         const res = await AuthService.api().get(ep);
         return res.data;
     }

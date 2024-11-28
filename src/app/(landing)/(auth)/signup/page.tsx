@@ -12,6 +12,7 @@ import {trimText} from "@/utils/string-formatters";
 import PasswordInput from "@/components/inputs/PasswordInput";
 import TextInput from "@/components/inputs/TextInput";
 import {useToast} from "@/providers/ToastProvider";
+import {Role} from '@/enums/access';
 
 const SignUpPage: NextPage = () => {
 
@@ -19,7 +20,9 @@ const SignUpPage: NextPage = () => {
         name: "",
         email: "",
         password: "",
-        passwordConfirmation: "",
+        confirmPassword: "",
+        role: '',
+        remember: false
     };
 
     const [userSignUpData, setUserSignUpData] = useState<UserSignUpData>(initUserSignUpData);
@@ -28,15 +31,16 @@ const SignUpPage: NextPage = () => {
     const [emailErrMsg, setEmailErrMsg] = useState<string>('');
     const [passwordErrMsg, setPasswordErrMsg] = useState<string>('');
     const [confirmPasswordErrMsg, setConfirmPasswordErrMsg] = useState<string>('');
+    const [roleErrMsg, setRoleErrMsg] = useState<string>('');
     const [errors, setErrors] = useState<any>(null);
     const [isDisable, setIsDisable] = useState<boolean>(false);
 
-    const { register } = useAuthService({
+    const {register} = useAuthService({
         middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
+        redirectIfAuthenticated: '/',
     });
 
-    const { notifySuccess, notifyError } = useToast();
+    const {notifySuccess, notifyError} = useToast();
 
     const validateData = (data: any): boolean[] => {
         setHasValidationErr([]);
@@ -75,23 +79,30 @@ const SignUpPage: NextPage = () => {
             setTimeout(() => setPasswordErrMsg(''), 3000);
             hasValidationErr.push(true);
 
-        } else if (data.hasOwnProperty('passwordConfirmation') && data.passwordConfirmation == "") {
+        } else if (data.hasOwnProperty('confirmPassword') && data.confirmPassword == "") {
             const errorText = 'Please enter the password confirmation.';
             debugLog('Please enter the password confirmation.');
             setConfirmPasswordErrMsg(errorText);
             setTimeout(() => setConfirmPasswordErrMsg(''), 3000);
             hasValidationErr.push(true);
 
-        } else if (data.password && data.password != data.passwordConfirmation) {
+        } else if (data.password && data.password != data.confirmPassword) {
             const errorText = 'Password and Confirm Password is not match.';
             debugLog('Password and Confirm Password is not match.');
             setConfirmPasswordErrMsg(errorText);
             setTimeout(() => setConfirmPasswordErrMsg(''), 3000);
             hasValidationErr.push(true);
         }
+        if (data.hasOwnProperty("role") && data.role === "") {
+            const errorText = "Please select a role.";
+            debugLog("Please select a role.");
+            setRoleErrMsg(errorText);
+            setTimeout(() => setRoleErrMsg(""), 3000);
+            hasValidationErr.push(true);
+        }
         debugLog("validateData =>", data);
         return hasValidationErr;
-    }
+    };
 
     const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -119,22 +130,26 @@ const SignUpPage: NextPage = () => {
 
     const nameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserSignUpData((prevState) => ({ ...prevState, name: trimmedValue }));
+        setUserSignUpData((prevState) => ({...prevState, name: trimmedValue}));
     };
 
     const emailChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserSignUpData((prevState) => ({ ...prevState, email: trimmedValue }));
+        setUserSignUpData((prevState) => ({...prevState, email: trimmedValue}));
     };
 
     const passwordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserSignUpData((prevState) => ({ ...prevState, password: trimmedValue }));
+        setUserSignUpData((prevState) => ({...prevState, password: trimmedValue}));
     };
 
     const confirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserSignUpData((prevState) => ({ ...prevState, passwordConfirmation: trimmedValue }));
+        setUserSignUpData((prevState) => ({...prevState, confirmPassword: trimmedValue}));
+    };
+
+    const roleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
+        setUserSignUpData((prevState) => ({...prevState, role: event.target.value}))
     };
 
     return (
@@ -143,7 +158,7 @@ const SignUpPage: NextPage = () => {
                 className={`bg-gray-100 bg-gradient-to-r from-gray-100 via-gray-100 to-blue-200 flex rounded-2xl
                 shadow-lg max-w-5xl items-center ${isDisable && "pointer-events-none"}`}
             >
-                <div className="md:w-1/2 px-4 md:pr-10 md:pl-4 m-5">
+                <div className="md:w-1/2 px-4 md:pr-10 md:pl-4 mx-5 my-10">
                     <h2 className="font-bold text-2xl md:text-3xl text-blue-600">Sign Up</h2>
                     <p className="text-sm mt-4 text-[#002D74]">If you’re not registered yet, sign up effortlessly.</p>
 
@@ -184,11 +199,55 @@ const SignUpPage: NextPage = () => {
                         <PasswordInput
                             name="password"
                             placeholder="Confirm Password"
-                            password={userSignUpData.passwordConfirmation}
+                            password={userSignUpData.confirmPassword}
                             onPasswordChange={confirmPasswordChange}
                             errorMessage={confirmPasswordErrMsg}
                             disabled={isDisable}
                         />
+                        <div>
+                            <select
+                                name="role"
+                                value={userSignUpData.role}
+                                onChange={roleChange}
+                                className={`w-full text-sm shadow-sm py-3 px-4 rounded-xl placeholder:text-slate-400/90
+                            transition duration-200 ease-in-out focus:ring-4 focus:ring-primary focus:ring-opacity-20
+                            focus:border-primary dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
+                            dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 
+                            ${!!roleErrMsg ? "border border-red-500" : "border border-slate-200"}`}
+                                disabled={isDisable}
+                            >
+                                <option value="" disabled>
+                                    Select Role
+                                </option>
+                                {Object.values(Role).filter((role) => role !== Role.ADMIN).map((role) => (
+                                    <option key={role} value={role}>
+                                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                                    </option>
+                                ))}
+                            </select>
+                            <If condition={!!roleErrMsg}>
+                                <small className="text-red-500 px-2">{roleErrMsg}</small>
+                            </If>
+                        </div>
+                        <div className="flex items-center mt-2">
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                id="remember"
+                                checked={userSignUpData.remember}
+                                onChange={(event) =>
+                                    setUserSignUpData((prevState) => ({...prevState, remember: event.target.checked}))
+                                }
+                                disabled={isDisable}
+                                className={`h-4 w-4 shadow-sm rounded-md transition duration-200 ease-in-out
+                                focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary 
+                                dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
+                                dark:focus:ring-opacity-50 `}
+                            />
+                            <label htmlFor="remember" className="ml-2 text-sm text-gray-700">
+                                Remember Me
+                            </label>
+                        </div>
                         <button
                             className={`bg-blue-900 rounded-xl text-white py-3 hover:scale-105 duration-300 shadow-2xl 
                             ${isDisable && "pointer-events-none"}`}

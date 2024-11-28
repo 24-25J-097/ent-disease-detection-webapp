@@ -17,6 +17,7 @@ class ServiceUtils {
 
     public static removeAccessToken(ctx?: any): void {
         destroyCookie(ctx, AccessKey.ENTI_TOKEN, { path: '/' });
+        destroyCookie(ctx, "token", { path: '/' });
     }
 
     public static setUserRole(role: string, ctx?: any): void {

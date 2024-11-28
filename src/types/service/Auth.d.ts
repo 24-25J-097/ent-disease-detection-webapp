@@ -12,14 +12,17 @@ export interface UserLoginData {
     email: string;
     password: string;
     source?: number;
-    rememberMe?: boolean;
+    signedUpAs?: string;
+    remember?: boolean;
 }
 
 export interface UserSignUpData {
     name: string;
     email: string;
     password: string;
-    passwordConfirmation: string;
+    confirmPassword: string;
+    role: string;
+    remember?: boolean;
 }
 
 export interface ForgotPswData {

@@ -12,13 +12,16 @@ import {trimText} from "@/utils/string-formatters";
 import TextInput from "@/components/inputs/TextInput";
 import PasswordInput from "@/components/inputs/PasswordInput";
 import {useToast} from "@/providers/ToastProvider";
+import {SignedUpAs, Source} from '@/enums/general';
 
 const LoginPage: NextPage = () => {
 
     const initUserLoginData: UserLoginData = {
         email: "",
         password: "",
-        rememberMe: false,
+        remember: false,
+        source: Source.WEB,
+        signedUpAs: SignedUpAs.EMAIL
     };
 
     const [userLoginData, setUserLoginData] = useState<UserLoginData>(initUserLoginData);
@@ -30,7 +33,7 @@ const LoginPage: NextPage = () => {
 
     const { login } = useAuthService({
         middleware: 'guest',
-        redirectIfAuthenticated: '/dashboard',
+        redirectIfAuthenticated: '/',
     });
 
     const { notifySuccess, notifyError } = useToast();

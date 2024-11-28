@@ -11,10 +11,8 @@ import {toKebabCase} from "@/utils/string-formatters";
 export function middleware(req: NextRequest) {
 
     const url = req.nextUrl.clone();
-    // const token = req.cookies.get(AccessKey.ENTI_TOKEN as any)?.value; // TODO:
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-    // const role = req.cookies.get(AccessKey.ENTI_ROLE as any)?.value; // TODO:
-    const role = "admin";
+    const token = req.cookies.get(AccessKey.ENTI_TOKEN as any)?.value;
+    const role = req.cookies.get(AccessKey.ENTI_ROLE as any)?.value;
 
     // List of public paths that don't require authentication and should be avoided by authenticated users
     const protectedPublicPaths = ['/login', '/signup', '/forgot-password'];

@@ -4,13 +4,13 @@ import { User, Edit, Lock, HelpCircle, ToggleRight } from 'lucide-react';
 import useClickOutside from "@/hooks/useClickOutside";
 import Image from "next/image";
 import Link from "next/link";
+import {useAuthService} from '@/hooks/services/useAuthService';
 
 const menuItems = [
     { id: 1, icon: User, label: 'Profile' },
     { id: 2, icon: Edit, label: 'Add Account' },
     { id: 3, icon: Lock, label: 'Reset Password' },
     { id: 4, icon: HelpCircle, label: 'Help' },
-    { id: 5, icon: ToggleRight, label: 'Logout' },
 ];
 
 const TopBarAccountMenu: React.FC = () => {
@@ -18,6 +18,15 @@ const TopBarAccountMenu: React.FC = () => {
     const [isOpenAccountMenu, setIsOpenAccountMenu] = useState<boolean>(false);
 
     const dropdownRef = useClickOutside(() => setIsOpenAccountMenu(false));
+
+    const { logout } = useAuthService({
+        middleware: 'auth',
+        redirectIfAuthenticated: '/login',
+    });
+
+    const handleLogout = async () => {
+        await logout();
+    }
 
     return (
         <div ref={dropdownRef} data-tw-placement="bottom-end" className="dropdown relative">
@@ -59,6 +68,14 @@ const TopBarAccountMenu: React.FC = () => {
                                 {item.label}
                             </Link>
                         ))}
+                        <div
+                            onClick={handleLogout}
+                            className="flex cursor-pointer items-center p-2 rounded-md transition duration-300
+                                ease-in-out hover:bg-white/5"
+                        >
+                            <ToggleRight className="mr-2 h-4 w-4" />
+                            Logout
+                        </div>
                         <div className="h-px my-2 bg-white/[0.08]" />
                     </motion.div>
                 )}
