@@ -33,9 +33,9 @@ const DashboardMenus = ({children}: ChildrenProps) => {
             <div className="mt-[4.7rem] flex md:mt-0 w-full">
                 <SideMenu menuItems={menuItems}/>
                 <div
-                    className="md:max-w-auto min-h-screen min-w-0 max-w-full flex-1 rounded-[30px] bg-slate-100
-                            px-4 pb-10 before:block before:h-px before:w-full before:content-[''] dark:bg-darkmode-700
-                            md:px-[22px]"
+                    className="md:max-w-auto min-h-screen min-w-0 max-w-full flex-1 rounded-[30px] bg-blue-50
+                    px-4 pb-10 before:block before:h-px before:w-full before:content-[''] dark:bg-darkmode-700
+                    md:px-[22px]"
                 >
                     <TopBar isTopMenu={false}/>
                     {children}
