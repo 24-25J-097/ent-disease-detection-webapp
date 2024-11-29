@@ -34,9 +34,9 @@ export const convertToAPIFormData = (data: DataObject, removeEmptyFields = false
     const formData = new FormData();
     Object.keys(data).forEach(key => {
         const value = data[key];
-        const snakeKey = toSnakeCase(key);
+        // const snakeKey = toSnakeCase(key);
         if (!removeEmptyFields || (value !== null && value !== '')) {
-            formData.append(snakeKey, value);
+            formData.append(key, value);
         }
     });
     return formData as FormData;

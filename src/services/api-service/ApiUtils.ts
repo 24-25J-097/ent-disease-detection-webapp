@@ -16,4 +16,8 @@ export class ApiUtils {
         return this.apiUrl + `/api/admin/` + path;
     }
 
+    public static doctorUrl(path: string): string {
+        return this.apiUrl + `/api/doctor/` + path;
+    }
+
 }

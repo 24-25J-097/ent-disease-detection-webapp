@@ -26,12 +26,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background-image: linear-gradient(to bottom, #131313, #ffffff);
+  background-color: #041e46;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background-image: linear-gradient(to bottom, #ffffff, #131313);
+  background-color: #ffffff;
 }
 
 /* Hide the scrollbar when not hovered over */

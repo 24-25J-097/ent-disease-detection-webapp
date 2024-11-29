@@ -10,7 +10,7 @@ const TopBar = ({isTopMenu}: { isTopMenu: boolean }) => {
     } else {
         return (
             <>
-                <div className="relative z-[51] flex h-[67px] items-center border-b border-slate-200">
+                <div className="relative flex h-[67px] items-center border-b border-slate-200 z-0">
                     <TopBarItems isTopMenu={isTopMenu}/>
                 </div>
             </>
