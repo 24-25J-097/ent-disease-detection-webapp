@@ -13,6 +13,8 @@ import PasswordInput from "@/components/inputs/PasswordInput";
 import TextInput from "@/components/inputs/TextInput";
 import {useToast} from "@/providers/ToastProvider";
 import {Role} from '@/enums/access';
+import Image from 'next/image';
+import useRouterApp from '@/hooks/useRouterApp';
 
 const SignUpPage: NextPage = () => {
 
@@ -40,6 +42,7 @@ const SignUpPage: NextPage = () => {
         redirectIfAuthenticated: '/',
     });
 
+    const router = useRouterApp();
     const {notifySuccess, notifyError} = useToast();
 
     const validateData = (data: any): boolean[] => {
@@ -153,7 +156,7 @@ const SignUpPage: NextPage = () => {
     };
 
     return (
-        <section className="bg-blue-100 min-h-screen flex items-center justify-center w-full">
+        <section className="bg-blue-50 min-h-screen flex items-center justify-center w-full">
             <div
                 className={`bg-gray-100 bg-gradient-to-r from-gray-100 via-gray-100 to-blue-200 flex rounded-2xl
                 shadow-lg max-w-5xl items-center ${isDisable && "pointer-events-none"}`}
@@ -288,6 +291,16 @@ const SignUpPage: NextPage = () => {
                     <div
                         className="w-[800px] h-[600px] mr-5 flex flex-col items-center justify-center text-center"
                     >
+                        <div className="w-60">
+                            <Image
+                                src={"/images/ent-insight-txt-logo.png"}
+                                alt="Logo"
+                                className="w-full cursor-pointer"
+                                width={1000}
+                                height={1000}
+                                onClick={() => router.push("/")}
+                            />
+                        </div>
                         <h2 className="font-bold text-2xl md:text-4xl text-blue-600">Welcome Again!</h2>
                         <p className="text-base mx-10 mt-8 text-gray-500">
                             Log in now to access advanced tools tailored for medical analysis!

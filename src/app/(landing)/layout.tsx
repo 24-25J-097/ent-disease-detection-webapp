@@ -26,7 +26,7 @@ export default function RootLayout({children}: Readonly<{ children: React.ReactN
                         enableSystem
                         disableTransitionOnChange
                     >
-                        <main className="relative flex justify-center items-center flex-col overflow-hidden bg-green-50">
+                        <main className="relative flex justify-center items-center flex-col overflow-hidden bg-blue-50">
                             <ToastProvider>
                                 {children}
                             </ToastProvider>
