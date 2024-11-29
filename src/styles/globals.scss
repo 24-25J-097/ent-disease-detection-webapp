@@ -1,0 +1,45 @@
+@use "colors" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "common";
+
+@import 'tippy.js/dist/tippy.css';
+@import 'tippy.js/animations/shift-away.css';
+@import 'tippy.js/themes/light-border.css';
+
+@import "./template/themes/rubick/side-nav";
+@import "./template/themes/rubick/top-nav";
+@import "./template/components/mobile-menu";
+@import "./template/app";
+
+/* Define custom styles for the scrollbar */
+::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #bebebe;
+}
+
+::-webkit-scrollbar-thumb {
+  background-image: linear-gradient(to bottom, #131313, #ffffff);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-image: linear-gradient(to bottom, #ffffff, #131313);
+}
+
+/* Hide the scrollbar when not hovered over */
+::-webkit-scrollbar-thumb:vertical {
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover:vertical {
+  opacity: 1;
+}
