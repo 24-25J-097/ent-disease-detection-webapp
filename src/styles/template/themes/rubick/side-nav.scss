@@ -41,7 +41,7 @@
             color: white;
             margin-bottom: theme("spacing.1");
             position: relative;
-            border-radius: theme("borderRadius.full");
+            border-radius: theme("borderRadius.2xl");
             .side-menu__title {
                 width: 100%;
                 margin-left: theme("spacing.3");
@@ -118,7 +118,7 @@
                 }
                 display: none;
                 background-color: theme("colors.black.100" / 10%);
-                border-radius: theme("borderRadius.lg");
+                border-radius: theme("borderRadius.2xl");
                 &.side-menu__sub-open {
                     display: block;
                 }
@@ -136,7 +136,7 @@
                 ul {
                     display: none;
                     background: theme("colors.black.100" / 10%);
-                    border-radius: theme("borderRadius.lg");
+                    border-radius: theme("borderRadius.2xl");
                 }
             }
             & > li {

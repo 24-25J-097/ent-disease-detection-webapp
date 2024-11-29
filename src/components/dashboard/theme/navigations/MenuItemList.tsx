@@ -19,6 +19,7 @@ const MenuItemList: React.FC<MenuItemListProps> = ({item, index, menuPlace}) => 
     const color = useSelector((state: any) => state.theme.color);
     const menuType = useSelector((state: any) => state.theme.menuType);
     const themeMode = useSelector((state: any) => state.theme.themeMode);
+    const role = useSelector((state: any) => state.auth.role);
 
     const activeElementRef = useRef<HTMLElement | null>(null);
     const menuLinkRef = useRef<HTMLAnchorElement | null>(null);
@@ -26,25 +27,29 @@ const MenuItemList: React.FC<MenuItemListProps> = ({item, index, menuPlace}) => 
     useEffect(() => {
         if (!item.isRootMenu) return;
 
-        const splitUrlAfterDashboard = (url) => {
-            const regex = /(.*\/dashboard)(\/.*)/;
+        const splitUrlAfterRole = (url, role) => {
+            const regex = new RegExp(`(.*\/${role})(\/.*)?`);
             const match = url.match(regex);
             return match ? [match[1], match[2]] : [url];
         };
 
-        const isSubMenu = (menuLink, currentPath) => {
-            const [beforeMenuLink, afterMenuLink] = splitUrlAfterDashboard(menuLink);
-            const [beforeCurrentPath, afterCurrentPath] = splitUrlAfterDashboard(currentPath);
+        const isSubMenu = (menuLink, currentPath, role) => {
+            const [beforeMenuLink, afterMenuLink] = splitUrlAfterRole(menuLink, role);
+            const [beforeCurrentPath, afterCurrentPath] = splitUrlAfterRole(currentPath, role);
             const menuLinkSegments = afterMenuLink ? afterMenuLink.split('/') : [];
             const currentPathSegments = afterCurrentPath ? afterCurrentPath.split('/') : [];
 
-            return (menuLinkSegments.at(-1) === currentPathSegments.at(-1) || menuLinkSegments.at(-1) === currentPathSegments.at(-2))
-                && menuLinkSegments.length > 0 && currentPathSegments.length > 1;
+            return (
+                (menuLinkSegments.at(-1) === currentPathSegments.at(-1) ||
+                    menuLinkSegments.at(-1) === currentPathSegments.at(-2)) &&
+                menuLinkSegments.length > 0 &&
+                currentPathSegments.length > 1
+            );
         };
 
         const updateMenuClassAndClick = () => {
             let classes = "root-menu";
-            if ((pathName === item.link) || (isSubMenu(item.link || "", pathName))) {
+            if ((pathName === item.link) || (isSubMenu(item.link || "", pathName, role))) {
                 classes += isTopMenu ? " top-menu--active" : " side-menu--active";
                 if (menuLinkRef.current?.click) {
                     if ("click" in menuLinkRef.current) {
@@ -54,8 +59,11 @@ const MenuItemList: React.FC<MenuItemListProps> = ({item, index, menuPlace}) => 
             }
             setClassName(classes);
         };
+
         updateMenuClassAndClick();
-        activeElementRef.current = document.querySelector(isTopMenu ? `.top-menu[data-link="${item.link}"]` : `.side-menu[data-link="${item.link}"]`);
+        activeElementRef.current = document.querySelector(
+            isTopMenu ? `.top-menu[data-link="${item.link}"]` : `.side-menu[data-link="${item.link}"]`
+        );
 
     }, [isTopMenu, item.isRootMenu, item.link, pathName]);
 
