@@ -1,8 +1,8 @@
 "use client";
 
 import {NextPage} from "next";
-import IdentificationPage from '@/app/(dashboard)/doctor/identification/page';
-import PatientsPage from '@/app/(dashboard)/doctor/patients/page';
+import IdentificationPage from '@/app/(dashboard)/doctor/cholesteatoma/identification/page';
+import PatientsPage from '@/app/(dashboard)/doctor/cholesteatoma/patients/page';
 
 const ReportsPage: NextPage = () => {
 

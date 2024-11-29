@@ -8,7 +8,6 @@ import TopBar from "@/components/dashboard/theme/top-bar/TopBar";
 import {Role} from "@/enums/access";
 import {AdminMenuItems} from "@/data/dashboard/admin-menu-items";
 import {MenuItem} from "@/types/Navigations";
-import {MenuItems} from "@/data/dashboard/menu-items";
 import {DoctorMenuItems} from '@/data/dashboard/doctor-menu-items';
 import {useSelector} from 'react-redux';
 
@@ -24,7 +23,7 @@ const DashboardMenus = ({children}: ChildrenProps) => {
         }else if (role == Role.DOCTOR) {
             setMenuItems(DoctorMenuItems);
         } else {
-            setMenuItems(MenuItems);
+            setMenuItems([]);
         }
     }, [role]);
 

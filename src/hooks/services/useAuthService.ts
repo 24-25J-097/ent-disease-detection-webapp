@@ -1,17 +1,17 @@
 import useSWR from 'swr';
 import {useCallback, useEffect} from 'react';
-import {useRouter} from 'next/navigation';
 import {IApiRequest, IUseAuth} from "@/types/Hooks";
 import {User} from "@/models/User";
 import {useDispatch} from "react-redux";
 import {clearUserSession, setRole, setToken, setUser} from "@/store/reducers/authSlice";
 import {AuthService} from "@/services/AuthService";
 import {toKebabCase} from "@/utils/string-formatters";
+import useRouterApp from '@/hooks/useRouterApp';
 
 export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) => {
 
     const dispatch = useDispatch();
-    const router = useRouter();
+    const router = useRouterApp();
 
     const fetchUser = useCallback(async () => {
         try {
@@ -64,16 +64,18 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     }, [dispatch, mutate]);
 
     const logout = useCallback(async () => {
-        try {
-            // const response = await AuthService.logout();
-            // if (response.success) {
-            //     dispatch(clearUserSession());
-            // }
-            dispatch(clearUserSession());
-            await router.push('/login');
-        } catch (error) {
-            throw error;
-        }
+        dispatch(clearUserSession());
+        await router.redirect('/login');
+        // try {
+        //     const response = await AuthService.logout();
+        //     if (response.success) {
+        //         dispatch(clearUserSession());
+        //     }
+        //     dispatch(clearUserSession());
+        //     await router.push('/login');
+        // } catch (error) {
+        //     throw error;
+        // }
     }, [dispatch, router]);
 
     const forgotPassword = useCallback(async ({forgotPswData}: IApiRequest) => {

@@ -1,21 +1,19 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, Edit, Lock, HelpCircle, ToggleRight } from 'lucide-react';
 import useClickOutside from "@/hooks/useClickOutside";
 import Image from "next/image";
 import Link from "next/link";
 import {useAuthService} from '@/hooks/services/useAuthService';
-
-const menuItems = [
-    { id: 1, icon: User, label: 'Profile' },
-    { id: 2, icon: Edit, label: 'Add Account' },
-    { id: 3, icon: Lock, label: 'Reset Password' },
-    { id: 4, icon: HelpCircle, label: 'Help' },
-];
+import {Role} from '@/enums/access';
+import {useSelector} from 'react-redux';
 
 const TopBarAccountMenu: React.FC = () => {
 
+    const role = useSelector((state: any) => state.auth.role);
+
     const [isOpenAccountMenu, setIsOpenAccountMenu] = useState<boolean>(false);
+    const [menuItems, setMenuItems] = useState<any[]>([]);
 
     const dropdownRef = useClickOutside(() => setIsOpenAccountMenu(false));
 
@@ -23,6 +21,29 @@ const TopBarAccountMenu: React.FC = () => {
         middleware: 'auth',
         redirectIfAuthenticated: '/login',
     });
+
+    useEffect(() => {
+        if (role == Role.ADMIN) {
+            setMenuItems([
+                { id: 1, icon: User, label: 'Profile' },
+                { id: 2, icon: Edit, label: 'Add Account' },
+                { id: 3, icon: Lock, label: 'Reset Password' },
+                { id: 4, icon: HelpCircle, label: 'Help' },
+            ]);
+        }else if (role == Role.DOCTOR) {
+            setMenuItems([
+                { id: 1, icon: User, label: 'Profile' },
+                { id: 3, icon: Lock, label: 'Reset Password' },
+                { id: 4, icon: HelpCircle, label: 'Help' },
+            ]);
+        } else {
+            setMenuItems([
+                { id: 1, icon: User, label: 'Profile' },
+                { id: 3, icon: Lock, label: 'Reset Password' },
+                { id: 4, icon: HelpCircle, label: 'Help' },
+            ]);
+        }
+    }, [role]);
 
     const handleLogout = async () => {
         await logout();
