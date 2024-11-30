@@ -45,12 +45,12 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
         subMenu: [
-           /* {
-                id: 1,
-                title: "Patients",
-                icon: "Users",
-                link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
-            },*/
+            /* {
+                 id: 1,
+                 title: "Patients",
+                 icon: "Users",
+                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
+             },*/
             {
                 id: 2,
                 title: "Identification",
@@ -73,6 +73,24 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/patients`,
         subMenu: [
+            /*{
+                id: 1,
+                title: "Patients",
+                icon: "Users",
+                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/patients`,
+            },*/
+            {
+                id: 2,
+                title: "Identification",
+                icon: "ScanEye",
+                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/identification`,
+            },
+            /*{
+                id: 3,
+                title: "Reports",
+                icon: "ClipboardPlus",
+                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/reports`,
+            },*/
         ],
         isDivider: false,
     },
@@ -82,8 +100,7 @@ export const DoctorMenuItems: MenuItem[] = [
         icon: "SquareActivity",
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
-        subMenu: [
-        ],
+        subMenu: [],
         isDivider: false,
     },
 ];
