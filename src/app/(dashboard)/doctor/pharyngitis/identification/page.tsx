@@ -3,16 +3,16 @@
 import React, {useState} from "react";
 import {NextPage} from "next";
 import {useToast} from '@/providers/ToastProvider';
-import {SinusitisAnalyzeService} from "@/services/SinusitisAnalyzeService";
-import {SinusitisRequest, SinusitisResult} from "@/types/service/SinusitisResult";
+import {PharyngitisAnalyzeService} from "@/services/PharyngitisAnalyzeService";
+import {PharyngitisRequest, PharyngitisResult} from "@/types/service/PharyngitisResult";
 import {If} from "@/components/utils/If";
 import {motion} from "framer-motion";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {predictionColors, predictionText} from "@/enums/sinusitis";
+import {PharyngitisPredictionColors, PharyngitisPredictionText} from "@/enums/pharyngitis";
 
 const IdentificationPage: NextPage = () => {
-    const [analysisResult, setAnalysisResult] = useState<SinusitisResult | null>(null);
+    const [analysisResult, setAnalysisResult] = useState<PharyngitisResult | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
@@ -26,7 +26,7 @@ const IdentificationPage: NextPage = () => {
     const validateFields = () => {
         setHasValidationErr([]);
         if (!file) {
-            setFileErrMsg("Please choose the X Ray.");
+            setFileErrMsg("Please choose the Throat image.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
         } else if (!file.type.startsWith("image/")) {
@@ -46,15 +46,15 @@ const IdentificationPage: NextPage = () => {
         event.preventDefault();
         if (!validateFields()) return;
 
-        const formData: SinusitisRequest = {
+        const formData: PharyngitisRequest = {
             file: file!
         }
 
         try {
             setIsDisable(true);
-            const response = await SinusitisAnalyzeService.analyze(formData);
+            const response = await PharyngitisAnalyzeService.analyze(formData);
             if (response.success && response.data) {
-                const results = response.data as SinusitisResult;
+                const results = response.data as PharyngitisResult;
                 notifySuccess(response.message);
                 setIsDisable(false);
                 setAnalysisResult(results);
@@ -91,7 +91,7 @@ const IdentificationPage: NextPage = () => {
         <section className="bg-blue-50 min-h-screen px-4">
             <div className="flex py-8 justify-between">
                 <h1 className="text-slate-600 text-3xl font-bold mb-6 text-center">
-                    Sinusitis Identification
+                    Pharyngitis Identification
                 </h1>
 
             </div>
@@ -100,7 +100,7 @@ const IdentificationPage: NextPage = () => {
                     className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-lg min-h-[700px] flex flex-col"
                 >
                     <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
-                        Upload Water&#39;s View X Ray
+                        Upload throat image
                     </h3>
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <If condition={!!errors}>
@@ -156,10 +156,10 @@ const IdentificationPage: NextPage = () => {
                                 {/* Display Prediction with Dynamic Colors */}
                                 <span
                                     className={`rounded-md py-1 px-4 text-white ${
-                                        predictionColors[analysisResult.prediction]
+                                        PharyngitisPredictionColors[analysisResult.prediction]
                                     }`}
                                 >
-                                    {predictionText[analysisResult.prediction]}
+                                    {PharyngitisPredictionText[analysisResult.prediction]}
                                 </span>
                                 {/* Display Confidence Score */}
                                 {analysisResult.confidence_score !== undefined && (
@@ -178,7 +178,7 @@ const IdentificationPage: NextPage = () => {
                     className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl min-h-[700px] h-[700px] flex flex-col items-center"
                 >
                     <h4 className="text-blue-500 text-xl font-bold mb-4">
-                        X-Ray Preview
+                        Throat image Preview
                     </h4>
                     {imagePreview ? (
                         <Image
