@@ -11,6 +11,7 @@ import {CholesteatomaDiagnosisData, DiagnosisResult} from '@/types/service/Diagn
 import {DiagnosisService} from '@/services/DiagnosisService';
 import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
+import {Cholesteatoma} from '@/models/Cholesteatoma';
 
 const IdentificationPage: NextPage = () => {
 
@@ -59,7 +60,8 @@ const IdentificationPage: NextPage = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (!validateFields()) return;
+        setErrors(null);
+        if (validateFields().includes(true)) return;
 
         const diagnosisData: CholesteatomaDiagnosisData = {
             patientId: patientId,
@@ -71,13 +73,13 @@ const IdentificationPage: NextPage = () => {
             setIsDisable(true);
             const response = await DiagnosisService.cholesteatomaDiagnosis(diagnosisData);
             if (response.success && response.data) {
-                const results = response.data as DiagnosisResult;
+                const results = response.data as Cholesteatoma;
                 notifySuccess(response.message);
                 setIsDisable(false);
                 setDiagnosisResult({
-                    isCholesteatoma: results.isCholesteatoma,
-                    stage: results.stage,
-                    suggestions: results.suggestions,
+                    isCholesteatoma: results.diagnosisResult!.isCholesteatoma!,
+                    stage: results.diagnosisResult!.stage,
+                    suggestions: results.diagnosisResult!.suggestions,
                 });
             }
         } catch (error) {
@@ -89,13 +91,6 @@ const IdentificationPage: NextPage = () => {
                 notifyError(error.response.data.message);
             }
         }
-
-        // const formData = new FormData();
-        // formData.append("patientId", patientId);
-        // formData.append("additionalInfo", additionalInfo);
-        // formData.append("endoscopyImage", file!);
-
-        console.log("Form submitted with:", {patientId, additionalInfo, file});
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
