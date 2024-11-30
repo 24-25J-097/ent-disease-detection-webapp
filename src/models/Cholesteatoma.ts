@@ -1,6 +1,6 @@
 
 export interface Cholesteatoma {
-    id: number;
+    id: string;
     diagnosticianId?: string;
     patientId: string;
     additionalInformation?: string;
