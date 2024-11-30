@@ -1,5 +1,7 @@
 export class ApiUtils {
 
+    public static fastApiUrl: string = process.env.NEXT_PUBLIC_FASTAPI_BASE_URL || "";
+
     public static apiUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
     public static webUrl: string = process.env.NEXT_PUBLIC_WEB_URL || this.apiUrl;
