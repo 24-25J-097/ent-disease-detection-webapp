@@ -17,24 +17,24 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/patients`,
         subMenu: [
-            {
+            /*{
                 id: 1,
                 title: "Patients",
                 icon: "Users",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/patients`,
-            },
+            },*/
             {
                 id: 2,
                 title: "Identification",
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/identification`,
             },
-            {
+            /*{
                 id: 3,
                 title: "Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/reports`,
-            },
+            },*/
         ],
         isDivider: false,
     },
@@ -45,24 +45,24 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
         subMenu: [
-            {
+           /* {
                 id: 1,
                 title: "Patients",
                 icon: "Users",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
-            },
+            },*/
             {
                 id: 2,
                 title: "Identification",
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/identification`,
             },
-            {
+            /*{
                 id: 3,
                 title: "Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/reports`,
-            },
+            },*/
         ],
         isDivider: false,
     },

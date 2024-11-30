@@ -80,7 +80,7 @@ const IdentificationPage: NextPage = () => {
                     suggestions: results.suggestions,
                 });
             }
-        } catch (error) {
+        } catch (error:any) {
             setIsDisable(false);
             if (error.response?.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
@@ -152,7 +152,7 @@ const IdentificationPage: NextPage = () => {
                                     type="text"
                                     value={patientId}
                                     placeholder="Enter Patient ID"
-                                    className="w-full"
+                                    inputClassName="w-full"
                                     onTextChange={(e) => setPatientId(e.target.value)}
                                     design="regular-form"
                                     errorMessage={patientIdErrMsg}
