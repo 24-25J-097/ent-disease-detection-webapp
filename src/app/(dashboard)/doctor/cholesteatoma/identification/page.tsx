@@ -224,7 +224,7 @@ const IdentificationPage: NextPage = () => {
                                     }`}
                                     disabled={hasValidationErr.includes(true) || isDisable}
                                 >
-                                    Diagnosis
+                                    Diagnose
                                 </button>
                             </div>
                         </form>
