@@ -10,7 +10,7 @@ const SideMenu: React.FC<MenuProps> = ({ menuItems }) => {
     return (
         <>
             <nav className="side-nav hidden w-[80px] overflow-x-hidden pb-16 pr-3 md:block xl:w-[280px]">
-                <Link href="" className="flex items-center pt-4 pl-5 intro-x">
+                <Link href="/" className="flex items-center pt-4 pl-5 intro-x">
                     <Image
                         className="w-6"
                         src="/images/ent-insight-logo-w.png"
