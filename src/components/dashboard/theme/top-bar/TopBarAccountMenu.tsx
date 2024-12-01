@@ -7,9 +7,11 @@ import Link from "next/link";
 import {useAuthService} from '@/hooks/services/useAuthService';
 import {Role} from '@/enums/access';
 import {useSelector} from 'react-redux';
+import {toTitleCase} from '@/utils/string-formatters';
 
 const TopBarAccountMenu: React.FC = () => {
 
+    const user = useSelector((state: any) => state.auth.user);
     const role = useSelector((state: any) => state.auth.role);
 
     const [isOpenAccountMenu, setIsOpenAccountMenu] = useState<boolean>(false);
@@ -74,8 +76,8 @@ const TopBarAccountMenu: React.FC = () => {
                         text-white shadow-xl"
                     >
                         <div className="p-2 font-medium">
-                            <div className="font-medium">Dr. Smith</div>
-                            <div className="mt-0.5 text-xs text-white/70">ENT Doctor</div>
+                            <div className="font-medium">{role == Role.DOCTOR && "Dr. "} {user.name}</div>
+                            <div className="mt-0.5 text-xs text-white/70">{toTitleCase(role)}</div>
                         </div>
                         <div className="h-px my-2 bg-white/[0.08]" />
                         {menuItems.map((item) => (

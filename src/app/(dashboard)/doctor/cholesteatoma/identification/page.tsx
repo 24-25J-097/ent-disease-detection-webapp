@@ -1,18 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import React, {useRef, useState} from "react";
 import TextInput from "@/components/inputs/TextInput";
 import TextAreaInput from "@/components/inputs/TextAreaInput";
-import { NextPage } from "next";
-import { If } from "@/components/utils/If";
+import {NextPage} from "next";
+import {If} from "@/components/utils/If";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {CholesteatomaDiagnosisData, DiagnosisResult} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData, DiagnosisAcceptance, DiagnosisResult} from '@/types/service/Diagnosis';
 import {DiagnosisService} from '@/services/DiagnosisService';
 import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
+import {Cholesteatoma} from '@/models/Cholesteatoma';
+import useRouterApp from '@/hooks/useRouterApp';
 
 const IdentificationPage: NextPage = () => {
+
+    const formRef = useRef(null);
 
     const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | null>(null);
     const [patientId, setPatientId] = useState<string>("");
@@ -26,7 +30,8 @@ const IdentificationPage: NextPage = () => {
     const [isDisable, setIsDisable] = useState<boolean>(false);
     const [errors, setErrors] = useState<any>(null);
 
-    const { notifySuccess, notifyError } = useToast();
+    const router = useRouterApp();
+    const {notifySuccess, notifyError} = useToast();
 
     const validateFields = () => {
         setHasValidationErr([]);
@@ -59,25 +64,26 @@ const IdentificationPage: NextPage = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        if (!validateFields()) return;
+        setErrors(null);
+        if (validateFields().includes(true)) return;
 
         const diagnosisData: CholesteatomaDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
             endoscopyImage: file!
-        }
+        };
 
         try {
             setIsDisable(true);
             const response = await DiagnosisService.cholesteatomaDiagnosis(diagnosisData);
             if (response.success && response.data) {
-                const results = response.data as DiagnosisResult;
+                const results = response.data as Cholesteatoma;
                 notifySuccess(response.message);
-                setIsDisable(false);
                 setDiagnosisResult({
-                    isCholesteatoma: results.isCholesteatoma,
-                    stage: results.stage,
-                    suggestions: results.suggestions,
+                    diagnosisId: results.id!,
+                    isCholesteatoma: results.diagnosisResult!.isCholesteatoma!,
+                    stage: results.diagnosisResult!.stage,
+                    suggestions: results.diagnosisResult!.suggestions,
                 });
             }
         } catch (error:any) {
@@ -89,13 +95,6 @@ const IdentificationPage: NextPage = () => {
                 notifyError(error.response.data.message);
             }
         }
-
-        // const formData = new FormData();
-        // formData.append("patientId", patientId);
-        // formData.append("additionalInfo", additionalInfo);
-        // formData.append("endoscopyImage", file!);
-
-        console.log("Form submitted with:", {patientId, additionalInfo, file});
     };
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,6 +109,33 @@ const IdentificationPage: NextPage = () => {
         }
     };
 
+    const handleDone = async (accept: boolean) => {
+        try {
+            setIsDisable(true);
+            const data: DiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
+            const response = await DiagnosisService.cholesteatomaDiagnosisAccept(data);
+            if (response.success) {
+                notifySuccess(response.message);
+            }
+        } catch (error) {
+            if (error.response?.status >= 500) {
+                setErrors("An unexpected error occurred. Please try again.");
+            } else {
+                setErrors(error.response.data.message);
+                notifyError(error.response.data.message);
+            }
+        } finally {
+            setIsDisable(false);
+            setDiagnosisResult(null);
+            setPatientId("");
+            setAdditionalInfo("");
+            setFile(null);
+            setImagePreview("");
+            formRef.current.reset();
+            router.refresh();
+        }
+    };
+
     return (
         <>
             <section className="bg-blue-50 min-h-screen px-4">
@@ -120,7 +146,7 @@ const IdentificationPage: NextPage = () => {
                     <div>
                         <button
                             type="button"
-                            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none"
+                            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none"
                             onClick={() => alert("Redirecting to Patient List...")}
                         >
                             Patient List
@@ -134,7 +160,7 @@ const IdentificationPage: NextPage = () => {
                         <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
                             Upload Middle Ear Endoscopy
                         </h3>
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                             <If condition={!!errors}>
                                 <motion.div
                                     className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200"
@@ -167,6 +193,7 @@ const IdentificationPage: NextPage = () => {
                                     placeholder="Enter any additional details (optional)"
                                     value={additionalInfo}
                                     onTextChange={(e) => setAdditionalInfo(e.target.value)}
+                                    disabled={isDisable}
                                 />
                             </div>
                             <div>
@@ -181,6 +208,7 @@ const IdentificationPage: NextPage = () => {
                                 file:py-2 file:px-4 file:border-0 file:rounded-md file:text-white file:bg-blue-900
                                 file:cursor-pointer hover:file:bg-blue-700 
                                 ${!!fileErrMsg ? "border border-red-500" : "border border-gray-300"}`}
+                                    disabled={isDisable}
                                 />
                                 <If condition={!!fileErrMsg}>
                                     <small className="text-red-500 px-2">{fileErrMsg}</small>
@@ -194,9 +222,9 @@ const IdentificationPage: NextPage = () => {
                                             ? "opacity-50 cursor-not-allowed"
                                             : "hover:bg-blue-700"
                                     }`}
-                                    disabled={hasValidationErr.includes(true)}
+                                    disabled={hasValidationErr.includes(true) || isDisable}
                                 >
-                                    Diagnosis
+                                    Diagnose
                                 </button>
                             </div>
                         </form>
@@ -211,8 +239,16 @@ const IdentificationPage: NextPage = () => {
                                     <p>
                                         <strong>Cholesteatoma Identified: </strong>
                                         {diagnosisResult.isCholesteatoma
-                                            ? <span className="bg-red-500 rounded-md py-1 px-4 text-white">Yes</span>
-                                            : <span className="bg-green-300 rounded-md py-1 px-4 text-white">No</span>
+                                            ? <span
+                                                className="border border-red-500 rounded-md py-1 px-4 text-red-500"
+                                            >
+                                                Yes
+                                            </span>
+                                            : <span
+                                                className="border border-green-300 rounded-md py-1 px-4 text-green-300"
+                                            >
+                                                No
+                                            </span>
                                         }
                                     </p>
                                     <p>
@@ -223,6 +259,22 @@ const IdentificationPage: NextPage = () => {
                                         <strong>Suggestions: </strong>
                                         {diagnosisResult.suggestions}
                                     </p>
+                                    <div className="flex justify-end gap-x-2">
+                                        <button
+                                            type="submit"
+                                            className={`bg-red-500 text-white py-1 px-6 rounded-md hover:bg-red-700 focus:outline-none`}
+                                            onClick={() => handleDone(false)}
+                                        >
+                                            Reject
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className={`bg-green-500 text-white py-1 px-6 rounded-md hover:bg-green-700 focus:outline-none`}
+                                            onClick={() => handleDone(true)}
+                                        >
+                                            Accept
+                                        </button>
+                                    </div>
                                 </div>
                             ) : (
                                 <p className="text-gray-500 text-sm">No diagnosis available</p>
