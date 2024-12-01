@@ -13,7 +13,7 @@ export class PharyngitisAnalyzeService {
     }
 
     public static async analyze(sinusFormData: PharyngitisRequest): Promise<AppResponse<PharyngitisResult>> {
-        const ep = ApiUtils.fastApiUrl + "/pharyngitis/predict";
+        const ep = ApiUtils.fastApiUrl + "/api/pharyngitis/analyze";
         console.log(ep)
         const formData = convertToAPIFormData(sinusFormData, true);
         const res = await PharyngitisAnalyzeService.api().post<CholesteatomaDiagnosisData, AxiosAppResponse<PharyngitisResult>>(ep, formData);
