@@ -9,7 +9,7 @@ export interface Cholesteatoma {
         isCholesteatoma?: boolean;
         stage?: string;
         suggestions?: string;
-        confidenceScore?: number | "N/A";
+        confidenceScore?: number;
         prediction?: "valid" | "invalid" | "N/A";
     };
     status?: "pending" | "diagnosed" | "failed";

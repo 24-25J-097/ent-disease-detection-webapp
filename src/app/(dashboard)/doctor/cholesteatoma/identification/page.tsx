@@ -279,9 +279,9 @@ const IdentificationPage: NextPage = () => {
                                         </p>
                                         <p>
                                             <strong>Confidence Score: </strong>
-                                            {diagnosisResult.confidenceScore == 'N/A'
-                                                ? diagnosisResult.confidenceScore
-                                                : diagnosisResult.confidenceScore?.toFixed(2)}
+                                            {diagnosisResult.confidenceScore == null
+                                                ? 'N/A'
+                                                : (Math.floor(diagnosisResult.confidenceScore * 100) / 100).toFixed(2)}
                                         </p>
                                         <div className="flex justify-end gap-x-2">
                                             <button
