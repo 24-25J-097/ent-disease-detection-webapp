@@ -9,7 +9,8 @@ import {If} from "@/components/utils/If";
 import {motion} from "framer-motion";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {predictionColors, predictionText} from "@/enums/sinusitis";
+import {predictionColors, SinusitisResultEnum} from "@/enums/sinusitis";
+import LoadingModal from "@/components/loaders/LoadingModal";
 
 const IdentificationPage: NextPage = () => {
     const [analysisResult, setAnalysisResult] = useState<SinusitisResult | null>(null);
@@ -20,6 +21,7 @@ const IdentificationPage: NextPage = () => {
     const [fileErrMsg, setFileErrMsg] = useState<string>("");
     const [isDisable, setIsDisable] = useState<boolean>(false);
     const [errors, setErrors] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const {notifySuccess, notifyError} = useToast();
 
@@ -43,6 +45,7 @@ const IdentificationPage: NextPage = () => {
 
     const handleSubmit = async (event: React.FormEvent) => {
         setIsDisable(true)
+        setIsLoading(true);
         event.preventDefault();
         if (!validateFields()) return;
 
@@ -69,6 +72,7 @@ const IdentificationPage: NextPage = () => {
             }
         } finally {
             setIsDisable(false)
+            setIsLoading(false);
         }
 
 
@@ -152,22 +156,43 @@ const IdentificationPage: NextPage = () => {
                     >
                         <h4 className="text-blue-500 text-xl font-bold mb-4">Analyzed Result</h4>
                         {analysisResult ? (
-                            <div className="w-full text-gray-700 space-y-4 text-center">
-                                {/* Display Prediction with Dynamic Colors */}
-                                <span
-                                    className={`rounded-md py-1 px-4 text-white ${
-                                        predictionColors[analysisResult.prediction]
-                                    }`}
-                                >
-                                    {predictionText[analysisResult.prediction]}
-                                </span>
-                                {/* Display Confidence Score */}
-                                {analysisResult.confidence_score !== undefined && (
-                                    <p className="text-sm text-gray-500">
-                                        Confidence Score: {analysisResult.confidence_score.toFixed(2)}
+                            analysisResult.prediction === SinusitisResultEnum.invalid ?
+                                <p className="text-gray-500 text-sm">
+                                    <strong>Invalid: </strong>
+                                    <span className="text-red-500 font-bold">
+                                            An irrelevant image has been submitted.
+                                        </span>
+                                </p>
+                                :
+                                <div className="w-full text-gray-700 space-y-4">
+                                    <p>
+                                        <strong>Sinusitis Identified: </strong>
+                                        {analysisResult.isSinusitis
+                                            ? <span className="border border-red-500 rounded-md py-1 px-4 text-red-500">
+                                                    Yes
+                                                </span>
+                                            : <span
+                                                className="border border-green-300 rounded-md py-1 px-4 text-green-300">
+                                                    No
+                                                </span>
+                                        }
                                     </p>
-                                )}
-                            </div>
+                                    <div>
+                                        <strong>Current Stage: </strong>
+                                        <span
+                                            className={predictionColors[analysisResult.prediction]}>
+                                            {analysisResult.label}
+                                        </span>
+                                    </div>
+                                    <p>
+                                        <strong>Suggestions: </strong>
+                                        {analysisResult.suggestions}
+                                    </p>
+                                    <p>
+                                        <strong>Confidence Score: </strong>
+                                        {analysisResult.confidence_score?.toFixed(2)}
+                                    </p>
+                                </div>
                         ) : (
                             <p className="text-gray-500 text-sm">No diagnosis available</p>
                         )}
@@ -220,6 +245,7 @@ const IdentificationPage: NextPage = () => {
                     />
                 </div>
             </ReactModal>
+            <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"} />
         </section>
     );
 };

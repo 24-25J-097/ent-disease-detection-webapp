@@ -8,11 +8,11 @@ export enum SinusitisResultEnum {
 
 // Map enum values to their respective colors
 export const predictionColors: { [key in SinusitisResultEnum]: string } = {
-    [SinusitisResultEnum.valid]: "bg-green-500 py-2",
-    [SinusitisResultEnum.invalid]: "bg-gray-500 py-2",
-    [SinusitisResultEnum.mild]: "bg-green-200 !text-black py-2",
-    [SinusitisResultEnum.moderate]: "bg-orange-500 py-2",
-    [SinusitisResultEnum.severe]: "bg-red-500 py-2",
+    [SinusitisResultEnum.valid]: "text-green-500",
+    [SinusitisResultEnum.invalid]: "text-gray-500",
+    [SinusitisResultEnum.mild]: "text-green-500",
+    [SinusitisResultEnum.moderate]: "text-orange-500",
+    [SinusitisResultEnum.severe]: "text-red-500",
 };
 // Map enum values to their respective colors
 export const predictionText: { [key in SinusitisResultEnum]: string } = {
