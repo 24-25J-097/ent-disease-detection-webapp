@@ -14,6 +14,7 @@ import {motion} from "framer-motion";
 import {Cholesteatoma} from '@/models/Cholesteatoma';
 import useRouterApp from '@/hooks/useRouterApp';
 import {number} from 'prop-types';
+import LoadingModal from '@/components/loaders/LoadingModal';
 
 const IdentificationPage: NextPage = () => {
 
@@ -30,6 +31,8 @@ const IdentificationPage: NextPage = () => {
     const [fileErrMsg, setFileErrMsg] = useState<string>("");
     const [isDisable, setIsDisable] = useState<boolean>(false);
     const [errors, setErrors] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading2, setIsLoading2] = useState<boolean>(false);
 
     const router = useRouterApp();
     const {notifySuccess, notifyError} = useToast();
@@ -75,6 +78,7 @@ const IdentificationPage: NextPage = () => {
         };
 
         try {
+            setIsLoading(true);
             setIsDisable(true);
             const response = await DiagnosisService.cholesteatomaDiagnosis(diagnosisData);
             if (response.success && response.data) {
@@ -97,6 +101,8 @@ const IdentificationPage: NextPage = () => {
                 setErrors(error.response.data.message);
                 notifyError(error.response.data.message);
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -114,6 +120,7 @@ const IdentificationPage: NextPage = () => {
 
     const handleDone = async (accept: boolean) => {
         try {
+            setIsLoading2(true);
             setIsDisable(true);
             const data: DiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
             const response = await DiagnosisService.cholesteatomaDiagnosisAccept(data);
@@ -135,6 +142,7 @@ const IdentificationPage: NextPage = () => {
             setFile(null);
             setImagePreview("");
             formRef.current.reset();
+            setIsLoading2(false);
             router.refresh();
         }
     };
@@ -345,6 +353,8 @@ const IdentificationPage: NextPage = () => {
                     />
                 </div>
             </ReactModal>
+            <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"} />
+            <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"} />
         </>
     );
 };

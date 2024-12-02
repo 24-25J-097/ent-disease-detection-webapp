@@ -5,7 +5,7 @@ export type ConfirmationModalProps = {
     title: string;
     message: string;
     btnText: string;
-}
+};
 
 export type CriticalConfirmationModalProps = {
     isVisible: boolean;
@@ -15,4 +15,10 @@ export type CriticalConfirmationModalProps = {
     message: string;
     subMessage?: string;
     btnText: string;
-}
+};
+
+export type LoadingModalProps = {
+    isOpen: boolean;
+    text?: string;
+    imagePath?: string;
+};
