@@ -1,6 +1,6 @@
 
 export interface Cholesteatoma {
-    id: string;
+    _id: string;
     diagnosticianId?: string;
     patientId: string;
     additionalInformation?: string;
@@ -9,6 +9,8 @@ export interface Cholesteatoma {
         isCholesteatoma?: boolean;
         stage?: string;
         suggestions?: string;
+        confidenceScore?: number | "N/A";
+        prediction?: "valid" | "invalid" | "N/A";
     };
     status?: "pending" | "diagnosed" | "failed";
     createdAt?: Date;

@@ -3,6 +3,8 @@ export interface DiagnosisResult {
     isCholesteatoma: boolean;
     stage?: string;
     suggestions?: string;
+    confidenceScore?: number | "N/A";
+    prediction?: "valid" | "invalid" | "N/A";
 }
 
 export interface CholesteatomaDiagnosisData {

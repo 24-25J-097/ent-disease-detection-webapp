@@ -13,6 +13,7 @@ import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
 import {Cholesteatoma} from '@/models/Cholesteatoma';
 import useRouterApp from '@/hooks/useRouterApp';
+import {number} from 'prop-types';
 
 const IdentificationPage: NextPage = () => {
 
@@ -80,13 +81,15 @@ const IdentificationPage: NextPage = () => {
                 const results = response.data as Cholesteatoma;
                 notifySuccess(response.message);
                 setDiagnosisResult({
-                    diagnosisId: results.id!,
+                    diagnosisId: results._id!,
                     isCholesteatoma: results.diagnosisResult!.isCholesteatoma!,
                     stage: results.diagnosisResult!.stage,
                     suggestions: results.diagnosisResult!.suggestions,
+                    confidenceScore: results.diagnosisResult!.confidenceScore,
+                    prediction: results.diagnosisResult!.prediction,
                 });
             }
-        } catch (error:any) {
+        } catch (error: any) {
             setIsDisable(false);
             if (error.response?.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
@@ -235,47 +238,60 @@ const IdentificationPage: NextPage = () => {
                         >
                             <h4 className="text-blue-500 text-xl font-bold mb-4">Diagnosis Result</h4>
                             {diagnosisResult ? (
-                                <div className="w-full text-gray-700 space-y-4">
-                                    <p>
-                                        <strong>Cholesteatoma Identified: </strong>
-                                        {diagnosisResult.isCholesteatoma
-                                            ? <span
-                                                className="border border-red-500 rounded-md py-1 px-4 text-red-500"
+                                diagnosisResult.prediction === 'invalid'
+                                    ? <p className="text-gray-500 text-sm">
+                                        <strong>Invalid: </strong>
+                                        <span className="text-red-500 font-bold">
+                                            An irrelevant image has been submitted.
+                                        </span>
+                                      </p>
+                                    : <div className="w-full text-gray-700 space-y-4">
+                                        <p>
+                                            <strong>Cholesteatoma Identified: </strong>
+                                            {diagnosisResult.isCholesteatoma
+                                                ? <span
+                                                    className="border border-red-500 rounded-md py-1 px-4 text-red-500"
+                                                >
+                                                    Yes
+                                                </span>
+                                                : <span
+                                                    className="border border-green-300 rounded-md py-1 px-4 text-green-300"
+                                                >
+                                                    No
+                                                </span>
+                                            }
+                                        </p>
+                                        <p>
+                                            <strong>Current Stage: </strong>
+                                            {diagnosisResult.stage}
+                                        </p>
+                                        <p>
+                                            <strong>Suggestions: </strong>
+                                            {diagnosisResult.suggestions}
+                                        </p>
+                                        <p>
+                                            <strong>Confidence Score: </strong>
+                                            {diagnosisResult.confidenceScore == 'N/A'
+                                                ? diagnosisResult.confidenceScore
+                                                : diagnosisResult.confidenceScore?.toFixed(2)}
+                                        </p>
+                                        <div className="flex justify-end gap-x-2">
+                                            <button
+                                                type="submit"
+                                                className={`bg-red-500 text-white py-1 px-6 rounded-md hover:bg-red-700 focus:outline-none`}
+                                                onClick={() => handleDone(false)}
                                             >
-                                                Yes
-                                            </span>
-                                            : <span
-                                                className="border border-green-300 rounded-md py-1 px-4 text-green-300"
+                                                Reject
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                className={`bg-green-500 text-white py-1 px-6 rounded-md hover:bg-green-700 focus:outline-none`}
+                                                onClick={() => handleDone(true)}
                                             >
-                                                No
-                                            </span>
-                                        }
-                                    </p>
-                                    <p>
-                                        <strong>Current Stage: </strong>
-                                        {diagnosisResult.stage}
-                                    </p>
-                                    <p>
-                                        <strong>Suggestions: </strong>
-                                        {diagnosisResult.suggestions}
-                                    </p>
-                                    <div className="flex justify-end gap-x-2">
-                                        <button
-                                            type="submit"
-                                            className={`bg-red-500 text-white py-1 px-6 rounded-md hover:bg-red-700 focus:outline-none`}
-                                            onClick={() => handleDone(false)}
-                                        >
-                                            Reject
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className={`bg-green-500 text-white py-1 px-6 rounded-md hover:bg-green-700 focus:outline-none`}
-                                            onClick={() => handleDone(true)}
-                                        >
-                                            Accept
-                                        </button>
+                                                Accept
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
                             ) : (
                                 <p className="text-gray-500 text-sm">No diagnosis available</p>
                             )}
