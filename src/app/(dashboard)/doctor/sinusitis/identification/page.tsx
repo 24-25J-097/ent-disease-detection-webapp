@@ -27,27 +27,42 @@ const IdentificationPage: NextPage = () => {
 
     const validateFields = () => {
         setHasValidationErr([]);
+        const invalidImageTypes = ["image/avif"];
+
         if (!file) {
             setFileErrMsg("Please choose the X Ray.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         } else if (!file.type.startsWith("image/")) {
             setFileErrMsg("Only image files are allowed.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
+        } else if (invalidImageTypes.includes(file.type)) {
+            setFileErrMsg(
+                `Unsupported file format. Allowed formats are: ${invalidImageTypes
+                    .map((type) => type.split("/")[1])
+                    .join(", ")}.`
+            );
+            setTimeout(() => setFileErrMsg(""), 3000);
+            hasValidationErr.push(true);
+            return false;
         } else if (file.size > 10 * 1024 * 1024) {
             setFileErrMsg("Image file size must be less than 10MB.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         }
-        return hasValidationErr;
+        return true;
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
-        setIsDisable(true)
-        setIsLoading(true);
         event.preventDefault();
         if (!validateFields()) return;
+
+        setIsDisable(true)
+        setIsLoading(true);
 
         const formData: SinusitisRequest = {
             file: file!
@@ -160,7 +175,7 @@ const IdentificationPage: NextPage = () => {
                                 <p className="text-gray-500 text-sm">
                                     <strong>Invalid: </strong>
                                     <span className="text-red-500 font-bold">
-                                            An irrelevant image has been submitted.
+                                            An irrelevant image has been submitted. {analysisResult.suggestions}
                                         </span>
                                 </p>
                                 :
@@ -245,7 +260,7 @@ const IdentificationPage: NextPage = () => {
                     />
                 </div>
             </ReactModal>
-            <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"} />
+            <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"}/>
         </section>
     );
 };

@@ -27,27 +27,42 @@ const IdentificationPage: NextPage = () => {
 
     const validateFields = () => {
         setHasValidationErr([]);
+        const invalidImageTypes = ["image/avif"];
+
         if (!file) {
             setFileErrMsg("Please choose the Throat image.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         } else if (!file.type.startsWith("image/")) {
             setFileErrMsg("Only image files are allowed.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
+        } else if (invalidImageTypes.includes(file.type)) {
+            setFileErrMsg(
+                `Unsupported file format. Allowed formats are: ${invalidImageTypes
+                    .map((type) => type.split("/")[1])
+                    .join(", ")}.`
+            );
+            setTimeout(() => setFileErrMsg(""), 3000);
+            hasValidationErr.push(true);
+            return false;
         } else if (file.size > 10 * 1024 * 1024) {
             setFileErrMsg("Image file size must be less than 10MB.");
             setTimeout(() => setFileErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         }
-        return hasValidationErr;
+        return true;
     };
 
     const handleSubmit = async (event: React.FormEvent) => {
-        setIsDisable(true)
-        setIsLoading(true);
         event.preventDefault();
         if (!validateFields()) return;
+
+        setIsDisable(true)
+        setIsLoading(true);
 
         const formData: PharyngitisRequest = {
             file: file!
@@ -166,7 +181,7 @@ const IdentificationPage: NextPage = () => {
                                 :
                                 <div className="w-full text-gray-700 space-y-4">
                                     <p>
-                                        <strong>Sinusitis Identified: </strong>
+                                        <strong>Pharyngitis Identified: </strong>
                                         {analysisResult.isDiseased
                                             ? <span className="border border-red-500 rounded-md py-1 px-4 text-red-500">
                                                     Yes
