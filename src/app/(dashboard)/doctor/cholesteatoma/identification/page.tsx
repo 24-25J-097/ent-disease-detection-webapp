@@ -147,6 +147,18 @@ const IdentificationPage: NextPage = () => {
         }
     };
 
+    const handleRest = async () => {
+        setIsDisable(false);
+        setDiagnosisResult(null);
+        setPatientId("");
+        setAdditionalInfo("");
+        setFile(null);
+        setImagePreview("");
+        formRef.current.reset();
+        setIsLoading2(false);
+        router.refresh();
+    }
+
     return (
         <>
             <section className="bg-blue-50 min-h-screen px-4">
@@ -247,12 +259,26 @@ const IdentificationPage: NextPage = () => {
                             <h4 className="text-blue-500 text-xl font-bold mb-4">Diagnosis Result</h4>
                             {diagnosisResult ? (
                                 diagnosisResult.prediction === 'invalid'
-                                    ? <p className="text-gray-500 text-sm">
-                                        <strong>Invalid: </strong>
-                                        <span className="text-red-500 font-bold">
-                                            An irrelevant image has been submitted.
-                                        </span>
-                                      </p>
+                                    ? <div className="w-full text-gray-700 space-y-4">
+                                        <p className="text-gray-500 text-sm">
+                                            <strong>Invalid: </strong>
+                                            <span className="text-red-500 font-bold">
+                                                An irrelevant image has been submitted.
+                                            </span>
+                                        </p>
+                                        <p className="text-gray-500 text-sm">
+                                            <strong>Please upload valid endoscopy image.</strong>
+                                        </p>
+                                        <div className="flex justify-end gap-x-2">
+                                            <button
+                                                type="submit"
+                                                className={`bg-gray-500 text-white py-1 px-6 rounded-md hover:bg-gray-700 focus:outline-none`}
+                                                onClick={() => handleRest()}
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
+                                    </div>
                                     : <div className="w-full text-gray-700 space-y-4">
                                         <p>
                                             <strong>Cholesteatoma Identified: </strong>
