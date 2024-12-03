@@ -260,12 +260,14 @@ const IdentificationPage: NextPage = () => {
                             {diagnosisResult ? (
                                 diagnosisResult.prediction === 'invalid'
                                     ? <div className="w-full text-gray-700 space-y-4">
-                                        <p className="text-gray-500 text-sm">
-                                            <strong>Invalid: </strong>
-                                            <span className="text-red-500 font-bold">
+                                        <div className="row-auto flex gap-1">
+                                            <p className="text-gray-500 text-sm">
+                                                <strong>Invalid: </strong>
+                                            </p>
+                                            <p className="text-red-500 font-bold">
                                                 An irrelevant image has been submitted.
-                                            </span>
-                                        </p>
+                                            </p>
+                                        </div>
                                         <p className="text-gray-500 text-sm">
                                             <strong>Please upload valid endoscopy image.</strong>
                                         </p>
@@ -295,14 +297,18 @@ const IdentificationPage: NextPage = () => {
                                                 </span>
                                             }
                                         </p>
-                                        <p>
-                                            <strong>Current Stage: </strong>
-                                            {diagnosisResult.stage}
-                                        </p>
-                                        <p>
-                                            <strong>Suggestions: </strong>
-                                            {diagnosisResult.suggestions}
-                                        </p>
+                                        <div className="row-auto flex gap-1">
+                                            <p>
+                                                <strong>Current Stage: </strong>
+                                            </p>
+                                            <p>{diagnosisResult.stage}</p>
+                                        </div>
+                                        <div className="row-auto flex gap-1">
+                                            <p>
+                                                <strong>Suggestions: </strong>
+                                            </p>
+                                            <p>{diagnosisResult.suggestions}</p>
+                                        </div>
                                         <p>
                                             <strong>Confidence Score: </strong>
                                             {diagnosisResult.confidenceScore == null
