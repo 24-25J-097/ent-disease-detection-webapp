@@ -76,6 +76,8 @@ const IdentificationPage: NextPage = () => {
                 notifySuccess(response.message);
                 setIsDisable(false);
                 setAnalysisResult(results);
+            }else {
+                setErrors(response.message || "Something went wrong.");
             }
         } catch (error: any) {
             setIsDisable(false);
