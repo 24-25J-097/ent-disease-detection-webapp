@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 import axios from "axios";
+import {ApiUtils} from "@/services/api-service/ApiUtils";
 
 const PatientsPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -31,7 +32,8 @@ const PatientsPage = () => {
     formData.append("file", imageFile);
 
     try {
-      const response = await axios.post("https://utterly-supreme-marmoset.ngrok-free.app/run-inference", formData, {
+      //ApiUtils.fastApiUrl + "/api/sinusitis/analyze";
+      const response = await axios.post(ApiUtils.fastApiUrl + "/api/foreign/run-inference", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -53,7 +55,7 @@ const PatientsPage = () => {
     formData.append("image", imageFile);
 
     try {
-      const response = await axios.post("https://utterly-supreme-marmoset.ngrok-free.app/detect", formData, {
+      const response = await axios.post(ApiUtils.fastApiUrl + "/api/foreign/detect", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
