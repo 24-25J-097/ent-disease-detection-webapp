@@ -31,7 +31,7 @@ const PatientsPage = () => {
     formData.append("file", imageFile);
 
     try {
-      const response = await axios.post("http://localhost:8000/run-inference", formData, {
+      const response = await axios.post("https://utterly-supreme-marmoset.ngrok-free.app/run-inference", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
@@ -53,7 +53,7 @@ const PatientsPage = () => {
     formData.append("image", imageFile);
 
     try {
-      const response = await axios.post("http://localhost:8000/detect", formData, {
+      const response = await axios.post("https://utterly-supreme-marmoset.ngrok-free.app/detect", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
