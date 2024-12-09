@@ -92,15 +92,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 <img src="https://github.com/user-attachments/assets/054438db-43ac-48f2-be67-b63a009d30ab" width="500">
 <img src="https://github.com/user-attachments/assets/82425bab-0cc7-4b8b-8e9d-e125986c5293" width="500"> 
 
-### Pharyngitis View X-Ray
+### Pharyngitis Oral endoscopy images Analyze
 <img src="https://github.com/user-attachments/assets/cc2afb92-5d98-499a-951b-ff2e9abef7e7" width="500">
 <img src="https://github.com/user-attachments/assets/608593a4-f67e-4bd7-8448-8fa198fcce81" width="500"> 
 
-### Cholesteatoma
+### Cholesteatoma Analyze
 <img src="https://github.com/user-attachments/assets/c1b39cb1-dd00-4790-b013-3c5be1d43cbe" width="500">
 <img src="https://github.com/user-attachments/assets/0867c596-69b0-4b23-9b80-06b776a8a03b" width="500">
 
-### Foreign Body
+### Foreign Body Detection
 <img src="https://github.com/user-attachments/assets/5c722317-7db8-44a9-9963-e03ea13a5460" width="500">
 <img src="https://github.com/user-attachments/assets/a07e737e-0260-4535-84c2-c3c5cb819bd6" width="500">
 
