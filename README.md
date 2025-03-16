@@ -1,4 +1,4 @@
-# **ENT Insight - Flutter App**  
+# **ENT Insight - Web App**  
 
 ENT Insight is a mobile application designed for analyzing Medical images related to ENT (Ear, Nose, and Throat) conditions using Deep learning APIs.
  
