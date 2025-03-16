@@ -28,12 +28,6 @@ export const AdminMenuItems: MenuItem[] = [
                 icon: "Roles",
                 link: `${URLBase.ADMIN_DASHBOARD}/roles`,
             },
-            {
-                id: 2,
-                title: "Permissions",
-                icon: "Permissions",
-                link: `${URLBase.ADMIN_DASHBOARD}/permissions`,
-            },
         ],
         isDivider: true,
     },

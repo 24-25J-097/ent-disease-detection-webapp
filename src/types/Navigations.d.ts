@@ -28,7 +28,6 @@ export type MenuItem = MenuItemWithLink | MenuItemWithSubMenu | MenuItemWithLink
 export type MenuItemListProps = {
     index: any;
     item: MenuItem;
-    menuPlace: 'top' | 'side';
 }
 
 export type MenuProps = {

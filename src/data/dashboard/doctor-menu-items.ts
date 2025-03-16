@@ -57,12 +57,12 @@ export const DoctorMenuItems: MenuItem[] = [
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/identification`,
             },
-            /*{
+            {
                 id: 3,
                 title: "Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/reports`,
-            },*/
+            },
         ],
         isDivider: false,
     },

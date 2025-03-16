@@ -24,7 +24,7 @@ const SideMenu: React.FC<MenuProps> = ({ menuItems }) => {
                 <ul id={uiRandomKey()}>
                 {menuItems.map((item, index) => (
                         <React.Fragment key={uiRandomKey()}>
-                            <MenuItemList key={index} index={index} item={item} menuPlace={"side"}/>
+                            <MenuItemList key={index} index={index} item={item}/>
                             {item.isDivider && <li className="side-nav__divider my-6"></li>}
                         </React.Fragment>
                     ))}
