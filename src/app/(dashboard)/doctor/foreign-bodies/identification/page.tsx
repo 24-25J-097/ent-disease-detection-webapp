@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useRef } from "react";
 import axios from "axios";
-import {ApiUtils} from "@/services/api-service/ApiUtils";
+import { ApiUtils } from "@/services/api-service/ApiUtils";
 import Image from 'next/image';
 
 const PatientsPage = () => {
@@ -33,7 +33,6 @@ const PatientsPage = () => {
     formData.append("file", imageFile);
 
     try {
-      //ApiUtils.fastApiUrl + "/api/sinusitis/analyze";
       const response = await axios.post(ApiUtils.fastApiUrl + "/api/foreign/run-inference", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -184,9 +183,9 @@ const PatientsPage = () => {
             src={imagePreview}
             alt="Uploaded"
             onLoad={handleImageLoad}
-            style={{ maxWidth: "100%" }}
-            width={100}
-            height={100}
+            layout="intrinsic"
+            width={imageDimensions.width}
+            height={imageDimensions.height}
           />
           {drawBoundingBoxes()}
         </div>
