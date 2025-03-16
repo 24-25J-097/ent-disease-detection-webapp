@@ -29,7 +29,7 @@ export function middleware(req: NextRequest) {
             const isNotSamePath = !(url.pathname).includes(roleURL || "");
 
             if (isNotSamePath) {
-                if (Object.values(Role).includes(role)) {
+                if (Object.values(Role).includes(role as Role)) {
                     url.pathname = `/${roleURL}`;
                 } else {
                     url.pathname = '/';

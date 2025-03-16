@@ -15,6 +15,8 @@ import {useToast} from "@/providers/ToastProvider";
 import {SignedUpAs, Source} from '@/enums/general';
 import Image from 'next/image';
 import useRouterApp from '@/hooks/useRouterApp';
+import {AxiosError} from 'axios';
+import {ErrorResponseData} from '@/types/Common';
 
 const LoginPage: NextPage = () => {
 
@@ -83,18 +85,19 @@ const LoginPage: NextPage = () => {
             if (!validateData(userLoginData).includes(true)) {
                 setIsDisable(true);
                 const res = await login({userLoginData});
-                notifySuccess(res.message);
+                notifySuccess(res!.message);
             } else {
                 setIsDisable(false);
                 console.error('SIGN IN FAILED: Please enter valid data :)');
             }
         } catch (error) {
             setIsDisable(false);
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response.data.message);
-                notifyError(error.response.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         }
     };
@@ -117,11 +120,15 @@ const LoginPage: NextPage = () => {
             >
                 <div className="md:w-1/2 px-4 md:pr-10 md:pl-4 m-5">
                     <h2 className="font-bold text-2xl md:text-3xl text-blue-600">Login</h2>
-                    <p className="text-sm mt-4 text-[#002D74]">If you're an authorized user, log in seamlessly.</p>
+                    <p className="text-sm mt-4 text-[#002D74]">
+                        If you&apos;re an authorized user, log in seamlessly.
+                    </p>
 
                     <If condition={!!errors}>
                         <div
-                            className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200 mt-4">
+                            className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8
+                            border-x-red-200 mt-4"
+                        >
                             {errors}
                         </div>
                     </If>

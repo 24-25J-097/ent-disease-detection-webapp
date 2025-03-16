@@ -17,12 +17,13 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
     const [selectedOption, setSelectedOption] = useState<string | number>(selectedOptionId || "");
     const [isOpen, setIsOpen] = useState<boolean>(false);
     const [openUpward, setOpenUpward] = useState<boolean>(false);
-    const dropdownRef = useRef(null);
-    const buttonRef = useRef(null);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+            if (dropdownRef.current
+                && ('contains' in dropdownRef.current && !dropdownRef.current?.contains(event.target as Node))) {
                 setIsOpen(false);
             }
         };
@@ -37,11 +38,17 @@ const DropdownButton: React.FC<DropdownButtonProps> = ({
     useEffect(() => {
         const updateDropdownPosition = () => {
             if (isOpen && buttonRef.current && dropdownRef.current) {
-                const buttonRect = buttonRef.current.getBoundingClientRect();
-                const dropdownHeight = dropdownRef.current.getBoundingClientRect().height;
+                let buttonRect;
+                let dropdownHeight;
+                if ('getBoundingClientRect' in buttonRef.current) {
+                    buttonRect = buttonRef.current.getBoundingClientRect();
+                }
+                if ('getBoundingClientRect' in dropdownRef.current) {
+                    dropdownHeight = dropdownRef.current.getBoundingClientRect().height;
+                }
                 const viewportHeight = window.innerHeight;
 
-                if (buttonRect.bottom + dropdownHeight > viewportHeight) {
+                if ((buttonRect?.bottom ?? 0) + (dropdownHeight ?? 0) > viewportHeight) {
                     setOpenUpward(true);
                 } else {
                     setOpenUpward(false);

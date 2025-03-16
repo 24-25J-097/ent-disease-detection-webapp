@@ -27,13 +27,13 @@ const MenuItemList: React.FC<MenuItemListProps> = ({item, index, menuPlace}) => 
     useEffect(() => {
         if (!item.isRootMenu) return;
 
-        const splitUrlAfterRole = (url, role) => {
+        const splitUrlAfterRole = (url: string, role: string) => {
             const regex = new RegExp(`(.*\/${role})(\/.*)?`);
             const match = url.match(regex);
             return match ? [match[1], match[2]] : [url];
         };
 
-        const isSubMenu = (menuLink, currentPath, role) => {
+        const isSubMenu = (menuLink: string, currentPath: string, role: string) => {
             const [beforeMenuLink, afterMenuLink] = splitUrlAfterRole(menuLink, role);
             const [beforeCurrentPath, afterCurrentPath] = splitUrlAfterRole(currentPath, role);
             const menuLinkSegments = afterMenuLink ? afterMenuLink.split('/') : [];
@@ -49,7 +49,10 @@ const MenuItemList: React.FC<MenuItemListProps> = ({item, index, menuPlace}) => 
 
         const updateMenuClassAndClick = () => {
             let classes = "root-menu";
-            if ((pathName === item.link) || (isSubMenu(item.link || "", pathName, role))) {
+            if (
+                (pathName === item.link)
+                || (isSubMenu(item.link || "", pathName, String(role)))
+            ) {
                 classes += isTopMenu ? " top-menu--active" : " side-menu--active";
                 if (menuLinkRef.current?.click) {
                     if ("click" in menuLinkRef.current) {
@@ -65,7 +68,7 @@ const MenuItemList: React.FC<MenuItemListProps> = ({item, index, menuPlace}) => 
             isTopMenu ? `.top-menu[data-link="${item.link}"]` : `.side-menu[data-link="${item.link}"]`
         );
 
-    }, [isTopMenu, item.isRootMenu, item.link, pathName]);
+    }, [isTopMenu, item.isRootMenu, item.link, pathName, role]);
 
     const handleMenuClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
         const target = e.currentTarget;

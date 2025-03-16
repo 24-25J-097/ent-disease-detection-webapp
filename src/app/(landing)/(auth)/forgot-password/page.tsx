@@ -12,6 +12,8 @@ import {trimText} from "@/utils/string-formatters";
 import {If} from "@/components/utils/If";
 import {useToast} from "@/providers/ToastProvider";
 import {useRouter} from "next/navigation";
+import {AxiosError} from 'axios';
+import {ErrorResponseData} from '@/types/Common';
 
 const ForgotPasswordPage: NextPage = () => {
 
@@ -64,8 +66,8 @@ const ForgotPasswordPage: NextPage = () => {
             if (!validateData(forgotPswData).includes(true)) {
                 setIsDisable(true);
                 const res = await forgotPassword({forgotPswData});
-                setStatus(res.message);
-                notifySuccess(res.message);
+                setStatus(res!.message);
+                notifySuccess(res!.message);
                 setTimeout(() => router.push(`/password-reset?email=${forgotPswData.email}`), 3000);
             } else {
                 setIsDisable(false);
@@ -73,11 +75,12 @@ const ForgotPasswordPage: NextPage = () => {
             }
         } catch (error) {
             setIsDisable(false);
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response.data.message);
-                notifyError(error.response.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         }
     };

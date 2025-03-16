@@ -11,6 +11,8 @@ import Image from 'next/image';
 import ReactModal from "react-modal";
 import LoadingModal from "@/components/loaders/LoadingModal";
 import {PharyngitisPredictionColors, PharyngitisResultEnum} from "@/enums/pharyngitis";
+import {AxiosError} from 'axios';
+import {ErrorResponseData} from '@/types/Common';
 
 const IdentificationPage: NextPage = () => {
     const [analysisResult, setAnalysisResult] = useState<PharyngitisResult | null>(null);
@@ -81,11 +83,12 @@ const IdentificationPage: NextPage = () => {
             }
         } catch (error: any) {
             setIsDisable(false);
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response.data.message);
-                notifyError(error.response.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         } finally {
             setIsDisable(false)

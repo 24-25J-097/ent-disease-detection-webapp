@@ -14,6 +14,8 @@ import {If} from "@/components/utils/If";
 import {useToast} from "@/providers/ToastProvider";
 import PasswordInput from "@/components/inputs/PasswordInput";
 import {useParams, useRouter, useSearchParams} from "next/navigation";
+import {AxiosError} from 'axios';
+import {ErrorResponseData} from '@/types/Common';
 
 const PasswordResetTokenPage: NextPage = () => {
 
@@ -121,8 +123,8 @@ const PasswordResetTokenPage: NextPage = () => {
             if (!validateData(resetPswData).includes(true)) {
                 setIsDisable(true);
                 const res = await resetPassword({ resetPswData });
-                setStatus(res.message);
-                notifySuccess(res.message);
+                setStatus(res!.message);
+                notifySuccess(res!.message);
                 setTimeout(() => router.push(`/login`), 1000);
             } else {
                 setIsDisable(false);
@@ -130,11 +132,12 @@ const PasswordResetTokenPage: NextPage = () => {
             }
         } catch (error) {
             setIsDisable(false);
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response?.data.message);
-                notifyError(error.response?.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         }
     };

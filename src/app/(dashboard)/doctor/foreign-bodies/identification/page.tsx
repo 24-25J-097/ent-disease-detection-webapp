@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import axios from "axios";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
+import Image from 'next/image';
 
 const PatientsPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -178,12 +179,14 @@ const PatientsPage = () => {
 
       {imagePreview && (
         <div style={{ position: "relative", display: "inline-block", marginTop: "20px" }}>
-          <img
+          <Image
             ref={imageRef}
             src={imagePreview}
             alt="Uploaded"
             onLoad={handleImageLoad}
             style={{ maxWidth: "100%" }}
+            width={100}
+            height={100}
           />
           {drawBoundingBoxes()}
         </div>

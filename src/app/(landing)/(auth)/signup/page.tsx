@@ -15,6 +15,8 @@ import {useToast} from "@/providers/ToastProvider";
 import {Role} from '@/enums/access';
 import Image from 'next/image';
 import useRouterApp from '@/hooks/useRouterApp';
+import {AxiosError} from 'axios';
+import {ErrorResponseData} from '@/types/Common';
 
 const SignUpPage: NextPage = () => {
 
@@ -115,18 +117,19 @@ const SignUpPage: NextPage = () => {
             if (!validateData(userSignUpData).includes(true)) {
                 setIsDisable(true);
                 const res = await register({userSignUpData});
-                notifySuccess(res.message);
+                notifySuccess(res!.message);
             } else {
                 setIsDisable(false);
                 console.error('SIGN UP FAILED: Please enter valid data :)');
             }
         } catch (error) {
             setIsDisable(false);
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response.data.message);
-                notifyError(error.response.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         }
     };

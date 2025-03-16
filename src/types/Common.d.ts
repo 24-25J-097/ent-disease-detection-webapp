@@ -8,3 +8,8 @@ export type GetLucideReactIconProps = {
     icon: string;
     className?: string;
 }
+
+export interface ErrorResponseData<T = any> {
+    message: string;
+    data?: T;
+}

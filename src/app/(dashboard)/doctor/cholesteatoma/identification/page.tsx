@@ -13,12 +13,13 @@ import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
 import {Cholesteatoma} from '@/models/Cholesteatoma';
 import useRouterApp from '@/hooks/useRouterApp';
-import {number} from 'prop-types';
 import LoadingModal from '@/components/loaders/LoadingModal';
+import {AxiosError} from 'axios';
+import {ErrorResponseData} from '@/types/Common';
 
 const IdentificationPage: NextPage = () => {
 
-    const formRef = useRef(null);
+    const formRef = useRef<HTMLFormElement | null>(null);
 
     const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | null>(null);
     const [patientId, setPatientId] = useState<string>("");
@@ -95,11 +96,12 @@ const IdentificationPage: NextPage = () => {
             }
         } catch (error: any) {
             setIsDisable(false);
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response.data.message);
-                notifyError(error.response.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         } finally {
             setIsLoading(false);
@@ -128,11 +130,12 @@ const IdentificationPage: NextPage = () => {
                 notifySuccess(response.message);
             }
         } catch (error) {
-            if (error.response?.status >= 500) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(error.response.data.message);
-                notifyError(error.response.data.message);
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
             }
         } finally {
             setIsDisable(false);
@@ -141,7 +144,9 @@ const IdentificationPage: NextPage = () => {
             setAdditionalInfo("");
             setFile(null);
             setImagePreview("");
-            formRef.current.reset();
+            if (formRef.current && 'reset' in formRef.current) {
+                formRef.current.reset();
+            }
             setIsLoading2(false);
             router.refresh();
         }
@@ -154,10 +159,12 @@ const IdentificationPage: NextPage = () => {
         setAdditionalInfo("");
         setFile(null);
         setImagePreview("");
-        formRef.current.reset();
+        if (formRef.current && 'reset' in formRef.current) {
+            formRef.current.reset();
+        }
         setIsLoading2(false);
         router.refresh();
-    }
+    };
 
     return (
         <>
@@ -385,8 +392,8 @@ const IdentificationPage: NextPage = () => {
                     />
                 </div>
             </ReactModal>
-            <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"} />
-            <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"} />
+            <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"}/>
+            <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"}/>
         </>
     );
 };

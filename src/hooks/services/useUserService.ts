@@ -12,18 +12,20 @@ export const useUserService = () => {
     const fetchUser = useCallback(async () => {
         try {
             const response = await AuthService.getOwnUser();
-            return response.data;
+            return response.data.user ?? null;
         } catch (error) {
             throw error;
         }
     }, []);
 
-    const {data: userData, error, mutate} = useSWR<User>('/auth/user', fetchUser, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-    });
-
-    const user = userData ? userData["user"] : null;
+    const {data: user, error, mutate} = useSWR<User>(
+        '/auth/user',
+        fetchUser,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+        }
+    );
 
     const refreshUser = useCallback(() => {
         return mutate();
