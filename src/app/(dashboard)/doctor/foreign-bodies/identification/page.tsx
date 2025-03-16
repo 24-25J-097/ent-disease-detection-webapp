@@ -20,6 +20,8 @@ const PatientsPage = () => {
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [showFullSizeModal, setShowFullSizeModal] = useState<boolean>(false);
   const [resizedDimensions, setResizedDimensions] = useState<{ width: number; height: number }>({ width: 800, height: 600 });
+  const [patientId, setPatientId] = useState<string>("");
+const [note, setNote] = useState<string>("");
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const fullSizeImageRef = useRef<HTMLImageElement | null>(null);
@@ -165,78 +167,101 @@ const PatientsPage = () => {
       </div>
 
       <div className="flex flex-wrap gap-6">
-        <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg mb-6">
-          <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
-            Upload an X-ray image to analyze
-          </h3>
+      <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg mb-6">
+  <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
+    Upload an X-ray image to analyze
+  </h3>
 
-          <If condition={!!errors}>
-            <motion.div
-              className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200 mb-6"
-              initial={{opacity: 0, y: 20}}
-              animate={{opacity: 1, y: 0}}
-              transition={{duration: 0.5}}
+  <If condition={!!errors}>
+    <motion.div
+      className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200 mb-6"
+      initial={{opacity: 0, y: 20}}
+      animate={{opacity: 1, y: 0}}
+      transition={{duration: 0.5}}
+    >
+      {errors}
+    </motion.div>
+  </If>
+
+  <div className="mb-6">
+    <label className="block text-gray-700 font-semibold mb-2">
+      Patient ID
+    </label>
+    <input
+      type="text"
+      value={patientId}
+      onChange={(e) => setPatientId(e.target.value)}
+      className="w-full text-gray-600 p-2 rounded-md border border-gray-300"
+    />
+  </div>
+
+  <div className="mb-6">
+    <label className="block text-gray-700 font-semibold mb-2">
+      Note
+    </label>
+    <textarea
+      value={note}
+      onChange={(e) => setNote(e.target.value)}
+      className="w-full text-gray-600 p-2 rounded-md border border-gray-300"
+    />
+  </div>
+
+  <div className="mb-6">
+    <label className="block text-gray-700 font-semibold mb-2">
+      Upload Image
+    </label>
+    <input
+      type="file"
+      accept="image/*"
+      onChange={handleFileChange}
+      className="w-full text-gray-600 p-2 rounded-md file:mr-4 
+        file:py-2 file:px-4 file:border-0 file:rounded-md file:text-white file:bg-blue-900
+        file:cursor-pointer hover:file:bg-blue-700 border border-gray-300"
+    />
+  </div>
+
+  <div className="flex justify-end">
+    <button
+      onClick={handleUpload}
+      disabled={isLoading || !imageFile || isDisabled}
+      className={`bg-blue-600 text-white py-2 px-6 rounded-md focus:outline-none ${
+        !imageFile || isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
+      }`}
+    >
+      {isDisabled ? "Processing..." : "Upload"}
+    </button>
+  </div>
+
+  {/* Confidence rates for classes B and D */}
+  {imagePreview && predictions.length > 0 && (
+    <div className="bg-white rounded-xl shadow-lg p-8 w-full mt-6">
+      <h3 className="text-blue-500 text-xl font-bold mb-4">
+        Analysis Results
+      </h3>
+      <div className="mb-4">
+        <p className="text-gray-600 font-semibold mb-2">B - Blockage , D - Object</p>
+      </div>
+      <h4 className="text-gray-700 font-semibold mb-4">
+        Confidence Rates for Classes B and D
+      </h4>
+      <ul className="space-y-2">
+        {predictions
+          .filter((prediction) => prediction.class === "B" || prediction.class === "D")
+          .map((prediction, index) => (
+            <li
+              key={index}
+              className="p-4 border border-gray-200 rounded-md"
             >
-              {errors}
-            </motion.div>
-          </If>
-
-          <div className="mb-6">
-            <label className="block text-gray-700 font-semibold mb-2">
-              Upload Image
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full text-gray-600 p-2 rounded-md file:mr-4 
-                file:py-2 file:px-4 file:border-0 file:rounded-md file:text-white file:bg-blue-900
-                file:cursor-pointer hover:file:bg-blue-700 border border-gray-300"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              onClick={handleUpload}
-              disabled={isLoading || !imageFile || isDisabled}
-              className={`bg-blue-600 text-white py-2 px-6 rounded-md focus:outline-none ${
-                !imageFile || isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
-              }`}
-            >
-              {isDisabled ? "Processing..." : "Upload"}
-            </button>
-          </div>
-
-          {/* Confidence rates for classes B and D */}
-          {imagePreview && predictions.length > 0 && (
-            <div className="bg-white rounded-xl shadow-lg p-8 w-full mt-6">
-              <h3 className="text-blue-500 text-xl font-bold mb-4">
-                Analysis Results
-              </h3>
-              <div className="mb-4">
-                <p className="text-gray-600 font-semibold mb-2">B - Blockage , D - Object</p>
-              </div>
-              <h4 className="text-gray-700 font-semibold mb-4">
-                Confidence Rates for Classes B and D
-              </h4>
-              <ul className="space-y-2">
-                {predictions
-                  .filter((prediction) => prediction.class === "B" || prediction.class === "D")
-                  .map((prediction, index) => (
-                    <li
-                      key={index}
-                      className="p-4 border border-gray-200 rounded-md"
-                    >
-                      <span className="font-bold text-gray-700">Class: {prediction.class}</span>
-                      <span className="ml-4 text-lg font-bold">
-                        Confidence: {(prediction.confidence * 100).toFixed(2)}%
-                      </span>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          )}
-        </div>
+              <span className="font-bold text-gray-700">Class: {prediction.class}</span>
+              <span className="ml-4 text-lg font-bold">
+                Confidence: {(prediction.confidence * 100).toFixed(2)}%
+              </span>
+            </li>
+          ))}
+      </ul>
+    </div>
+  )}
+</div>
 
         {imagePreview && (
           <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-lg mb-6">
