@@ -17,3 +17,10 @@ export type ConfidenceScoreDistributionChart = {
     scoreRange: string;
     count: number;
 }
+
+export type CholesteatomaReportsData = {
+    diagnosisStatus: DiagnosisStatusChart[];
+    cholesteatomaStages: CholesteatomaStagesChart[];
+    confidenceScores: ConfidenceScoreDistributionChart[];
+    cholesteatomaVsHealthy: DiseaseVsHealthyChart[];
+}

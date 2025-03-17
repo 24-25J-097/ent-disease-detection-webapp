@@ -6,33 +6,10 @@ import CholesteatomaStagesBarChart from '@/app/(dashboard)/doctor/cholesteatoma/
 import ConfidenceScoreBarChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/ConfidenceScoreBarChart';
 import DiseaseVsHealthyDoughnutChart
     from '@/app/(dashboard)/doctor/cholesteatoma/reports/DiseaseVsHealthyDoughnutChart';
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {ChevronDown, Printer} from 'lucide-react';
-
-const data = {
-    diagnosisStatus: [
-        {name: 'Diagnosed', value: 60},
-        {name: 'Failed', value: 25},
-        {name: 'Pending', value: 15}
-    ],
-    cholesteatomaStages: [
-        {stage: 'Stage 1', count: 20},
-        {stage: 'Stage 2', count: 25},
-        {stage: 'Stage 3', count: 15}
-    ],
-    confidenceScores: [
-        {scoreRange: '0-20%', count: 5},
-        {scoreRange: '21-40%', count: 10},
-        {scoreRange: '41-60%', count: 30},
-        {scoreRange: '61-80%', count: 25},
-        {scoreRange: '81-100%', count: 50}
-    ],
-    cholesteatomaVsHealthy: [
-        {name: 'Cholesteatoma', value: 52},
-        {name: 'Healthy', value: 48}
-    ]
-};
-
+import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
+import {CholesteatomaReportsData} from '@/types/Charts';
 
 const ReportsPage: NextPage = () => {
 
@@ -41,7 +18,25 @@ const ReportsPage: NextPage = () => {
     const stagesBarChartRef = useRef<HTMLDivElement | null>(null);
     const confidenceScoreBarChartRef = useRef<HTMLDivElement | null>(null);
 
-    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [reportsData, setReportsData] = useState<CholesteatomaReportsData>(null);
+    const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+
+    useEffect(() => {
+        (async () => {
+            await fetchCholesteatomaReportsData();
+        })();
+    }, []);
+
+    const fetchCholesteatomaReportsData = async () => {
+        try {
+            const response = await CholesteatomaDiagnosisService.getCholesteatomaReports();
+            if (response.success && response.data) {
+                setReportsData(response.data);
+            }
+        } catch (error) {
+            console.error("Error in get cholesteatoma reports data: ", error);
+        }
+    };
 
     const handlePrint = (chartRef: React.RefObject<HTMLDivElement>) => {
         if (chartRef.current) {
@@ -62,6 +57,9 @@ const ReportsPage: NextPage = () => {
                                 display: flex;
                                 flex-direction: column;
                                 align-items: center;
+                                border: 1px solid rgba(126,126,126,0.91);
+                                border-radius: 24px;
+                                padding-bottom: 20px;
                             }
                             @page {
                                 size: A4 landscape;
@@ -136,19 +134,19 @@ const ReportsPage: NextPage = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
                 <DiagnosisStatusPieChart
-                    diagnosisStatusData={data.diagnosisStatus}
+                    diagnosisStatusData={reportsData?.diagnosisStatus ?? null}
                     chartRef={diagnosisStatusPieChartRef}
                 />
                 <DiseaseVsHealthyDoughnutChart
-                    cholesteatomaVsHealthyData={data.cholesteatomaVsHealthy}
+                    cholesteatomaVsHealthyData={reportsData?.cholesteatomaVsHealthy ?? null}
                     chartRef={diseaseVsHealthyDoughnutChartRef}
                 />
                 <CholesteatomaStagesBarChart
-                    cholesteatomaStagesData={data.cholesteatomaStages}
+                    cholesteatomaStagesData={reportsData?.cholesteatomaStages ?? null}
                     chartRef={stagesBarChartRef}
                 />
                 <ConfidenceScoreBarChart
-                    confidenceScoresData={data.confidenceScores}
+                    confidenceScoresData={reportsData?.confidenceScores ?? null}
                     chartRef={confidenceScoreBarChartRef}
                 />
             </div>

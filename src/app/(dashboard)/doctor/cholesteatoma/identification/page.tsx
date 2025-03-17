@@ -8,7 +8,7 @@ import {If} from "@/components/utils/If";
 import Image from 'next/image';
 import ReactModal from "react-modal";
 import {CholesteatomaDiagnosisData, DiagnosisAcceptance, DiagnosisResult} from '@/types/service/Diagnosis';
-import {DiagnosisService} from '@/services/DiagnosisService';
+import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
 import {Cholesteatoma} from '@/models/Cholesteatoma';
@@ -81,7 +81,7 @@ const IdentificationPage: NextPage = () => {
         try {
             setIsLoading(true);
             setIsDisable(true);
-            const response = await DiagnosisService.cholesteatomaDiagnosis(diagnosisData);
+            const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosis(diagnosisData);
             if (response.success && response.data) {
                 const results = response.data as Cholesteatoma;
                 notifySuccess(response.message);
@@ -125,7 +125,7 @@ const IdentificationPage: NextPage = () => {
             setIsLoading2(true);
             setIsDisable(true);
             const data: DiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
-            const response = await DiagnosisService.cholesteatomaDiagnosisAccept(data);
+            const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosisAccept(data);
             if (response.success) {
                 notifySuccess(response.message);
             }
