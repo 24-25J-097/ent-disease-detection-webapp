@@ -4,8 +4,9 @@ import {AppResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Res
 import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
 import {CholesteatomaDiagnosisData, DiagnosisAcceptance} from '@/types/service/Diagnosis';
+import {CholesteatomaReportsData} from '@/types/Charts';
 
-export class DiagnosisService {
+export class CholesteatomaDiagnosisService {
 
     private static api(): ApiInstance {
         return ApiService.getInstance().getApi();
@@ -14,13 +15,20 @@ export class DiagnosisService {
     public static async cholesteatomaDiagnosis(diagnosisData: CholesteatomaDiagnosisData): Promise<AppResponse<CommonResponse>> {
         const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma");
         const formData = convertToAPIFormData(diagnosisData, true);
-        const res = await DiagnosisService.api().post<CholesteatomaDiagnosisData, AxiosAppResponse<CommonResponse>>(ep, formData);
+        const res = await CholesteatomaDiagnosisService.api().post<CholesteatomaDiagnosisData, AxiosAppResponse<CommonResponse>>(ep, formData);
         return res.data;
     }
 
     public static async cholesteatomaDiagnosisAccept(diagnosisAcceptance: DiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
         const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma/accept");
-        const res = await DiagnosisService.api().post<DiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
+        const res = await CholesteatomaDiagnosisService.api().post<DiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
         return res.data;
     }
+
+    public static async getCholesteatomaReports(): Promise<AppResponse<CholesteatomaReportsData>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma/reports");
+        const res = await CholesteatomaDiagnosisService.api().get(ep);
+        return res.data;
+    }
+
 }
