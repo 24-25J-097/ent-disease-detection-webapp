@@ -176,16 +176,18 @@ const IdentificationPage: NextPage = () => {
                     <div>
                         <button
                             type="button"
-                            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none"
+                            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700
+                            focus:outline-none"
                             onClick={() => alert("Redirecting to Patient List...")}
                         >
                             Patient List
                         </button>
                     </div>
                 </div>
-                <div className="flex items-start justify-center gap-8">
+                <div className="flex items-start justify-between gap-10 px-6 pb-6">
                     <div
-                        className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-lg min-h-[700px] flex flex-col"
+                        className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-xl min-h-[700px]
+                        flex flex-col"
                     >
                         <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
                             Upload Middle Ear Endoscopy
@@ -193,7 +195,8 @@ const IdentificationPage: NextPage = () => {
                         <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                             <If condition={!!errors}>
                                 <motion.div
-                                    className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200"
+                                    className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8
+                                    border-x-red-200"
                                     initial={{opacity: 0, y: 20}}
                                     animate={{opacity: 1, y: 0}}
                                     transition={{duration: 0.5}}
@@ -234,9 +237,9 @@ const IdentificationPage: NextPage = () => {
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFileChange}
-                                    className={`w-full text-gray-600 p-2 rounded-md file:mr-4
-                                file:py-2 file:px-4 file:border-0 file:rounded-md file:text-white file:bg-blue-900
-                                file:cursor-pointer hover:file:bg-blue-700 
+                                    className={`w-full text-gray-600 p-2 rounded-md file:mr-4 file:py-2 file:px-4 
+                                    file:border-0 file:rounded-md file:text-white file:bg-blue-900 
+                                    file:cursor-pointer hover:file:bg-blue-700 
                                 ${!!fileErrMsg ? "border border-red-500" : "border border-gray-300"}`}
                                     disabled={isDisable}
                                 />
@@ -281,7 +284,8 @@ const IdentificationPage: NextPage = () => {
                                         <div className="flex justify-end gap-x-2">
                                             <button
                                                 type="submit"
-                                                className={`bg-gray-500 text-white py-1 px-6 rounded-md hover:bg-gray-700 focus:outline-none`}
+                                                className={`bg-gray-500 text-white py-1 px-6 rounded-md 
+                                                hover:bg-gray-700 focus:outline-none`}
                                                 onClick={() => handleRest()}
                                             >
                                                 Reset
@@ -298,7 +302,8 @@ const IdentificationPage: NextPage = () => {
                                                     Yes
                                                 </span>
                                                 : <span
-                                                    className="border border-green-300 rounded-md py-1 px-4 text-green-300"
+                                                    className="border border-green-300 rounded-md py-1 px-4
+                                                    text-green-300"
                                                 >
                                                     No
                                                 </span>
@@ -325,14 +330,16 @@ const IdentificationPage: NextPage = () => {
                                         <div className="flex justify-end gap-x-2">
                                             <button
                                                 type="submit"
-                                                className={`bg-red-500 text-white py-1 px-6 rounded-md hover:bg-red-700 focus:outline-none`}
+                                                className={`bg-red-500 text-white py-1 px-6 rounded-md 
+                                                hover:bg-red-700 focus:outline-none`}
                                                 onClick={() => handleDone(false)}
                                             >
                                                 Reject
                                             </button>
                                             <button
                                                 type="submit"
-                                                className={`bg-green-500 text-white py-1 px-6 rounded-md hover:bg-green-700 focus:outline-none`}
+                                                className={`bg-green-500 text-white py-1 px-6 rounded-md 
+                                                hover:bg-green-700 focus:outline-none`}
                                                 onClick={() => handleDone(true)}
                                             >
                                                 Accept
@@ -346,7 +353,7 @@ const IdentificationPage: NextPage = () => {
                     </div>
 
                     <div
-                        className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl min-h-[700px]
+                        className="bg-white rounded-xl shadow-lg p-8 w-full min-h-[700px]
                         flex flex-col items-center"
                     >
                         <h4 className="text-blue-500 text-xl font-bold mb-4">
@@ -356,9 +363,9 @@ const IdentificationPage: NextPage = () => {
                             <Image
                                 src={imagePreview}
                                 alt="Selected Preview"
-                                className="w-full rounded-md cursor-pointer"
-                                width={100}
-                                height={100}
+                                className="max-w-[580px] max-h-[580px] rounded-md cursor-pointer"
+                                width={1000}
+                                height={1000}
                                 onClick={() => setModalIsOpen(true)}
                             />
                         ) : (
@@ -371,14 +378,14 @@ const IdentificationPage: NextPage = () => {
             <ReactModal
                 isOpen={modalIsOpen}
                 onRequestClose={() => setModalIsOpen(false)}
-                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[5000]"
-                overlayClassName="fixed inset-0 bg-black bg-opacity-80"
+                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9000]"
+                overlayClassName="fixed inset-0 bg-black bg-opacity-80 z-[9000]"
             >
                 <div className="bg-transparent rounded-md p-4">
                     <div className="absolute right-4 top-0 flex justify-end">
                         <button
                             onClick={() => setModalIsOpen(false)}
-                            className="mt-4 bg-red-400 text-white px-2 py-1 rounded hover:bg-red-700 text-3xl"
+                            className="mt-4 bg-red-400 text-white px-2 rounded hover:bg-red-700 text-3xl"
                         >
                             &times;
                         </button>

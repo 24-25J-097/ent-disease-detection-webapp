@@ -132,7 +132,7 @@ const ReportsPage: NextPage = () => {
                     )}
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6">
                 <DiagnosisStatusPieChart
                     diagnosisStatusData={reportsData?.diagnosisStatus ?? null}
                     chartRef={diagnosisStatusPieChartRef}
