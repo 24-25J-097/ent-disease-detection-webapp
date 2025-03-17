@@ -1,11 +1,12 @@
 import {Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend} from 'recharts';
 import {DiseaseVsHealthyChart} from '@/types/Charts';
 import React from 'react';
+import LoadingMessage from '@/components/loaders/LoadingMessage';
 
 const CHART_COLORS = ['#ff4d4f', '#40a9ff'];
 
 const DiseaseVsHealthyDoughnutChart: React.FC<{
-    cholesteatomaVsHealthyData: DiseaseVsHealthyChart[],
+    cholesteatomaVsHealthyData: DiseaseVsHealthyChart[] | null,
     chartRef: any
 }> = ({cholesteatomaVsHealthyData, chartRef}) => {
 
@@ -15,28 +16,32 @@ const DiseaseVsHealthyDoughnutChart: React.FC<{
             <p className="text-sm text-gray-500 text-center mb-3">
                 Proportion of diagnosed cases vs. healthy patients
             </p>
-            <ResponsiveContainer width="100%" height={280}>
-                <PieChart>
-                    <Pie
-                        data={cholesteatomaVsHealthyData}
-                        dataKey="value"
-                        nameKey="name"
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={90}
-                        // paddingAngle={5}
-                        label={({percent}) => `${(percent * 100).toFixed(1)}%`}
-                        labelStyle={{fontSize: '12px', fontWeight: 'bold'}}
-                    >
-                        {cholesteatomaVsHealthyData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]}/>
-                        ))}
-                    </Pie>
-                    <Tooltip/>
-                    <Legend verticalAlign="bottom" align="center" wrapperStyle={{marginTop: 10}}/>
-                </PieChart>
-            </ResponsiveContainer>
+            {cholesteatomaVsHealthyData ? (
+                <ResponsiveContainer width="100%" height={280}>
+                    <PieChart>
+                        <Pie
+                            data={cholesteatomaVsHealthyData}
+                            dataKey="value"
+                            nameKey="name"
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={90}
+                            // paddingAngle={5}
+                            label={({percent}) => `${(percent * 100).toFixed(1)}%`}
+                            labelStyle={{fontSize: '12px', fontWeight: 'bold'}}
+                        >
+                            {cholesteatomaVsHealthyData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]}/>
+                            ))}
+                        </Pie>
+                        <Tooltip/>
+                        <Legend verticalAlign="bottom" align="center" wrapperStyle={{marginTop: 10}}/>
+                    </PieChart>
+                </ResponsiveContainer>
+            ) : (
+                <LoadingMessage/>
+            )}
         </div>
     );
 };
