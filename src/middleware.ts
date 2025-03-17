@@ -56,6 +56,7 @@ export const config = {
         "/student/:path*",
         "/login",
         "/signup",
-        "/forgot-password"
+        "/forgot-password",
+        
     ],
 };

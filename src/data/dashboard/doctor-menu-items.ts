@@ -101,12 +101,12 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
         subMenu: [
-//             {
-//                  id: 1,
-//                  title: "Patients",
-//                 icon: "Users",
-//                  link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
-//              },
+            {
+                 id: 1,
+                 title: "Patients",
+                icon: "Users",
+                 link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
+             },
              {
                     id: 2,
                         title: "Identification",

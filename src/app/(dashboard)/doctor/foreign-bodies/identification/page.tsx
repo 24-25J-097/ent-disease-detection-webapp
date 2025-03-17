@@ -8,6 +8,9 @@ import { motion } from "framer-motion";
 import { If } from "@/components/utils/If";
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { db, storage } from "./firebaseConfig";
 
 const PatientsPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -23,8 +26,26 @@ const PatientsPage = () => {
   const [patientId, setPatientId] = useState<string>("");
 const [note, setNote] = useState<string>("");
 
+
   const imageRef = useRef<HTMLImageElement | null>(null);
   const fullSizeImageRef = useRef<HTMLImageElement | null>(null);
+
+  const uploadImageToFirebase = async (file: File) => {
+    const storageRef = ref(storage, `images/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  };
+
+  const saveMetadataToFirestore = async (data: any) => {
+    try {
+      const docRef = await addDoc(collection(db, "foreign"), data);
+      return docRef.id;
+    } catch (error) {
+      console.error("Error saving metadata to Firestore:", error);
+      throw error;
+    }
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -42,37 +63,51 @@ const [note, setNote] = useState<string>("");
       setErrors("Please upload an image.");
       return;
     }
-
+  
     setIsLoading(true);
     setIsDisabled(true);
     setErrors(null);
-
+  
     try {
       // First check if the image is valid
       const validityFormData = new FormData();
       validityFormData.append("file", imageFile);
-
+  
       const validityResponse = await axios.post(
         ApiUtils.fastApiUrl + "/api/foreign/run-inference", 
         validityFormData, 
         { headers: { "Content-Type": "multipart/form-data" } }
       );
-
+  
       const isValid = validityResponse.data.images[0]?.results[0]?.class === 1;
       setIsValidImage(isValid);
-
+  
       // If valid, proceed with detection
       if (isValid) {
         const detectionFormData = new FormData();
         detectionFormData.append("image", imageFile);
-
+  
         const detectResponse = await axios.post(
           ApiUtils.fastApiUrl + "/api/foreign/detect", 
           detectionFormData, 
           { headers: { "Content-Type": "multipart/form-data" } }
         );
-
-        setPredictions(detectResponse.data.predictions || []);
+  
+        const predictions = detectResponse.data.predictions || [];
+        setPredictions(predictions);
+  
+        // Upload image to Firebase Storage
+        const imageUrl = await uploadImageToFirebase(imageFile);
+  
+        // Save metadata to Firestore
+        const metadata = {
+          patientId,
+          note,
+          imageUrl,
+          predictions,
+          timestamp: new Date(),
+        };
+        await saveMetadataToFirestore(metadata);
       } else {
         setErrors("Please upload a valid X-ray image.");
       }

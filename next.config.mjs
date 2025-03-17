@@ -6,7 +6,7 @@ const nextConfig = {
         includePaths: [path.join(process.cwd(), 'styles')],
     },
     images: {
-        domains: ['ui-avatars.com', 'localhost'], // TODO: must change when going production
+        domains: ['ui-avatars.com', 'localhost', 'firebasestorage.googleapis.com'], // TODO: must change when going production
         dangerouslyAllowSVG: true,
     },
 };
