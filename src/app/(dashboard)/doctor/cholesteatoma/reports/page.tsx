@@ -11,6 +11,7 @@ import {ChevronDown, Printer} from 'lucide-react';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {CholesteatomaReportsData} from '@/types/Charts';
 import AcceptedVsRejectedPieChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/AcceptedVsRejectedPieChart';
+import {Button} from '@/components/ui/button';
 
 const ReportsPage: NextPage = () => {
 
@@ -91,10 +92,8 @@ const ReportsPage: NextPage = () => {
                     Cholesteatoma Reports
                 </h1>
                 <div>
-                    <button
-                        type="button"
-                        className="bg-green-500 text-white py-2 px-4 w-80 rounded-md hover:bg-green-700
-                        focus:outline-none flex items-center justify-between"
+                    <Button
+                        className="bg-blue-900 text-white w-80 flex items-center justify-between"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                     >
                         <div className="flex">
@@ -102,7 +101,7 @@ const ReportsPage: NextPage = () => {
                             <span className="mx-2">Print Reports</span>
                         </div>
                         <ChevronDown className="stroke-1.5 w-5 h-5"/>
-                    </button>
+                    </Button>
 
                     {dropdownOpen && (
                         <div className="absolute mt-2 w-80 bg-white shadow-lg rounded-md py-2 z-50">
@@ -140,7 +139,7 @@ const ReportsPage: NextPage = () => {
                     )}
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 px-8 pb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 pb-8">
                 <AcceptedVsRejectedPieChart
                     diagnosisAcceptedVsRejected={reportsData?.diagnosisAcceptedVsRejected ?? null}
                     chartRef={acceptedVsRejectedPieChartRef}
@@ -154,7 +153,7 @@ const ReportsPage: NextPage = () => {
                     chartRef={diseaseVsHealthyDoughnutChartRef}
                 />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 pb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8">
                 <CholesteatomaStagesBarChart
                     cholesteatomaStagesData={reportsData?.cholesteatomaStages ?? null}
                     chartRef={stagesBarChartRef}
