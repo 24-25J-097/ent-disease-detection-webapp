@@ -5,7 +5,7 @@ import LoadingMessage from '@/components/loaders/LoadingMessage';
 
 const CHART_COLORS = ['#ff4d4f', '#40a9ff'];
 
-const DiseaseVsHealthyDoughnutChart: React.FC<{
+const DiseaseVsHealthyPieChart: React.FC<{
     cholesteatomaVsHealthyData: DiseaseVsHealthyChart[] | null,
     chartRef: any
 }> = ({cholesteatomaVsHealthyData, chartRef}) => {
@@ -46,4 +46,4 @@ const DiseaseVsHealthyDoughnutChart: React.FC<{
     );
 };
 
-export default DiseaseVsHealthyDoughnutChart;
+export default DiseaseVsHealthyPieChart;

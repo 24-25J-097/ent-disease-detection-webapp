@@ -4,15 +4,17 @@ import {NextPage} from "next";
 import DiagnosisStatusPieChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/DiagnosisStatusPieChart';
 import CholesteatomaStagesBarChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/CholesteatomaStagesBarChart';
 import ConfidenceScoreBarChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/ConfidenceScoreBarChart';
-import DiseaseVsHealthyDoughnutChart
-    from '@/app/(dashboard)/doctor/cholesteatoma/reports/DiseaseVsHealthyDoughnutChart';
+import DiseaseVsHealthyPieChart
+    from '@/app/(dashboard)/doctor/cholesteatoma/reports/DiseaseVsHealthyPieChart';
 import React, {useEffect, useRef, useState} from 'react';
 import {ChevronDown, Printer} from 'lucide-react';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {CholesteatomaReportsData} from '@/types/Charts';
+import AcceptedVsRejectedPieChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/AcceptedVsRejectedPieChart';
 
 const ReportsPage: NextPage = () => {
 
+    const acceptedVsRejectedPieChartRef = useRef<HTMLDivElement | null>(null);
     const diagnosisStatusPieChartRef = useRef<HTMLDivElement | null>(null);
     const diseaseVsHealthyDoughnutChartRef = useRef<HTMLDivElement | null>(null);
     const stagesBarChartRef = useRef<HTMLDivElement | null>(null);
@@ -105,6 +107,12 @@ const ReportsPage: NextPage = () => {
                     {dropdownOpen && (
                         <div className="absolute mt-2 w-64 bg-white shadow-lg rounded-md py-2">
                             <button
+                                onClick={() => handlePrint(acceptedVsRejectedPieChartRef)}
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
+                            >
+                                Print Diagnosis Accepted vs. Rejected
+                            </button>
+                            <button
                                 onClick={() => handlePrint(diagnosisStatusPieChartRef)}
                                 className="block w-full px-4 py-2 text-left hover:bg-gray-200"
                             >
@@ -132,15 +140,21 @@ const ReportsPage: NextPage = () => {
                     )}
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 px-8 pb-8">
+                <AcceptedVsRejectedPieChart
+                    diagnosisAcceptedVsRejected={reportsData?.diagnosisAcceptedVsRejected ?? null}
+                    chartRef={acceptedVsRejectedPieChartRef}
+                />
                 <DiagnosisStatusPieChart
                     diagnosisStatusData={reportsData?.diagnosisStatus ?? null}
                     chartRef={diagnosisStatusPieChartRef}
                 />
-                <DiseaseVsHealthyDoughnutChart
+                <DiseaseVsHealthyPieChart
                     cholesteatomaVsHealthyData={reportsData?.cholesteatomaVsHealthy ?? null}
                     chartRef={diseaseVsHealthyDoughnutChartRef}
                 />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 pb-8">
                 <CholesteatomaStagesBarChart
                     cholesteatomaStagesData={reportsData?.cholesteatomaStages ?? null}
                     chartRef={stagesBarChartRef}

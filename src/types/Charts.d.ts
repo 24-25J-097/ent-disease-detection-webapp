@@ -8,6 +8,11 @@ export type DiseaseVsHealthyChart = {
     value: number;
 }
 
+export type DiagnosisAcceptedVsRejectedChart = {
+    name: string;
+    value: number;
+}
+
 export type CholesteatomaStagesChart = {
     stage: string;
     count: number;
@@ -19,6 +24,7 @@ export type ConfidenceScoreDistributionChart = {
 }
 
 export type CholesteatomaReportsData = {
+    diagnosisAcceptedVsRejected: DiagnosisAcceptedVsRejectedChart[];
     diagnosisStatus: DiagnosisStatusChart[];
     cholesteatomaStages: CholesteatomaStagesChart[];
     confidenceScores: ConfidenceScoreDistributionChart[];
