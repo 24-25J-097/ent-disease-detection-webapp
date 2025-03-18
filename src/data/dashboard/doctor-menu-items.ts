@@ -29,12 +29,12 @@ export const DoctorMenuItems: MenuItem[] = [
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/identification`,
             },
-            /*{
+            {
                 id: 3,
                 title: "Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/reports`,
-            },*/
+            },
         ],
         isDivider: false,
     },
@@ -102,17 +102,17 @@ export const DoctorMenuItems: MenuItem[] = [
         link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
         subMenu: [
             {
-                 id: 1,
-                 title: "Patients",
+                id: 1,
+                title: "Patients",
                 icon: "Users",
-                 link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
-             },
-             {
-                    id: 2,
-                        title: "Identification",
-                        icon: "ScanEye",
-                        link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/identification`,
-             },
+                link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
+            },
+            {
+                id: 2,
+                title: "Identification",
+                icon: "ScanEye",
+                link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/identification`,
+            },
             {
                 id: 3,
                 title: "Reports",

@@ -5,6 +5,7 @@ import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
 import {SinusitisDiagnosisAcceptance, SinusitisDiagnosisData} from "@/types/service/SinusitisDiagnosis";
 import {Sinusitis} from "@/models/Sinusitis";
+import {SinusitisReportsData} from "@/types/Charts";
 
 export class SinusitisAnalyzeService {
 
@@ -24,6 +25,12 @@ export class SinusitisAnalyzeService {
     public static async sinusitisDiagnosisAccept(diagnosisAcceptance: SinusitisDiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
         const ep = ApiUtils.doctorUrl("diagnosis/sinusitis/accept");
         const res = await SinusitisAnalyzeService.api().post<SinusitisDiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
+        return res.data;
+    }
+
+    public static async getSinusitisReports(): Promise<AppResponse<SinusitisReportsData>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/sinusitis/reports");
+        const res = await SinusitisAnalyzeService.api().get(ep);
         return res.data;
     }
 }
