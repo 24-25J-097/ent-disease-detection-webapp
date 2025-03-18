@@ -106,7 +106,10 @@ const IdentificationPage: NextPage = () => {
                 const results = response.data as Sinusitis;
                 notifySuccess(response.message);
                 setIsDisable(false);
-                setAnalysisResult(results.diagnosisResult!);
+                setAnalysisResult({
+                    ...results.diagnosisResult!,
+                    diagnosisId: results._id!,
+                });
             } else {
                 setErrors(response.message || "Something went wrong.");
             }
