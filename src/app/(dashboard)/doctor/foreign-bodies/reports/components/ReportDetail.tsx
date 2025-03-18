@@ -84,34 +84,6 @@ const ReportDetail: React.FC<ReportDetailProps> = ({ report, onBack }) => {
               </button>
             </div>
           </div>
-
-          <div className="relative" id="report-image-container">
-            <Image
-              ref={imageRef}
-              src={report.imageUrl}
-              alt={`X-Ray for patient ${report.patientId}`}
-              width={0}
-              height={0}
-              sizes="100vw"
-              className="rounded-lg w-auto h-auto"
-              style={{ maxWidth: '100%' }}
-              priority
-              unoptimized
-              onLoad={(e) => {
-                if (imageRef.current) {
-                  const { naturalWidth, naturalHeight } = imageRef.current;
-                  setImageDimensions({
-                    width: naturalWidth,
-                    height: naturalHeight,
-                  });
-                }
-              }}
-            />
-            <div className="absolute inset-0">
-              {renderBoundingBoxes()}
-            </div>
-          </div>
-
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-gray-700 mb-4">
               Detection Results
@@ -149,10 +121,41 @@ const ReportDetail: React.FC<ReportDetailProps> = ({ report, onBack }) => {
             <h3 className="text-lg font-semibold text-gray-700 mb-2">
               Analysis Note:
             </h3>
+            <div className='p-4 bg-gray-50 rounded-lg'>
             <p className="text-gray-600">
               {report.note}
             </p>
+            </div>
           </div>
+
+          <div className="relative" id="report-image-container">
+            <Image
+              ref={imageRef}
+              src={report.imageUrl}
+              alt={`X-Ray for patient ${report.patientId}`}
+              width={0}
+              height={0}
+              sizes="100vw"
+              className="rounded-lg w-auto h-auto"
+              style={{ maxWidth: '100%' }}
+              priority
+              unoptimized
+              onLoad={(e) => {
+                if (imageRef.current) {
+                  const { naturalWidth, naturalHeight } = imageRef.current;
+                  setImageDimensions({
+                    width: naturalWidth,
+                    height: naturalHeight,
+                  });
+                }
+              }}
+            />
+            <div className="absolute inset-0">
+              {renderBoundingBoxes()}
+            </div>
+          </div>
+
+          
         </div>
       </div>
     </div>
