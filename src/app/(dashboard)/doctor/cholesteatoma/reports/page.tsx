@@ -20,7 +20,7 @@ const ReportsPage: NextPage = () => {
     const stagesBarChartRef = useRef<HTMLDivElement | null>(null);
     const confidenceScoreBarChartRef = useRef<HTMLDivElement | null>(null);
 
-    const [reportsData, setReportsData] = useState<CholesteatomaReportsData>(null);
+    const [reportsData, setReportsData] = useState<CholesteatomaReportsData | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
     useEffect(() => {

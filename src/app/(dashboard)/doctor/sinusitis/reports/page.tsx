@@ -18,7 +18,7 @@ const ReportsPage: NextPage = () => {
     const stagesBarChartRef = useRef<HTMLDivElement | null>(null);
     const confidenceScoreBarChartRef = useRef<HTMLDivElement | null>(null);
 
-    const [reportsData, setReportsData] = useState<SinusitisReportsData>(null);
+    const [reportsData, setReportsData] = useState<SinusitisReportsData | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
     useEffect(() => {

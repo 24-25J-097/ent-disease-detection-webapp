@@ -29,7 +29,6 @@ const DiseaseVsHealthyDoughnutChart: React.FC<{
                             outerRadius={90}
                             // paddingAngle={5}
                             label={({percent}) => `${(percent * 100).toFixed(1)}%`}
-                            labelStyle={{fontSize: '12px', fontWeight: 'bold'}}
                         >
                             {pharyngitisVsHealthyData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]}/>

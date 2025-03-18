@@ -34,7 +34,7 @@ const ConfidenceScoreBarChart: React.FC<{
                         <CartesianGrid strokeDasharray="3 3"/>
                         <XAxis
                             dataKey="scoreRange"
-                            tick={{fill: '#333', angle: -45, textAnchor: 'end', fontSize: 11}}
+                            tick={{fill: '#333', angle: -45, textAnchor: 'end', fontSize: 11} as any}
                             interval={0} // Show all labels
                             label={{
                                 value: "Diagnosis Probability Range",

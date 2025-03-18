@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Report } from '../types';
+import { Report } from '../types/types';
 
 export const generatePDF = async (selectedReport: Report, elementId: string): Promise<void> => {
     try {
