@@ -1,36 +1,60 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {NextPage} from "next";
 import {useToast} from '@/providers/ToastProvider';
 import {SinusitisAnalyzeService} from "@/services/SinusitisAnalyzeService";
-import {SinusitisRequest, SinusitisResult} from "@/types/service/SinusitisResult";
 import {If} from "@/components/utils/If";
 import {motion} from "framer-motion";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {predictionColors, SinusitisResultEnum} from "@/enums/sinusitis";
 import LoadingModal from "@/components/loaders/LoadingModal";
 import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
+import TextInput from "@/components/inputs/TextInput";
+import TextAreaInput from "@/components/inputs/TextAreaInput";
+import {
+    SinusitisDiagnosisAcceptance,
+    SinusitisDiagnosisData,
+    SinusitisDiagnosisResult
+} from "@/types/service/SinusitisDiagnosis";
+import {Sinusitis} from "@/models/Sinusitis";
+import useRouterApp from "@/hooks/useRouterApp";
+
 
 const IdentificationPage: NextPage = () => {
-    const [analysisResult, setAnalysisResult] = useState<SinusitisResult | null>(null);
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const [analysisResult, setAnalysisResult] = useState<SinusitisDiagnosisResult | null>(null);
+    const [patientId, setPatientId] = useState<string>("");
+    const [additionalInfo, setAdditionalInfo] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
     const [hasValidationErr, setHasValidationErr] = useState<boolean[]>([false, false]);
+    const [patientIdErrMsg, setPatientIdErrMsg] = useState<string>("");
     const [fileErrMsg, setFileErrMsg] = useState<string>("");
     const [isDisable, setIsDisable] = useState<boolean>(false);
     const [errors, setErrors] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading2, setIsLoading2] = useState<boolean>(false);
 
     const {notifySuccess, notifyError} = useToast();
+    const router = useRouterApp();
 
     const validateFields = () => {
         setHasValidationErr([]);
         const invalidImageTypes = ["image/avif"];
-
+        if (!patientId) {
+            const errorText = "Please enter the Patient ID.";
+            setPatientIdErrMsg(errorText);
+            setTimeout(() => setPatientIdErrMsg(""), 3000);
+            hasValidationErr.push(true);
+        } else if (patientId.length < 5) {
+            const errorText = "Patient ID must be at least 5 characters long.";
+            setPatientIdErrMsg(errorText);
+            setTimeout(() => setPatientIdErrMsg(""), 3000);
+            hasValidationErr.push(true);
+        }
         if (!file) {
             setFileErrMsg("Please choose the X Ray.");
             setTimeout(() => setFileErrMsg(""), 3000);
@@ -66,22 +90,28 @@ const IdentificationPage: NextPage = () => {
         setIsDisable(true)
         setIsLoading(true);
 
-        const formData: SinusitisRequest = {
-            file: file!
-        }
+        // const formData: SinusitisRequest = {
+        //     file: file!
+        // }
+        const diagnosisData: SinusitisDiagnosisData = {
+            patientId: patientId,
+            additionalInfo: additionalInfo,
+            watersViewXrayImage: file!
+        };
 
         try {
             setIsDisable(true);
-            const response = await SinusitisAnalyzeService.analyze(formData);
+            const response = await SinusitisAnalyzeService.analyze(diagnosisData);
             if (response.success && response.data) {
-                const results = response.data as SinusitisResult;
+                const results = response.data as Sinusitis;
                 notifySuccess(response.message);
                 setIsDisable(false);
-                setAnalysisResult(results);
-            }else{
+                setAnalysisResult(results.diagnosisResult!);
+            } else {
                 setErrors(response.message || "Something went wrong.");
             }
         } catch (error: any) {
+            console.log(error)
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
@@ -111,6 +141,54 @@ const IdentificationPage: NextPage = () => {
             setAnalysisResult(null)
         }
     };
+
+    const handleDone = async (accept: boolean) => {
+        try {
+            setIsLoading2(true);
+            setIsDisable(true);
+            const data: SinusitisDiagnosisAcceptance = {diagnosisId: analysisResult?.diagnosisId!, accept: accept};
+            const response = await SinusitisAnalyzeService.sinusitisDiagnosisAccept(data);
+            if (response.success) {
+                notifySuccess(response.message);
+            }
+        } catch (error) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
+                setErrors("An unexpected error occurred. Please try again.");
+            } else {
+                setErrors(axiosError?.response?.data?.message || "An error occurred.");
+                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+            }
+        } finally {
+            setIsDisable(false);
+            setAnalysisResult(null);
+            setPatientId("");
+            setAdditionalInfo("");
+            setFile(null);
+            setImagePreview("");
+            if (formRef.current && 'reset' in formRef.current) {
+                formRef.current.reset();
+            }
+            setIsLoading2(false);
+            router.refresh();
+        }
+    };
+
+    const handleRest = async () => {
+        setIsDisable(false);
+        setAnalysisResult(null);
+        setPatientId("");
+        setAdditionalInfo("");
+        setFile(null);
+        setImagePreview("");
+        if (formRef.current && 'reset' in formRef.current) {
+            formRef.current.reset();
+        }
+        setIsLoading2(false);
+        router.refresh();
+    };
+
+
     return (
         <section className="bg-blue-50 min-h-screen px-4">
             <div className="flex py-8 justify-between">
@@ -126,7 +204,7 @@ const IdentificationPage: NextPage = () => {
                     <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
                         Upload Water&#39;s View X Ray
                     </h3>
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                         <If condition={!!errors}>
                             <motion.div
                                 className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200"
@@ -137,7 +215,31 @@ const IdentificationPage: NextPage = () => {
                                 {errors}
                             </motion.div>
                         </If>
-
+                        <div>
+                            <TextInput
+                                name="patientId"
+                                label="Patient Id *"
+                                type="text"
+                                value={patientId}
+                                placeholder="Enter Patient ID"
+                                inputClassName="w-full"
+                                onTextChange={(e) => setPatientId(e.target.value)}
+                                design="regular-form"
+                                errorMessage={patientIdErrMsg}
+                                disabled={isDisable}
+                            />
+                        </div>
+                        <div>
+                            <TextAreaInput
+                                id="additional-info"
+                                name="additionalInfo"
+                                label="Additional Information"
+                                placeholder="Enter any additional details (optional)"
+                                value={additionalInfo}
+                                onTextChange={(e) => setAdditionalInfo(e.target.value)}
+                                disabled={isDisable}
+                            />
+                        </div>
                         <div>
                             <label className="block text-gray-700 font-semibold mb-2">
                                 Upload Image
@@ -176,42 +278,79 @@ const IdentificationPage: NextPage = () => {
                     >
                         <h4 className="text-blue-500 text-xl font-bold mb-4">Analyzed Result</h4>
                         {analysisResult ? (
-                            analysisResult.prediction === SinusitisResultEnum.invalid ?
-                                <p className="text-gray-500 text-sm">
-                                    <strong>Invalid: </strong>
-                                    <span className="text-red-500 font-bold">
-                                            An irrelevant image has been submitted. {analysisResult.suggestions}
-                                        </span>
-                                </p>
-                                :
-                                <div className="w-full text-gray-700 space-y-4">
+                            analysisResult.prediction === 'invalid'
+                                ? <div className="w-full text-gray-700 space-y-4">
+                                    <div className="row-auto flex gap-1">
+                                        <p className="text-gray-500 text-sm">
+                                            <strong>Invalid: </strong>
+                                        </p>
+                                        <p className="text-red-500 font-bold">
+                                            An irrelevant image has been submitted.
+                                        </p>
+                                    </div>
+                                    <p className="text-gray-500 text-sm">
+                                        <strong>Please upload valid Waters View Xray Image.</strong>
+                                    </p>
+                                    <div className="flex justify-end gap-x-2">
+                                        <button
+                                            type="submit"
+                                            className={`bg-gray-500 text-white py-1 px-6 rounded-md hover:bg-gray-700 focus:outline-none`}
+                                            onClick={() => handleRest()}
+                                        >
+                                            Reset
+                                        </button>
+                                    </div>
+                                </div>
+                                : <div className="w-full text-gray-700 space-y-4">
                                     <p>
                                         <strong>Sinusitis Identified: </strong>
                                         {analysisResult.isSinusitis
-                                            ? <span className="border border-red-500 rounded-md py-1 px-4 text-red-500">
+                                            ? <span
+                                                className="border border-red-500 rounded-md py-1 px-4 text-red-500"
+                                            >
                                                     Yes
                                                 </span>
                                             : <span
-                                                className="border border-green-300 rounded-md py-1 px-4 text-green-300">
+                                                className="border border-green-300 rounded-md py-1 px-4 text-green-300"
+                                            >
                                                     No
                                                 </span>
                                         }
                                     </p>
-                                    <div>
-                                        <strong>Current Stage: </strong>
-                                        <span
-                                            className={predictionColors[analysisResult.prediction]}>
-                                            {analysisResult.label}
-                                        </span>
+                                    <div className="row-auto flex gap-1">
+                                        <p>
+                                            <strong>Current Stage: </strong>
+                                        </p>
+                                        <p>{analysisResult.severity}</p>
+                                    </div>
+                                    <div className="row-auto flex gap-1">
+                                        <p>
+                                            <strong>Suggestions: </strong>
+                                        </p>
+                                        <p>{analysisResult.suggestions}</p>
                                     </div>
                                     <p>
-                                        <strong>Suggestions: </strong>
-                                        {analysisResult.suggestions}
-                                    </p>
-                                    <p>
                                         <strong>Confidence Score: </strong>
-                                        {analysisResult.confidence_score?.toFixed(2)}
+                                        {analysisResult.confidenceScore == null
+                                            ? 'N/A'
+                                            : (Math.floor(analysisResult.confidenceScore * 100) / 100).toFixed(2)}
                                     </p>
+                                    <div className="flex justify-end gap-x-2">
+                                        <button
+                                            type="submit"
+                                            className={`bg-red-500 text-white py-1 px-6 rounded-md hover:bg-red-700 focus:outline-none`}
+                                            onClick={() => handleDone(false)}
+                                        >
+                                            Reject
+                                        </button>
+                                        <button
+                                            type="submit"
+                                            className={`bg-green-500 text-white py-1 px-6 rounded-md hover:bg-green-700 focus:outline-none`}
+                                            onClick={() => handleDone(true)}
+                                        >
+                                            Accept
+                                        </button>
+                                    </div>
                                 </div>
                         ) : (
                             <p className="text-gray-500 text-sm">No diagnosis available</p>

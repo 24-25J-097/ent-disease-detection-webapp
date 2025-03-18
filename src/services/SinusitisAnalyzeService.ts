@@ -3,8 +3,8 @@ import ApiService from "@/services/api-service/ApiService";
 import {AppResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Response";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
-import {CholesteatomaDiagnosisData} from '@/types/service/Diagnosis';
-import {SinusitisRequest, SinusitisResult} from "@/types/service/SinusitisResult";
+import {SinusitisDiagnosisAcceptance, SinusitisDiagnosisData} from "@/types/service/SinusitisDiagnosis";
+import {Sinusitis} from "@/models/Sinusitis";
 
 export class SinusitisAnalyzeService {
 
@@ -12,11 +12,18 @@ export class SinusitisAnalyzeService {
         return ApiService.getInstance().getApi();
     }
 
-    public static async analyze(sinusFormData: SinusitisRequest): Promise<AppResponse<SinusitisResult>> {
-        const ep = ApiUtils.fastApiUrl + "/api/sinusitis/analyze";
+    public static async analyze(sinusFormData: SinusitisDiagnosisData): Promise<AppResponse<Sinusitis>> {
+        // const ep = ApiUtils.fastApiUrl + "/api/sinusitis/analyze";
+        const ep = ApiUtils.doctorUrl("diagnosis/sinusitis");
         console.log(ep)
         const formData = convertToAPIFormData(sinusFormData, true);
-        const res = await SinusitisAnalyzeService.api().post<CholesteatomaDiagnosisData, AxiosAppResponse<SinusitisResult>>(ep, formData);
+        const res = await SinusitisAnalyzeService.api().post<SinusitisDiagnosisData, AxiosAppResponse<Sinusitis>>(ep, formData);
+        return res.data;
+    }
+
+    public static async sinusitisDiagnosisAccept(diagnosisAcceptance: SinusitisDiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/sinusitis/accept");
+        const res = await SinusitisAnalyzeService.api().post<SinusitisDiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
         return res.data;
     }
 }
