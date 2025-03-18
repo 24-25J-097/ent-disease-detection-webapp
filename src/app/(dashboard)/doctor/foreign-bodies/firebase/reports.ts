@@ -46,7 +46,7 @@ export const updateReport = async (id: string, data: Partial<Report>): Promise<v
 };
 
 export const uploadImage = async (file: File): Promise<string> => {
-    const storageRef = ref(storage, `xrays/${Date.now()}-${file.name}`);
+    const storageRef = ref(storage, `lateral/${Date.now()}-${file.name}`);
     const snapshot = await uploadBytes(storageRef, file);
     return await getDownloadURL(snapshot.ref);
 };

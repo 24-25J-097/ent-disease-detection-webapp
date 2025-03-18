@@ -31,7 +31,7 @@ const [note, setNote] = useState<string>("");
   const fullSizeImageRef = useRef<HTMLImageElement | null>(null);
 
   const uploadImageToFirebase = async (file: File) => {
-    const storageRef = ref(storage, `images/${file.name}`);
+    const storageRef = ref(storage, `lateral/${file.name}`);
     await uploadBytes(storageRef, file);
     const downloadURL = await getDownloadURL(storageRef);
     return downloadURL;
