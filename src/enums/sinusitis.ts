@@ -4,6 +4,7 @@ export enum SinusitisResultEnum {
     mild = "mild",
     moderate = "moderate",
     severe = "severe",
+    na = "N/A",
 }
 
 // Map enum values to their respective colors
@@ -13,6 +14,7 @@ export const predictionColors: { [key in SinusitisResultEnum]: string } = {
     [SinusitisResultEnum.mild]: "text-green-500",
     [SinusitisResultEnum.moderate]: "text-orange-500",
     [SinusitisResultEnum.severe]: "text-red-500",
+    [SinusitisResultEnum.na]: "text-red-500",
 };
 // Map enum values to their respective colors
 export const predictionText: { [key in SinusitisResultEnum]: string } = {
@@ -21,4 +23,5 @@ export const predictionText: { [key in SinusitisResultEnum]: string } = {
     [SinusitisResultEnum.mild]: "Healthy Or Not Serious Sinusitis",
     [SinusitisResultEnum.moderate]: "Moderate Sinusitis",
     [SinusitisResultEnum.severe]: "Severe Sinusitis",
+    [SinusitisResultEnum.na]: "Severe Sinusitis",
 };
