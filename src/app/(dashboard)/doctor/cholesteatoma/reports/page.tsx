@@ -93,7 +93,7 @@ const ReportsPage: NextPage = () => {
                 <div>
                     <button
                         type="button"
-                        className="bg-green-500 text-white py-2 px-4 w-64 rounded-md hover:bg-green-700
+                        className="bg-green-500 text-white py-2 px-4 w-80 rounded-md hover:bg-green-700
                         focus:outline-none flex items-center justify-between"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                     >
@@ -105,34 +105,34 @@ const ReportsPage: NextPage = () => {
                     </button>
 
                     {dropdownOpen && (
-                        <div className="absolute mt-2 w-64 bg-white shadow-lg rounded-md py-2">
+                        <div className="absolute mt-2 w-80 bg-white shadow-lg rounded-md py-2 z-50">
                             <button
                                 onClick={() => handlePrint(acceptedVsRejectedPieChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
+                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
                             >
                                 Print Diagnosis Accepted vs. Rejected
                             </button>
                             <button
                                 onClick={() => handlePrint(diagnosisStatusPieChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
+                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
                             >
                                 Print Diagnosis Status
                             </button>
                             <button
                                 onClick={() => handlePrint(diseaseVsHealthyDoughnutChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
+                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
                             >
                                 Print Cholesteatoma vs. Healthy
                             </button>
                             <button
                                 onClick={() => handlePrint(stagesBarChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
+                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
                             >
                                 Print Cholesteatoma Stages
                             </button>
                             <button
                                 onClick={() => handlePrint(confidenceScoreBarChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
+                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
                             >
                                 Print Confidence Scores
                             </button>

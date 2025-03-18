@@ -15,7 +15,7 @@ const CholesteatomaListPage: NextPage = () => {
 
     const [cholesteatomaList, setCholesteatomaList] = useState<Cholesteatoma[]>([]);
     const [filteredCholesteatomaList, setFilteredCholesteatomaList] = useState<Cholesteatoma[]>([]);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [statusFilter, setStatusFilter] = useState<string>("");
     const [stageFilter, setStageFilter] = useState<string>("");
     const [patientIdSearch, setPatientIdSearch] = useState<string>("");
@@ -103,7 +103,7 @@ const CholesteatomaListPage: NextPage = () => {
 
                 {isLoading ? (
                     <LoadingMessage/>
-                ) : filteredCholesteatomaList.length === 0 ? (
+                ) : (cholesteatomaList.length === 0 || filteredCholesteatomaList.length === 0) ? (
                     <>
                         <div className="flex justify-center items-center h-full min-h-[250px] mt-6">
                             <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
@@ -159,7 +159,8 @@ const CholesteatomaListPage: NextPage = () => {
                                                     : "N/A"}
                                             </p>
                                             <p className={`mt-2 font-semibold ${item.status === "diagnosed"
-                                                ? "text-green-600" : item.status === "failed" ? "text-red-600" : "text-yellow-600"}`}>
+                                                ? "text-green-600" : item.status === "failed" ? "text-red-600" : "text-yellow-600"}`}
+                                            >
                                                 Status: {item.status || "Pending"}
                                             </p>
                                         </div>
