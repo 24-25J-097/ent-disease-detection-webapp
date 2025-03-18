@@ -1,43 +1,40 @@
 "use client";
 
 import {NextPage} from "next";
-import DiagnosisStatusPieChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/DiagnosisStatusPieChart';
-import CholesteatomaStagesBarChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/CholesteatomaStagesBarChart';
-import ConfidenceScoreBarChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/ConfidenceScoreBarChart';
-import DiseaseVsHealthyPieChart
-    from '@/app/(dashboard)/doctor/cholesteatoma/reports/DiseaseVsHealthyPieChart';
+import DiagnosisStatusPieChart from '@/app/(dashboard)/doctor/pharyngitis/reports/DiagnosisStatusPieChart';
+import PharyngitisStagesBarChart from '@/app/(dashboard)/doctor/pharyngitis/reports/PharyngitisStagesBarChart';
+import ConfidenceScoreBarChart from '@/app/(dashboard)/doctor/pharyngitis/reports/ConfidenceScoreBarChart';
+import DiseaseVsHealthyDoughnutChart
+    from '@/app/(dashboard)/doctor/pharyngitis/reports/DiseaseVsHealthyDoughnutChart';
 import React, {useEffect, useRef, useState} from 'react';
 import {ChevronDown, Printer} from 'lucide-react';
-import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
-import {CholesteatomaReportsData} from '@/types/Charts';
-import AcceptedVsRejectedPieChart from '@/app/(dashboard)/doctor/cholesteatoma/reports/AcceptedVsRejectedPieChart';
-import {Button} from '@/components/ui/button';
+import {PharyngitisAnalyzeService} from '@/services/PharyngitisAnalyzeService';
+import {PharyngitisReportsData} from '@/types/Charts';
 
 const ReportsPage: NextPage = () => {
 
-    const acceptedVsRejectedPieChartRef = useRef<HTMLDivElement | null>(null);
     const diagnosisStatusPieChartRef = useRef<HTMLDivElement | null>(null);
     const diseaseVsHealthyDoughnutChartRef = useRef<HTMLDivElement | null>(null);
     const stagesBarChartRef = useRef<HTMLDivElement | null>(null);
     const confidenceScoreBarChartRef = useRef<HTMLDivElement | null>(null);
 
-    const [reportsData, setReportsData] = useState<CholesteatomaReportsData | null>(null);
+    const [reportsData, setReportsData] = useState<PharyngitisReportsData | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
     useEffect(() => {
         (async () => {
-            await fetchCholesteatomaReportsData();
+            await fetchPharyngitisReportsData();
         })();
     }, []);
 
-    const fetchCholesteatomaReportsData = async () => {
+    const fetchPharyngitisReportsData = async () => {
         try {
-            const response = await CholesteatomaDiagnosisService.getCholesteatomaReports();
+            const response = await PharyngitisAnalyzeService.getPharyngitisReports();
             if (response.success && response.data) {
                 setReportsData(response.data);
             }
         } catch (error) {
-            console.error("Error in get cholesteatoma reports data: ", error);
+            console.error("Error in get pharyngitis reports data: ", error);
         }
     };
 
@@ -89,11 +86,13 @@ const ReportsPage: NextPage = () => {
         <section className="bg-blue-50 min-h-screen px-4">
             <div className="flex py-8 justify-between">
                 <h1 className="text-slate-600 text-3xl font-bold text-center">
-                    Cholesteatoma Reports
+                    Pharyngitis Reports
                 </h1>
                 <div>
-                    <Button
-                        className="bg-blue-900 text-white w-80 flex items-center justify-between"
+                    <button
+                        type="button"
+                        className="bg-green-500 text-white py-2 px-4 w-64 rounded-md hover:bg-green-700
+                        focus:outline-none flex items-center justify-between"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                     >
                         <div className="flex">
@@ -101,37 +100,31 @@ const ReportsPage: NextPage = () => {
                             <span className="mx-2">Print Reports</span>
                         </div>
                         <ChevronDown className="stroke-1.5 w-5 h-5"/>
-                    </Button>
+                    </button>
 
                     {dropdownOpen && (
-                        <div className="absolute mt-2 w-80 bg-white shadow-lg rounded-md py-2 z-50">
-                            <button
-                                onClick={() => handlePrint(acceptedVsRejectedPieChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
-                            >
-                                Print Diagnosis Accepted vs. Rejected
-                            </button>
+                        <div className="absolute mt-2 w-64 bg-white shadow-lg rounded-md py-2">
                             <button
                                 onClick={() => handlePrint(diagnosisStatusPieChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
                             >
                                 Print Diagnosis Status
                             </button>
                             <button
                                 onClick={() => handlePrint(diseaseVsHealthyDoughnutChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
                             >
-                                Print Cholesteatoma vs. Healthy
+                                Print Pharyngitis vs. Healthy
                             </button>
                             <button
                                 onClick={() => handlePrint(stagesBarChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
                             >
-                                Print Cholesteatoma Stages
+                                Print Pharyngitis Stages
                             </button>
                             <button
                                 onClick={() => handlePrint(confidenceScoreBarChartRef)}
-                                className="block w-full px-4 py-2 text-left hover:bg-blue-50"
+                                className="block w-full px-4 py-2 text-left hover:bg-gray-200"
                             >
                                 Print Confidence Scores
                             </button>
@@ -139,23 +132,17 @@ const ReportsPage: NextPage = () => {
                     )}
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-8 pb-8">
-                <AcceptedVsRejectedPieChart
-                    diagnosisAcceptedVsRejected={reportsData?.diagnosisAcceptedVsRejected ?? null}
-                    chartRef={acceptedVsRejectedPieChartRef}
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6">
                 <DiagnosisStatusPieChart
                     diagnosisStatusData={reportsData?.diagnosisStatus ?? null}
                     chartRef={diagnosisStatusPieChartRef}
                 />
-                <DiseaseVsHealthyPieChart
-                    cholesteatomaVsHealthyData={reportsData?.cholesteatomaVsHealthy ?? null}
+                <DiseaseVsHealthyDoughnutChart
+                    pharyngitisVsHealthyData={reportsData?.pharyngitisVsHealthy ?? null}
                     chartRef={diseaseVsHealthyDoughnutChartRef}
                 />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8">
-                <CholesteatomaStagesBarChart
-                    cholesteatomaStagesData={reportsData?.cholesteatomaStages ?? null}
+                <PharyngitisStagesBarChart
+                    pharyngitisStagesData={reportsData?.pharyngitisStage ?? null}
                     chartRef={stagesBarChartRef}
                 />
                 <ConfidenceScoreBarChart

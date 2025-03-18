@@ -8,33 +8,33 @@ export const DoctorMenuItems: MenuItem[] = [
         icon: "Dashboard",
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}`,
-        isDivider: false,
+        isDivider: true,
     },
     {
         id: 2,
         title: "Diagnosis of Sinusitis",
         icon: "SquareActivity",
         isRootMenu: true,
-        link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/patients`,
+        link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis`,
         subMenu: [
-            /*{
+            {
                 id: 1,
-                title: "Patients",
+                title: "History",
                 icon: "Users",
-                link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/patients`,
-            },*/
+                link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis`,
+            },
             {
                 id: 2,
                 title: "Identification",
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/identification`,
             },
-            /*{
+            {
                 id: 3,
                 title: "Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/reports`,
-            },*/
+            },
         ],
         isDivider: false,
     },
@@ -43,23 +43,23 @@ export const DoctorMenuItems: MenuItem[] = [
         title: "Diagnosis of Cholesteatoma",
         icon: "SquareActivity",
         isRootMenu: true,
-        link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
+        link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`,
         subMenu: [
-            /* {
-                 id: 1,
-                 title: "Patients",
-                 icon: "Users",
-                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
-             },*/
             {
-                id: 2,
+                id: 1,
                 title: "Identification",
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/identification`,
             },
             {
+                id: 2,
+                title: "Diagnosis History",
+                icon: "List",
+                link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`,
+            },
+            {
                 id: 3,
-                title: "Reports",
+                title: "Statistical Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/reports`,
             },
@@ -73,24 +73,18 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/patients`,
         subMenu: [
-            /*{
-                id: 1,
-                title: "Patients",
-                icon: "Users",
-                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/patients`,
-            },*/
             {
                 id: 2,
                 title: "Identification",
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/identification`,
             },
-            /*{
+            {
                 id: 3,
                 title: "Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/reports`,
-            },*/
+            },
         ],
         isDivider: false,
     },
@@ -102,17 +96,17 @@ export const DoctorMenuItems: MenuItem[] = [
         link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
         subMenu: [
             {
-                 id: 1,
-                 title: "Patients",
+                id: 1,
+                title: "Patients",
                 icon: "Users",
-                 link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
-             },
-             {
-                    id: 2,
-                        title: "Identification",
-                        icon: "ScanEye",
-                        link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/identification`,
-             },
+                link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/patients`,
+            },
+            {
+                id: 2,
+                title: "Identification",
+                icon: "ScanEye",
+                link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/identification`,
+            },
             {
                 id: 3,
                 title: "Reports",
@@ -120,6 +114,14 @@ export const DoctorMenuItems: MenuItem[] = [
                 link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/reports`,
             }
         ],
-        isDivider: false,
+        isDivider: true,
+    },
+    {
+        id: 6,
+        title: "Patients",
+        icon: "Users",
+        isRootMenu: true,
+        link: `${URLBase.DOCTOR_DASHBOARD}/patients`,
+        isDivider: true,
     },
 ];
