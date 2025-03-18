@@ -8,7 +8,7 @@ export const DoctorMenuItems: MenuItem[] = [
         icon: "Dashboard",
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}`,
-        isDivider: false,
+        isDivider: true,
     },
     {
         id: 2,
@@ -43,14 +43,8 @@ export const DoctorMenuItems: MenuItem[] = [
         title: "Diagnosis of Cholesteatoma",
         icon: "SquareActivity",
         isRootMenu: true,
-        link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
+        link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`,
         subMenu: [
-            /* {
-                 id: 1,
-                 title: "Patients",
-                 icon: "Users",
-                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
-             },*/
             {
                 id: 2,
                 title: "Identification",
@@ -63,6 +57,12 @@ export const DoctorMenuItems: MenuItem[] = [
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/reports`,
             },
+            {
+                id: 3,
+                title: "Identification List",
+                icon: "List",
+                link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`,
+            },
         ],
         isDivider: false,
     },
@@ -73,12 +73,6 @@ export const DoctorMenuItems: MenuItem[] = [
         isRootMenu: true,
         link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/patients`,
         subMenu: [
-            /*{
-                id: 1,
-                title: "Patients",
-                icon: "Users",
-                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/patients`,
-            },*/
             {
                 id: 2,
                 title: "Identification",
@@ -120,6 +114,14 @@ export const DoctorMenuItems: MenuItem[] = [
                 link: `${URLBase.DOCTOR_DASHBOARD}/foreign-bodies/reports`,
             }
         ],
-        isDivider: false,
+        isDivider: true,
+    },
+    {
+        id: 6,
+        title: "Patients",
+        icon: "Users",
+        isRootMenu: true,
+        link: `${URLBase.DOCTOR_DASHBOARD}/patients`,
+        isDivider: true,
     },
 ];

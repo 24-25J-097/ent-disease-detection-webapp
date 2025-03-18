@@ -9,7 +9,7 @@ import {
     HardDrive,
     Home,
     Inbox,
-    Layout, LockKeyholeOpen,
+    Layout, List, LockKeyholeOpen,
     MessageSquare, ScanEye,
     ShoppingBag,
     Sidebar, SquareActivity,
@@ -63,6 +63,8 @@ const GetLucideReactIcon: React.FC<GetLucideReactIconProps> = ({ icon, className
             return (<><ScanEye className={className || "stroke-1.5 w-5 h-5"} /></>);
         case "ClipboardPlus":
             return (<><ClipboardPlus className={className || "stroke-1.5 w-5 h-5"} /></>);
+        case "List":
+            return (<><List className={className || "stroke-1.5 w-5 h-5"} /></>);
         default:
             return (<></>);
     }
