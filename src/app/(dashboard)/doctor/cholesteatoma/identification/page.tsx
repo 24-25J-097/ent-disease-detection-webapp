@@ -16,6 +16,7 @@ import useRouterApp from '@/hooks/useRouterApp';
 import LoadingModal from '@/components/loaders/LoadingModal';
 import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
+import {URLBase} from '@/enums/navigation';
 
 const IdentificationPage: NextPage = () => {
 
@@ -178,7 +179,7 @@ const IdentificationPage: NextPage = () => {
                             type="button"
                             className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700
                             focus:outline-none"
-                            onClick={() => alert("Redirecting to Patient List...")}
+                            onClick={() => router.push(`${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`)}
                         >
                             Identification List
                         </button>

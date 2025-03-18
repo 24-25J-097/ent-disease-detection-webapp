@@ -37,7 +37,7 @@ export const DoctorMenuItems: MenuItem[] = [
         title: "Diagnosis of Cholesteatoma",
         icon: "SquareActivity",
         isRootMenu: true,
-        link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma/patients`,
+        link: `${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`,
         subMenu: [
             {
                 id: 2,
