@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { User, Edit, Lock, HelpCircle, ToggleRight } from 'lucide-react';
+import { User, Edit, Settings, HelpCircle, ToggleRight } from 'lucide-react';
 import useClickOutside from "@/hooks/useClickOutside";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,19 +29,19 @@ const TopBarAccountMenu: React.FC = () => {
             setMenuItems([
                 { id: 1, icon: User, label: 'Profile' },
                 { id: 2, icon: Edit, label: 'Add Account' },
-                { id: 3, icon: Lock, label: 'Reset Password' },
+                { id: 3, icon: Settings, label: 'Settings' },
                 { id: 4, icon: HelpCircle, label: 'Help' },
             ]);
         }else if (role == Role.DOCTOR) {
             setMenuItems([
                 { id: 1, icon: User, label: 'Profile' },
-                { id: 3, icon: Lock, label: 'Reset Password' },
+                { id: 3, icon: Settings, label: 'Settings' },
                 { id: 4, icon: HelpCircle, label: 'Help' },
             ]);
         } else {
             setMenuItems([
                 { id: 1, icon: User, label: 'Profile' },
-                { id: 3, icon: Lock, label: 'Reset Password' },
+                { id: 3, icon: Settings, label: 'Settings' },
                 { id: 4, icon: HelpCircle, label: 'Help' },
             ]);
         }
