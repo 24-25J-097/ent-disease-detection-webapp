@@ -13,7 +13,7 @@ import {
 } from 'chart.js';
 import { Bar, Pie } from 'react-chartjs-2';
 import 'chartjs-adapter-date-fns';
-
+import{ Report } from '../types/types'
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,8 +25,21 @@ ChartJS.register(
   TimeScale
 );
 
+interface Prediction {
+  class: 'B' | 'D';
+  confidence: number;
+  bbox?: number[];
+}
+
+
+
 interface PatientStatsProps {
-  reports: any[];
+  reports: Report[];
+}
+
+interface DetectionStats {
+  batteryCount: number;
+  dentalCount: number;
 }
 
 const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
@@ -34,7 +47,7 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
 
   const stats = useMemo(() => {
     // Group reports by month for timeline
-    const reportsByMonth = reports.reduce((acc, report) => {
+    const reportsByMonth = reports.reduce((acc: Record<string, number>, report) => {
       const date = new Date(report.timestamp?.seconds * 1000);
       const monthKey = date.toLocaleString('default', { 
         year: 'numeric',
@@ -53,8 +66,8 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
     const displayMonths = sortedMonths.slice(-displayRange);
 
     // Calculate detection statistics
-    const detectionStats = reports.reduce((acc, report) => {
-      report.predictions.forEach(pred => {
+    const detectionStats = reports.reduce((acc: DetectionStats, report) => {
+      report.predictions.forEach((pred: Prediction) => {
         if (pred.class === 'B') acc.batteryCount++;
         if (pred.class === 'D') acc.dentalCount++;
       });
@@ -90,6 +103,7 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Timeline Chart */}
       <div className="bg-white p-6 rounded-xl shadow">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Reports Timeline</h3>
@@ -104,7 +118,7 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
             <option value={1000}>All Time</option>
           </select>
         </div>
-        <div className="h-[300px]"> {/* Fixed height container */}
+        <div className="h-[300px]">
           <Bar
             data={stats.timelineChartData}
             options={{
@@ -131,6 +145,9 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
                 }
               },
               plugins: {
+                legend: {
+                  display: false
+                },
                 tooltip: {
                   callbacks: {
                     title: (context) => `Month: ${context[0].label}`,
@@ -143,9 +160,10 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
         </div>
       </div>
 
+      {/* Pie Chart */}
       <div className="bg-white p-6 rounded-xl shadow">
         <h3 className="text-lg font-semibold mb-4">Detection Distribution</h3>
-        <div className="h-[300px]"> {/* Fixed height container */}
+        <div className="h-[300px]">
           <Pie
             data={stats.pieChartData}
             options={{
@@ -175,6 +193,7 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
         </div>
       </div>
 
+      {/* Summary Statistics */}
       <div className="bg-white p-6 rounded-xl shadow col-span-full">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div className="bg-blue-50 p-4 rounded-lg">
