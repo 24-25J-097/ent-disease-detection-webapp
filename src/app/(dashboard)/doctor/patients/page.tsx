@@ -122,9 +122,13 @@ const PatientsPage: NextPage = () => {
                                     <TableCell className="p-3">{patient.diagnosis}</TableCell>
                                     <TableCell className="p-3">{patient.admissionDate}</TableCell>
                                     <TableCell className="p-3 text-center">
-                                        <Button variant="outline"
-                                                className="text-blue-600 border-blue-600 mr-2">View</Button>
-                                        <Button variant="destructive">Delete</Button>
+                                        <Button
+                                            variant="outline"
+                                            className="text-blue-600 border-blue-600 mr-2"
+                                        >
+                                            View
+                                        </Button>
+                                        <Button variant="destructive">Manage</Button>
                                     </TableCell>
                                 </TableRow>
                             ))}

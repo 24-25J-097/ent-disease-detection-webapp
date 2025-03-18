@@ -1,7 +1,7 @@
 "use client";
 
 import {NextPage} from "next";
-import React from "react";
+import React, {useState} from "react";
 import {Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Legend, LineChart, Line} from "recharts";
 import {Card} from "@/components/ui/card";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
@@ -11,6 +11,7 @@ import {Autoplay, Navigation, Pagination} from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import {Button} from '@/components/ui/button';
 
 const summaryStats = [
     {title: "OPD Today", value: 125},
@@ -28,28 +29,58 @@ const cholesteatomaData = {
         {month: "Apr", newPatients: 18, oldPatients: 22},
         {month: "May", newPatients: 15, oldPatients: 28},
         {month: "Jun", newPatients: 10, oldPatients: 35},
+        {month: "Jul", newPatients: 13, oldPatients: 22},
+        {month: "Aug", newPatients: 10, oldPatients: 15},
+        {month: "Sep", newPatients: 5, oldPatients: 14},
+        {month: "Oct", newPatients: 7, oldPatients: 12},
+        {month: "Nov", newPatients: 8, oldPatients: 20},
+        {month: "Dec", newPatients: 10, oldPatients: 35},
     ]
 };
 
 const sinusitisData = {
     name: "Sinusitis Report",
     data: [
-        {month: "Jan", newPatients: 15, oldPatients: 20},
+        {month: "Jan", newPatients: 5, oldPatients: 3},
         {month: "Feb", newPatients: 10, oldPatients: 25},
-        {month: "Mar", newPatients: 18, oldPatients: 30},
+        {month: "Mar", newPatients: 4, oldPatients: 16},
         {month: "Apr", newPatients: 22, oldPatients: 18},
-        {month: "May", newPatients: 28, oldPatients: 15},
-        {month: "Jun", newPatients: 35, oldPatients: 10},
+        {month: "May", newPatients: 8, oldPatients: 15},
+        {month: "Jun", newPatients: 23, oldPatients: 10},
+        {month: "Jul", newPatients: 12, oldPatients: 24},
+        {month: "Aug", newPatients: 10, oldPatients: 4},
+        {month: "Sep", newPatients: 11, oldPatients: 2},
+        {month: "Oct", newPatients: 15, oldPatients: 7},
+        {month: "Nov", newPatients: 4, oldPatients: 14},
+        {month: "Dec", newPatients: 2, oldPatients: 16},
     ]
 };
 
-const commonDiseasesData = [
-    {day: "Mon", cholesteatoma: 100, sinusitis: 50, pharyngitis: 120, foreignBodies: 25},
-    {day: "Tue", cholesteatoma: 120, sinusitis: 80, pharyngitis: 110, foreignBodies: 30},
-    {day: "Wed", cholesteatoma: 90, sinusitis: 60, pharyngitis: 140, foreignBodies: 20},
-    {day: "Thu", cholesteatoma: 130, sinusitis: 70, pharyngitis: 160, foreignBodies: 15},
-    {day: "Fri", cholesteatoma: 150, sinusitis: 90, pharyngitis: 180, foreignBodies: 11},
+const commonDiseasesMonthly = [
+    {month: "Jan", cholesteatoma: 100, sinusitis: 50, pharyngitis: 120, foreignBodies: 25},
+    {month: "Feb", cholesteatoma: 120, sinusitis: 80, pharyngitis: 110, foreignBodies: 30},
+    {month: "Mar", cholesteatoma: 90, sinusitis: 60, pharyngitis: 140, foreignBodies: 20},
+    {month: "Apr", cholesteatoma: 130, sinusitis: 70, pharyngitis: 160, foreignBodies: 15},
+    {month: "May", cholesteatoma: 150, sinusitis: 90, pharyngitis: 180, foreignBodies: 11},
+    {month: "Jun", cholesteatoma: 140, sinusitis: 85, pharyngitis: 150, foreignBodies: 18},
+    {month: "Jul", cholesteatoma: 160, sinusitis: 95, pharyngitis: 170, foreignBodies: 22},
+    {month: "Aug", cholesteatoma: 170, sinusitis: 100, pharyngitis: 160, foreignBodies: 24},
+    {month: "Sep", cholesteatoma: 180, sinusitis: 110, pharyngitis: 140, foreignBodies: 27},
+    {month: "Oct", cholesteatoma: 190, sinusitis: 120, pharyngitis: 130, foreignBodies: 20},
+    {month: "Nov", cholesteatoma: 200, sinusitis: 130, pharyngitis: 120, foreignBodies: 23},
+    {month: "Dec", cholesteatoma: 210, sinusitis: 140, pharyngitis: 110, foreignBodies: 26},
 ];
+
+const commonDiseasesWeekly = [
+    {day: "Mon", cholesteatoma: 3, sinusitis: 1, pharyngitis: 5, foreignBodies: 1},
+    {day: "Tue", cholesteatoma: 2, sinusitis: 2, pharyngitis: 4, foreignBodies: 2},
+    {day: "Wed", cholesteatoma: 4, sinusitis: 1, pharyngitis: 6, foreignBodies: 1},
+    {day: "Thu", cholesteatoma: 5, sinusitis: 3, pharyngitis: 3, foreignBodies: 0},
+    {day: "Fri", cholesteatoma: 3, sinusitis: 2, pharyngitis: 2, foreignBodies: 1},
+    {day: "Sat", cholesteatoma: 2, sinusitis: 1, pharyngitis: 5, foreignBodies: 2},
+    {day: "Sun", cholesteatoma: 4, sinusitis: 2, pharyngitis: 3, foreignBodies: 1},
+];
+
 
 const patientsList = [
     {id: 1, name: "Nimal Perera", doctor: "Dr. Janaka Wijesinghe", date: "12 Jan 2022", disease: "Cholesteatoma"},
@@ -66,6 +97,8 @@ const doctorsList = [
 ];
 
 const DoctorDashboard: NextPage = () => {
+
+    const [isMonthly, setIsMonthly] = useState<boolean>(true);
 
     return (
         <section className="bg-blue-50 min-h-screen px-4">
@@ -127,10 +160,22 @@ const DoctorDashboard: NextPage = () => {
                     </div>
 
                     <Card className="p-4 bg-white shadow-md">
-                        <h2 className="text-lg font-semibold mb-3">Common Diseases Report</h2>
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-lg font-semibold mb-3">
+                                {isMonthly ? 'Monthly' : 'Daily'} Diseases Report
+                            </h2>
+                            <div className="mb-4">
+                                <Button
+                                    onClick={() => setIsMonthly(!isMonthly)}
+                                    className="text-blue-900 font-semibold"
+                                >
+                                    {isMonthly ? 'Daily Report' : 'Monthly Report'}
+                                </Button>
+                            </div>
+                        </div>
                         <ResponsiveContainer width="100%" height={250}>
-                            <BarChart data={commonDiseasesData}>
-                                <XAxis dataKey="day"/>
+                            <BarChart data={isMonthly ? commonDiseasesMonthly : commonDiseasesWeekly}>
+                                <XAxis dataKey={isMonthly ? "month" : "day"}/>
                                 <YAxis/>
                                 <Tooltip/>
                                 <Legend/>
