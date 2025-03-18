@@ -65,10 +65,10 @@ const CholesteatomaStagesBarChart: React.FC<{
                     <div className="mt-4">
                         {Object.entries(stageDescriptions).map(([stage, description], index) => (
                             <div key={stage} className="flex items-center mb-2">
-                        <span
-                            className="inline-block w-4 h-4 mr-2 rounded-full"
-                            style={{backgroundColor: COLORS[index]}}
-                        ></span>
+                                <span
+                                    className="inline-block w-4 h-4 mr-2 rounded-full"
+                                    style={{backgroundColor: COLORS[index]}}
+                                ></span>
                                 <p className="text-gray-700 font-medium">
                                     <strong>{stage}:</strong> {description}
                                 </p>

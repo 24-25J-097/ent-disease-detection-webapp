@@ -20,3 +20,23 @@ export const formatToHumanReadableDate = (isoDateStr: string | null): string => 
     });
 };
 
+/**
+ * Converts an ISO date string into a human-readable format with specific time formatting.
+ *
+ * @param isoDateStr - The ISO date string to be formatted (e.g., "2024-07-28T07:02:27.000000Z").
+ * @returns The formatted date and time string (e.g., "Jul 28, 2024, 07:02 AM").
+ */
+export const formatToShortDateTime = (isoDateStr: string | null): string => {
+    if (!isoDateStr) {
+        return "";
+    }
+    const date = new Date(isoDateStr);
+    return date.toLocaleString("en-US", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    });
+};

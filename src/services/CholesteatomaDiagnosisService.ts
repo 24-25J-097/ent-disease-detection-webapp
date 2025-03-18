@@ -5,6 +5,7 @@ import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
 import {CholesteatomaDiagnosisData, DiagnosisAcceptance} from '@/types/service/Diagnosis';
 import {CholesteatomaReportsData} from '@/types/Charts';
+import {AxiosRequestConfig} from 'axios';
 
 export class CholesteatomaDiagnosisService {
 
@@ -29,6 +30,17 @@ export class CholesteatomaDiagnosisService {
         const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma/reports");
         const res = await CholesteatomaDiagnosisService.api().get(ep);
         return res.data;
+    }
+
+    public static async getAllCholesteatoma(): Promise<AppResponse<CommonResponse>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma");
+        const res = await CholesteatomaDiagnosisService.api().get(ep);
+        return res.data;
+    }
+
+    public static async getCholesteatomaImage(uploadId: string): Promise<any> {
+        const ep = ApiUtils.publicUrl(`diagnosis/cholesteatoma/image/${uploadId}`);
+        return  await CholesteatomaDiagnosisService.api().get(ep);
     }
 
 }

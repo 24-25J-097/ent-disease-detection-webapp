@@ -180,7 +180,7 @@ const IdentificationPage: NextPage = () => {
                             focus:outline-none"
                             onClick={() => alert("Redirecting to Patient List...")}
                         >
-                            Patient List
+                            Identification List
                         </button>
                     </div>
                 </div>
@@ -367,6 +367,7 @@ const IdentificationPage: NextPage = () => {
                                 width={1000}
                                 height={1000}
                                 onClick={() => setModalIsOpen(true)}
+                                title="Open Image"
                             />
                         ) : (
                             <p className="text-gray-500 text-sm">No image selected</p>
@@ -393,9 +394,9 @@ const IdentificationPage: NextPage = () => {
                     <Image
                         src={imagePreview}
                         alt="Zoomed Preview"
-                        className="rounded-md"
-                        width={800}
-                        height={600}
+                        className="rounded-md w-auto h-screen"
+                        width={1000}
+                        height={1000}
                     />
                 </div>
             </ReactModal>
