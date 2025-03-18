@@ -5,6 +5,7 @@ import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
 import {PharyngitisDiagnosisAcceptance, PharyngitisDiagnosisData} from "@/types/service/PharyngitisDiagnosisData";
 import {Pharyngitis} from "@/models/Pharyngitis";
+import {PharyngitisReportsData} from "@/types/Charts";
 
 export class PharyngitisAnalyzeService {
 
@@ -24,6 +25,12 @@ export class PharyngitisAnalyzeService {
     public static async pharyngitisDiagnosisAccept(diagnosisAcceptance: PharyngitisDiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
         const ep = ApiUtils.doctorUrl("diagnosis/pharyngitis/accept");
         const res = await PharyngitisAnalyzeService.api().post<PharyngitisDiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
+        return res.data;
+    }
+
+    public static async getPharyngitisReports(): Promise<AppResponse<PharyngitisReportsData>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/pharyngitis/reports");
+        const res = await PharyngitisAnalyzeService.api().get(ep);
         return res.data;
     }
 }
