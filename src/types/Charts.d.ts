@@ -13,6 +13,11 @@ export type SinusitisSeverityChart = {
     count: number;
 }
 
+export type PharyngitisStageChart = {
+    stage: string;
+    count: number;
+}
+
 export type ConfidenceScoreDistributionChart = {
     scoreRange: string;
     count: number;
@@ -23,4 +28,11 @@ export type SinusitisReportsData = {
     sinusitisSeverity: SinusitisSeverityChart[];
     confidenceScores: ConfidenceScoreDistributionChart[];
     sinusitisVsHealthy: DiseaseVsHealthyChart[];
+}
+
+export type PharyngitisReportsData = {
+    diagnosisStatus: DiagnosisStatusChart[];
+    pharyngitisStage: PharyngitisStageChart[];
+    confidenceScores: ConfidenceScoreDistributionChart[];
+    pharyngitisVsHealthy: DiseaseVsHealthyChart[];
 }
