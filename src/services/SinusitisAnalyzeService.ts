@@ -33,4 +33,10 @@ export class SinusitisAnalyzeService {
         const res = await SinusitisAnalyzeService.api().get(ep);
         return res.data;
     }
+
+    public static async getAllSinusitis(): Promise<AppResponse<Sinusitis[]>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/sinusitis");
+        const res = await SinusitisAnalyzeService.api().get(ep);
+        return res.data;
+    }
 }

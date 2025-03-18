@@ -15,14 +15,14 @@ export const DoctorMenuItems: MenuItem[] = [
         title: "Diagnosis of Sinusitis",
         icon: "SquareActivity",
         isRootMenu: true,
-        link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/patients`,
+        link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis`,
         subMenu: [
-            /*{
+            {
                 id: 1,
-                title: "Patients",
+                title: "History",
                 icon: "Users",
-                link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/patients`,
-            },*/
+                link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis`,
+            },
             {
                 id: 2,
                 title: "Identification",
