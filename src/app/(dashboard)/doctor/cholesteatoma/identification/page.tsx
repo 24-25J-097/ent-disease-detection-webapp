@@ -17,6 +17,7 @@ import LoadingModal from '@/components/loaders/LoadingModal';
 import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
 import {URLBase} from '@/enums/navigation';
+import {Button} from '@/components/ui/button';
 
 const IdentificationPage: NextPage = () => {
 
@@ -175,17 +176,15 @@ const IdentificationPage: NextPage = () => {
                         Cholesteatoma Identification
                     </h1>
                     <div>
-                        <button
-                            type="button"
-                            className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-700
-                            focus:outline-none"
+                        <Button
+                            className="bg-blue-900 text-white"
                             onClick={() => router.push(`${URLBase.DOCTOR_DASHBOARD}/cholesteatoma`)}
                         >
                             Identification List
-                        </button>
+                        </Button>
                     </div>
                 </div>
-                <div className="flex items-start justify-between gap-10 px-6 pb-6">
+                <div className="flex items-start justify-between gap-10 pb-6">
                     <div
                         className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-xl min-h-[700px]
                         flex flex-col"

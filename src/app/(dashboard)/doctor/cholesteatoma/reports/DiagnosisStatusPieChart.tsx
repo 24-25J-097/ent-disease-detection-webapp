@@ -36,7 +36,6 @@ const DiagnosisStatusPieChart: React.FC<{
                             outerRadius={90}
                             fill="#8884d8"
                             label={({percent}) => `${(percent * 100).toFixed(1)}%`}
-                            labelStyle={{fill: '#333', fontSize: 14}}
                         >
                             {diagnosisStatusData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
