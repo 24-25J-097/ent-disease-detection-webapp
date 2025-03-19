@@ -11,6 +11,7 @@ import 'react-resizable/css/styles.css';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 import { db, storage } from "./firebaseConfig";
+import UniquePatientIdInput from "./uniqueIdInput";
 
 const PatientsPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -25,6 +26,7 @@ const PatientsPage = () => {
   const [resizedDimensions, setResizedDimensions] = useState<{ width: number; height: number }>({ width: 800, height: 600 });
   const [patientId, setPatientId] = useState<string>("");
 const [note, setNote] = useState<string>("");
+const [isPatientIdValid, setIsPatientIdValid] = useState(false);
 
 
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -61,6 +63,11 @@ const [note, setNote] = useState<string>("");
   const handleUpload = async () => {
     if (!imageFile) {
       setErrors("Please upload an image.");
+      return;
+    }
+
+    if (!patientId.trim() || !isPatientIdValid) {
+      setErrors("Please enter a valid Patient ID.");
       return;
     }
   
@@ -219,16 +226,17 @@ const [note, setNote] = useState<string>("");
   </If>
 
   <div className="mb-6">
-    <label className="block text-gray-700 font-semibold mb-2">
-      Patient ID
-    </label>
-    <input
-      type="text"
-      value={patientId}
-      onChange={(e) => setPatientId(e.target.value)}
-      className="w-full text-gray-600 p-2 rounded-md border border-gray-300"
-    />
-  </div>
+  <label className="block text-gray-700 font-semibold mb-2">
+    Patient ID
+  </label>
+  <UniquePatientIdInput
+    value={patientId}
+    onChange={(value, isValid) => {
+      setPatientId(value);
+      setIsPatientIdValid(isValid);
+    }}
+  />
+</div>
 
   <div className="mb-6">
     <label className="block text-gray-700 font-semibold mb-2">

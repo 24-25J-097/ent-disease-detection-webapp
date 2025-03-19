@@ -14,7 +14,7 @@ import {
 import {SinusitisSeverityChart} from '@/types/Charts';
 import LoadingMessage from '@/components/loaders/LoadingMessage';
 
-const COLORS = ['#76bbff', '#2592f4', '#005bb2'];
+const COLORS = ['#11d901', '#faad14', '#ff4d4f'];
 
 const stageDescriptions: { [key: string]: string } = {
     'Healthy/Mild': 'No treatment necessary. Maintain hydration, use saline sprays, and monitor symptoms if present.',

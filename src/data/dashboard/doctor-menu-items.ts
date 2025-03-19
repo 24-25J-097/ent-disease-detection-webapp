@@ -19,19 +19,19 @@ export const DoctorMenuItems: MenuItem[] = [
         subMenu: [
             {
                 id: 1,
-                title: "History",
-                icon: "Users",
-                link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis`,
-            },
-            {
-                id: 2,
                 title: "Identification",
                 icon: "ScanEye",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/identification`,
             },
             {
+                id: 2,
+                title: "Patient History",
+                icon: "List",
+                link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis`,
+            },
+            {
                 id: 3,
-                title: "Reports",
+                title: "Analytic Reports",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/sinusitis/reports`,
             },
@@ -80,8 +80,14 @@ export const DoctorMenuItems: MenuItem[] = [
                 link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/identification`,
             },
             {
+                id: 2,
+                title: "Diagnosis History",
+                icon: "List",
+                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis`,
+            },
+            {
                 id: 3,
-                title: "Reports",
+                title: "Summery Report",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/reports`,
             },

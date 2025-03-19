@@ -48,6 +48,14 @@ export type SinusitisReportsData = {
     sinusitisSeverity: SinusitisSeverityChart[];
     confidenceScores: ConfidenceScoreDistributionChart[];
     sinusitisVsHealthy: DiseaseVsHealthyChart[];
+    monthlySeverityTrends: SeverityMonthlyData[];
+}
+
+export interface SeverityMonthlyData {
+    month: string;
+    mild: number;
+    moderate: number;
+    severe: number;
 }
 
 export type PharyngitisReportsData = {

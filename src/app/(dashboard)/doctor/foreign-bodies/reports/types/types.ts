@@ -5,6 +5,7 @@ export interface Report {
     imageUrl: string;
     predictions: Prediction[];
     updatedAt?: any;
+    [key: string]: any;
 }
 
 export interface Prediction {
