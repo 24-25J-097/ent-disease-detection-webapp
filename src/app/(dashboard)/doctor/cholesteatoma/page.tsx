@@ -7,11 +7,12 @@ import {Cholesteatoma} from "@/models/Cholesteatoma";
 import Image from "next/image";
 import {ApiUtils} from '@/services/api-service/ApiUtils';
 import LoadingMessage from '@/components/loaders/LoadingMessage';
-import {OctagonAlert} from 'lucide-react';
+import {ArrowUpDown, OctagonAlert} from 'lucide-react';
 import ReactModal from "react-modal";
 import {formatToShortDateTime} from '@/utils/date-formatters';
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Button} from '@/components/ui/button';
 
 const CholesteatomaListPage: NextPage = () => {
 
@@ -21,6 +22,7 @@ const CholesteatomaListPage: NextPage = () => {
     const [statusFilter, setStatusFilter] = useState<string>("");
     const [stageFilter, setStageFilter] = useState<string>("");
     const [patientIdSearch, setPatientIdSearch] = useState<string>("");
+    const [orderByPatientId, setOrderByPatientId] = useState<'asc' | 'desc'>('asc');
 
     useEffect(() => {
         (async () => {
@@ -30,7 +32,7 @@ const CholesteatomaListPage: NextPage = () => {
 
     useEffect(() => {
         applyFilters();
-    }, [statusFilter, stageFilter, cholesteatomaList, patientIdSearch]);
+    }, [statusFilter, stageFilter, cholesteatomaList, patientIdSearch, orderByPatientId]);
 
     const fetchCholesteatomaList = async () => {
         setIsLoading(true);
@@ -63,6 +65,11 @@ const CholesteatomaListPage: NextPage = () => {
                 item.patientId.toLowerCase().includes(patientIdSearch.toLowerCase())
             );
         }
+        filteredList.sort((a, b) => {
+            return orderByPatientId === 'asc'
+                ? a.patientId.localeCompare(b.patientId)
+                : b.patientId.localeCompare(a.patientId);
+        });
         setFilteredCholesteatomaList(filteredList);
     };
 
@@ -81,6 +88,14 @@ const CholesteatomaListPage: NextPage = () => {
                             placeholder="Search by Patient ID"
                             className="w-60 bg-white border border-gray-300 rounded-md"
                         />
+                        <Button
+                            onClick={() => setOrderByPatientId(orderByPatientId === 'asc' ? 'desc' : 'asc')}
+                            className="flex items-center bg-white border border-gray-300 rounded-md
+                            px-3 py-2 hover:bg-white"
+                            title="Order by Patient ID"
+                        >
+                            <ArrowUpDown className="stroke-2 w-8 h-8"/>
+                        </Button>
                         <Select onValueChange={setStatusFilter} value={statusFilter}>
                             <SelectTrigger className="w-40 bg-white border border-gray-300 rounded-md">
                                 <SelectValue placeholder="All Status"/>
