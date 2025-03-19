@@ -80,8 +80,14 @@ export const DoctorMenuItems: MenuItem[] = [
                 link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/identification`,
             },
             {
+                id: 2,
+                title: "Diagnosis History",
+                icon: "List",
+                link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis`,
+            },
+            {
                 id: 3,
-                title: "Reports",
+                title: "Summery Report",
                 icon: "ClipboardPlus",
                 link: `${URLBase.DOCTOR_DASHBOARD}/pharyngitis/reports`,
             },
