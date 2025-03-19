@@ -33,4 +33,11 @@ export class PharyngitisAnalyzeService {
         const res = await PharyngitisAnalyzeService.api().get(ep);
         return res.data;
     }
+
+    public static async getAllPharyngitis(): Promise<AppResponse<CommonResponse>> {
+        const ep = ApiUtils.doctorUrl("diagnosis/pharyngitis");
+        const res = await PharyngitisAnalyzeService.api().get(ep);
+        return res.data;
+    }
+
 }

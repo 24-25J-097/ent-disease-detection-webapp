@@ -3,7 +3,7 @@ import {Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend} from 'rechart
 import {DiagnosisStatusChart} from '@/types/Charts';
 import LoadingMessage from '@/components/loaders/LoadingMessage';
 
-const COLORS = ['#52c41a', '#ff4d4f', '#ffa940'];
+const COLORS = ['#11d901', '#ff4d4f', '#ffa940'];
 
 const DiagnosisStatusPieChart: React.FC<{
     diagnosisStatusData: DiagnosisStatusChart[] | null,

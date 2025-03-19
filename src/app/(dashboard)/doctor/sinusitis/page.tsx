@@ -128,22 +128,22 @@ const SinusitisListPage: NextPage = () => {
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 pb-6">
                             {filteredSinusitisList.map((item) => (
-                                <div key={item._id} className="bg-white p-4 rounded-lg shadow-md">
-                                    <h2 className="text-lg font-semibold mb-2">Patient ID: {item.patientId}</h2>
-                                    <div className="flex gap-2">
+                                <div key={item._id} className={`bg-white p-4 rounded-lg shadow-md ${ typeof item.accepted !== 'undefined' && !item.accepted ? '!bg-red-200 !text-white' : ''}`}>
+                                    <h2 className="text-lg font-semibold mb-2">Patient ID: P-{item.patientId}</h2>
+                                    <div className="flex gap-2 text-gray-700">
                                         <SinusitisImage
                                             uploadId={item.watersViewXrayImage}
                                         />
                                         <div>
-                                            <p className="mt-2 text-gray-700">
+                                            <p className="mt-2 ">
                                                 <strong>Diagnosis: </strong>
                                                 {item.diagnosisResult?.isSinusitis ? "Positive" : "Negative"}
                                             </p>
-                                            <p className="text-gray-700">
+                                            <p className="">
                                                 <strong>Severity: </strong>
                                                 {item.diagnosisResult?.severity || "N/A"}
                                             </p>
-                                            <p className="text-gray-700">
+                                            <p className="">
                                                 <strong>Confidence Score: </strong>
                                                 {
                                                     item.diagnosisResult?.confidenceScore
@@ -151,7 +151,7 @@ const SinusitisListPage: NextPage = () => {
                                                         : "N/A"
                                                 }
                                             </p>
-                                            <p className="text-gray-700">
+                                            <p className="">
                                                 <strong>Last Update: </strong>
                                                 {item.updatedAt
                                                     ? formatToShortDateTime(item.updatedAt.toString())

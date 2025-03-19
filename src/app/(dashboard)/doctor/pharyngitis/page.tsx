@@ -2,54 +2,52 @@
 
 import {NextPage} from "next";
 import React, {useEffect, useState} from "react";
-import {CholesteatomaDiagnosisService} from "@/services/CholesteatomaDiagnosisService";
-import {Cholesteatoma} from "@/models/Cholesteatoma";
+import {PharyngitisAnalyzeService} from "@/services/PharyngitisAnalyzeService";
+import {Pharyngitis} from "@/models/Pharyngitis";
 import Image from "next/image";
 import {ApiUtils} from '@/services/api-service/ApiUtils';
 import LoadingMessage from '@/components/loaders/LoadingMessage';
-import {ArrowUpDown, OctagonAlert} from 'lucide-react';
+import {OctagonAlert} from 'lucide-react';
 import ReactModal from "react-modal";
 import {formatToShortDateTime} from '@/utils/date-formatters';
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Button} from '@/components/ui/button';
 
-const CholesteatomaListPage: NextPage = () => {
+const PharyngitisListPage: NextPage = () => {
 
-    const [cholesteatomaList, setCholesteatomaList] = useState<Cholesteatoma[]>([]);
-    const [filteredCholesteatomaList, setFilteredCholesteatomaList] = useState<Cholesteatoma[]>([]);
+    const [pharyngitisList, setPharyngitisList] = useState<Pharyngitis[]>([]);
+    const [filteredPharyngitisList, setFilteredPharyngitisList] = useState<Pharyngitis[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [statusFilter, setStatusFilter] = useState<string>("");
     const [stageFilter, setStageFilter] = useState<string>("");
     const [patientIdSearch, setPatientIdSearch] = useState<string>("");
-    const [orderByPatientId, setOrderByPatientId] = useState<'asc' | 'desc'>('asc');
 
     useEffect(() => {
         (async () => {
-            await fetchCholesteatomaList();
+            await fetchPharyngitisList();
         })();
     }, []);
 
     useEffect(() => {
         applyFilters();
-    }, [statusFilter, stageFilter, cholesteatomaList, patientIdSearch, orderByPatientId]);
+    }, [statusFilter, stageFilter, pharyngitisList, patientIdSearch]);
 
-    const fetchCholesteatomaList = async () => {
+    const fetchPharyngitisList = async () => {
         setIsLoading(true);
         try {
-            const response = await CholesteatomaDiagnosisService.getAllCholesteatoma();
+            const response = await PharyngitisAnalyzeService.getAllPharyngitis();
             if (response.success && response.data) {
-                setCholesteatomaList(response.data as Cholesteatoma[]);
+                setPharyngitisList(response.data as Pharyngitis[]);
             }
         } catch (error) {
-            console.error("Error fetching cholesteatoma list:", error);
+            console.error("Error fetching pharyngitis list:", error);
         } finally {
             setIsLoading(false);
         }
     };
 
     const applyFilters = () => {
-        let filteredList = cholesteatomaList;
+        let filteredList = pharyngitisList;
         if (statusFilter && statusFilter !== "all") {
             filteredList = filteredList.filter(item => (
                 item.status?.toLowerCase() === statusFilter.toLowerCase()
@@ -65,12 +63,7 @@ const CholesteatomaListPage: NextPage = () => {
                 item.patientId.toLowerCase().includes(patientIdSearch.toLowerCase())
             );
         }
-        filteredList.sort((a, b) => {
-            return orderByPatientId === 'asc'
-                ? a.patientId.localeCompare(b.patientId)
-                : b.patientId.localeCompare(a.patientId);
-        });
-        setFilteredCholesteatomaList(filteredList);
+        setFilteredPharyngitisList(filteredList);
     };
 
     return (
@@ -78,7 +71,7 @@ const CholesteatomaListPage: NextPage = () => {
             <section className="bg-blue-50 min-h-screen px-4 py-8">
                 <div className="flex pt-8 pb-3 justify-between">
                     <h1 className="text-slate-600 text-3xl font-bold text-center">
-                        Cholesteatoma Diagnosis History
+                        Pharyngitis Diagnosis History
                     </h1>
                     <div className="flex justify-end gap-x-3">
                         <Input
@@ -88,14 +81,6 @@ const CholesteatomaListPage: NextPage = () => {
                             placeholder="Search by Patient ID"
                             className="w-60 bg-white border border-gray-300 rounded-md"
                         />
-                        <Button
-                            onClick={() => setOrderByPatientId(orderByPatientId === 'asc' ? 'desc' : 'asc')}
-                            className="flex items-center bg-white border border-gray-300 rounded-md
-                            px-3 py-2 hover:bg-white"
-                            title="Order by Patient ID"
-                        >
-                            <ArrowUpDown className="stroke-2 w-8 h-8"/>
-                        </Button>
                         <Select onValueChange={setStatusFilter} value={statusFilter}>
                             <SelectTrigger className="w-40 bg-white border border-gray-300 rounded-md">
                                 <SelectValue placeholder="All Status"/>
@@ -114,9 +99,8 @@ const CholesteatomaListPage: NextPage = () => {
                             <SelectContent className="bg-white cursor-pointer">
                                 <SelectItem className="cursor-pointer" value="all">All Stages</SelectItem>
                                 <SelectItem className="cursor-pointer" value="Normal">Normal</SelectItem>
-                                <SelectItem className="cursor-pointer" value="Stage 1">Stage 1</SelectItem>
-                                <SelectItem className="cursor-pointer" value="Stage 2">Stage 2</SelectItem>
-                                <SelectItem className="cursor-pointer" value="Stage 3">Stage 3</SelectItem>
+                                <SelectItem className="cursor-pointer" value="Moderate">Moderate</SelectItem>
+                                <SelectItem className="cursor-pointer" value="Tonsillitis">Tonsillitis</SelectItem>
                             </SelectContent>
                         </Select>
                     </div>
@@ -124,7 +108,7 @@ const CholesteatomaListPage: NextPage = () => {
 
                 {isLoading ? (
                     <LoadingMessage/>
-                ) : (cholesteatomaList.length === 0 || filteredCholesteatomaList.length === 0) ? (
+                ) : (pharyngitisList.length === 0 || filteredPharyngitisList.length === 0) ? (
                     <>
                         <div className="flex justify-center items-center h-full min-h-[250px] mt-6">
                             <div className="bg-white shadow-lg rounded-lg p-6 max-w-md text-center">
@@ -133,7 +117,7 @@ const CholesteatomaListPage: NextPage = () => {
                                 </div>
                                 <h2 className="text-xl font-semibold text-gray-700">No Records Found</h2>
                                 <p className="text-gray-500 mt-2 leading-relaxed">
-                                    There are no cholesteatoma records available at the moment.
+                                    There are no pharyngitis records available at the moment.
                                 </p>
                             </div>
                         </div>
@@ -143,23 +127,23 @@ const CholesteatomaListPage: NextPage = () => {
                         <div className="text-center mb-2">
                             <span className="text-sm font-light">
                                 Showing &nbsp;
-                                {filteredCholesteatomaList.length === cholesteatomaList.length
-                                    ? `${cholesteatomaList.length} items`
-                                    : `${filteredCholesteatomaList.length} items from ${cholesteatomaList.length} items`}
+                                {filteredPharyngitisList.length === pharyngitisList.length
+                                    ? `${pharyngitisList.length} items`
+                                    : `${filteredPharyngitisList.length} items from ${pharyngitisList.length} items`}
                             </span>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
-                            {filteredCholesteatomaList.map((item) => (
+                            {filteredPharyngitisList.map((item) => (
                                 <div key={item._id} className="bg-white p-4 rounded-lg shadow-md">
                                     <h2 className="text-lg font-semibold mb-2">Patient ID: {item.patientId}</h2>
                                     <div className="flex gap-2">
-                                        <CholesteatomaImage
-                                            uploadId={item.endoscopyImage}
+                                        <PharyngitisImage
+                                            uploadId={item.throatImage}
                                         />
                                         <div>
                                             <p className="mt-2 text-gray-700">
                                                 <strong>Diagnosis: </strong>
-                                                {item.diagnosisResult?.isCholesteatoma ? "Positive" : "Negative"}
+                                                {item.diagnosisResult?.isPharyngitis ? "Positive" : "Negative"}
                                             </p>
                                             <p className="text-gray-700">
                                                 <strong>Stage: </strong>
@@ -196,7 +180,7 @@ const CholesteatomaListPage: NextPage = () => {
     );
 };
 
-const CholesteatomaImage = ({uploadId}: { uploadId: string }) => {
+const PharyngitisImage = ({uploadId}: { uploadId: string }) => {
 
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
@@ -204,7 +188,7 @@ const CholesteatomaImage = ({uploadId}: { uploadId: string }) => {
         <>
             <Image
                 src={
-                    ApiUtils.publicUrl(`diagnosis/cholesteatoma/image/${uploadId}`)
+                    ApiUtils.publicUrl(`diagnosis/pharyngitis/image/${uploadId}`)
                     ?? "/images/placeholders/200x200.jpg"
                 }
                 alt="Endoscopy Image"
@@ -232,7 +216,7 @@ const CholesteatomaImage = ({uploadId}: { uploadId: string }) => {
                     </div>
                     <Image
                         src={
-                            ApiUtils.publicUrl(`diagnosis/cholesteatoma/image/${uploadId}`)
+                            ApiUtils.publicUrl(`diagnosis/pharyngitis/image/${uploadId}`)
                             ?? "/images/placeholders/200x200.jpg"
                         }
                         alt="Zoomed Preview"
@@ -246,4 +230,4 @@ const CholesteatomaImage = ({uploadId}: { uploadId: string }) => {
     );
 };
 
-export default CholesteatomaListPage;
+export default PharyngitisListPage;

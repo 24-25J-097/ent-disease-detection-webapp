@@ -8,6 +8,7 @@ export interface Sinusitis {
     watersViewXrayImage: string;
     diagnosisResult?: SinusitisDiagnosisResult;
     status?: "pending" | "diagnosed" | "failed";
+    accepted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }
