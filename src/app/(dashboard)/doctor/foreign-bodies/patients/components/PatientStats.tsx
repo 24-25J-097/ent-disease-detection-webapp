@@ -86,7 +86,7 @@ const PatientStats: React.FC<PatientStatsProps> = ({ reports }) => {
         }]
       },
       pieChartData: {
-        labels: ['Battery', 'Dental'],
+        labels: ['Blockage', 'Device'],
         datasets: [{
           data: [detectionStats.batteryCount, detectionStats.dentalCount],
           backgroundColor: [
