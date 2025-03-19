@@ -10,15 +10,17 @@ import React, {useEffect, useRef, useState} from 'react';
 import {ChevronDown, Printer} from 'lucide-react';
 import {SinusitisAnalyzeService} from '@/services/SinusitisAnalyzeService';
 import {SinusitisReportsData} from '@/types/Charts';
+import SinusitisMonthlyLineChart from "@/app/(dashboard)/doctor/sinusitis/reports/SinusitisMonthlyLineChart";
 
 const ReportsPage: NextPage = () => {
 
+    const SinusitisMonthlyLineChartRef = useRef<HTMLDivElement | null>(null);
     const diagnosisStatusPieChartRef = useRef<HTMLDivElement | null>(null);
     const diseaseVsHealthyDoughnutChartRef = useRef<HTMLDivElement | null>(null);
     const stagesBarChartRef = useRef<HTMLDivElement | null>(null);
     const confidenceScoreBarChartRef = useRef<HTMLDivElement | null>(null);
 
-    const [reportsData, setReportsData] = useState<SinusitisReportsData>(null);
+    const [reportsData, setReportsData] = useState<SinusitisReportsData | null>(null);
     const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
 
     useEffect(() => {
@@ -132,7 +134,13 @@ const ReportsPage: NextPage = () => {
                     )}
                 </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6">
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6 px-6 pb-6">
+                <SinusitisMonthlyLineChart
+                    monthlySeverityTrends={reportsData?.monthlySeverityTrends ?? null}
+                    chartRef={SinusitisMonthlyLineChartRef}
+                />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-8 pb-8">
                 <DiagnosisStatusPieChart
                     diagnosisStatusData={reportsData?.diagnosisStatus ?? null}
                     chartRef={diagnosisStatusPieChartRef}
@@ -141,6 +149,8 @@ const ReportsPage: NextPage = () => {
                     sinusitisVsHealthyData={reportsData?.sinusitisVsHealthy ?? null}
                     chartRef={diseaseVsHealthyDoughnutChartRef}
                 />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-6 pb-6">
                 <SinusitisStagesBarChart
                     sinusitisStagesData={reportsData?.sinusitisSeverity ?? null}
                     chartRef={stagesBarChartRef}
@@ -150,6 +160,7 @@ const ReportsPage: NextPage = () => {
                     chartRef={confidenceScoreBarChartRef}
                 />
             </div>
+
         </section>
     );
 };

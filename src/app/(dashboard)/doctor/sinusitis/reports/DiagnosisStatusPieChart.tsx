@@ -3,7 +3,7 @@ import {Cell, Pie, PieChart, ResponsiveContainer, Tooltip, Legend} from 'rechart
 import {DiagnosisStatusChart} from '@/types/Charts';
 import LoadingMessage from '@/components/loaders/LoadingMessage';
 
-const COLORS = ['#52c41a', '#ff4d4f', '#ffa940'];
+const COLORS = ['#11d901', '#ff4d4f', '#ffa940'];
 
 const DiagnosisStatusPieChart: React.FC<{
     diagnosisStatusData: DiagnosisStatusChart[] | null,
@@ -36,7 +36,6 @@ const DiagnosisStatusPieChart: React.FC<{
                             outerRadius={90}
                             fill="#8884d8"
                             label={({percent}) => `${(percent * 100).toFixed(1)}%`}
-                            labelStyle={{fill: '#333', fontSize: 14}}
                         >
                             {diagnosisStatusData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]}/>
