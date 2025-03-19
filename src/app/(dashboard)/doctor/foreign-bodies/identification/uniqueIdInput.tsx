@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
@@ -16,43 +16,42 @@ const UniquePatientIdInput: React.FC<UniquePatientIdInputProps> = ({
   const [isCheckingId, setIsCheckingId] = useState(false);
   const [isIdUnique, setIsIdUnique] = useState<boolean | null>(null);
 
-  useEffect(() => {
-    const checkPatientIdUniqueness = async () => {
-      if (!value.trim()) {
-        setIsIdUnique(null);
-        onChange(value, false);
-        return;
-      }
+  const checkPatientIdUniqueness = async () => {
+    if (!value.trim()) {
+      setIsIdUnique(null);
+      onChange(value, false);
+      return;
+    }
 
-      setIsCheckingId(true);
-      try {
-        const q = query(
-          collection(db, "foreign"),
-          where("patientId", "==", value.trim())
-        );
-        const querySnapshot = await getDocs(q);
-        const unique = querySnapshot.empty;
-        setIsIdUnique(unique);
-        onChange(value, unique);
-      } catch (error) {
-        console.error("Error checking ID uniqueness:", error);
-        setIsIdUnique(null);
-        onChange(value, false);
-      } finally {
-        setIsCheckingId(false);
-      }
-    };
-
-    const timeoutId = setTimeout(checkPatientIdUniqueness, 500);
-    return () => clearTimeout(timeoutId);
-  }, [value, onChange]);
+    setIsCheckingId(true);
+    try {
+      const q = query(
+        collection(db, "foreign"),
+        where("patientId", "==", value.trim())
+      );
+      const querySnapshot = await getDocs(q);
+      const unique = querySnapshot.empty;
+      setIsIdUnique(unique);
+      onChange(value, unique);
+    } catch (error) {
+      console.error("Error checking ID uniqueness:", error);
+      setIsIdUnique(null);
+      onChange(value, false);
+    } finally {
+      setIsCheckingId(false);
+    }
+  };
 
   return (
     <div className="relative">
       <input
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value, isIdUnique || false)}
+        onChange={(e) => {
+          onChange(e.target.value, false);
+          setIsIdUnique(null);
+        }}
+        onBlur={checkPatientIdUniqueness}
         className={`w-full text-gray-600 p-2 rounded-md border ${
           isIdUnique === false 
             ? 'border-red-500' 

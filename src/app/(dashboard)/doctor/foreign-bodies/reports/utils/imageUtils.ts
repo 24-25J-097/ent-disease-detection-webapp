@@ -14,7 +14,7 @@ export const validateAndProcessImage = async (file: File): Promise<{
         validityFormData.append("file", file);
 
         const validityResponse = await axios.post(
-            ApiUtils.fastApiUrl + "/api/foreign/run-inference",
+            ApiUtils.fastApiUrl2 + "/api/foreign/run-inference",
             validityFormData,
             { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -30,7 +30,7 @@ export const validateAndProcessImage = async (file: File): Promise<{
         detectionFormData.append("image", file);
 
         const detectResponse = await axios.post(
-            ApiUtils.fastApiUrl + "/api/foreign/detect",
+            ApiUtils.fastApiUrl2 + "/api/foreign/detect",
             detectionFormData,
             { headers: { "Content-Type": "multipart/form-data" } }
         );
