@@ -49,11 +49,13 @@ const IdentificationPage: NextPage = () => {
             setPatientIdErrMsg(errorText);
             setTimeout(() => setPatientIdErrMsg(""), 3000);
             hasValidationErr.push(true);
-        } else if (patientId.length < 5) {
-            const errorText = "Patient ID must be at least 5 characters long.";
+            return false;
+        } else if (patientId.length < 4) {
+            const errorText = "Patient ID must be at least 4 characters long.";
             setPatientIdErrMsg(errorText);
             setTimeout(() => setPatientIdErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         }
         if (!file) {
             setFileErrMsg("Please choose the X Ray.");
