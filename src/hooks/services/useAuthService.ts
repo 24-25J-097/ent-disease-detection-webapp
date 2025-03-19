@@ -16,7 +16,7 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     const fetchUser = useCallback(async () => {
         try {
             const response = await AuthService.getOwnUser();
-            console.log('Fetched user data:', response.data);
+            // console.log('Fetched user data:', response.data);
             return response.data;
         } catch (error) {
             throw error;

@@ -31,7 +31,7 @@ export const store = configureStore({
         auth: persistedAuthReducer,
         users: persistedUsersReducer,
     },
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+    // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
 
 export const persistor = persistStore(store);
