@@ -72,7 +72,7 @@ const UpdateReportModal: React.FC<UpdateReportModalProps> = ({
           </button>
         </div>
 
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <label className="block text-gray-700 font-semibold mb-2">
             Patient ID
           </label>
@@ -82,7 +82,18 @@ const UpdateReportModal: React.FC<UpdateReportModalProps> = ({
             onChange={(e) => setPatientId(e.target.value)}
             className="w-full text-gray-600 p-2 rounded-md border border-gray-300"
           />
-        </div>
+        </div> */}
+        <div className="mb-6">
+  <label className="block text-gray-700 font-semibold mb-2">
+    Patient ID
+  </label>
+  <input
+    type="text"
+    value={patientId}
+    readOnly
+    className="w-full text-gray-600 p-2 rounded-md border border-gray-300 bg-gray-50 cursor-not-allowed"
+  />
+</div>
 
         <div className="mb-6">
           <label className="block text-gray-700 font-semibold mb-2">
