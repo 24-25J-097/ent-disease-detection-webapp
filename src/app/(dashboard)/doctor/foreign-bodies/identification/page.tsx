@@ -12,6 +12,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
 import { db, storage } from "./firebaseConfig";
 import UniquePatientIdInput from "./uniqueIdInput";
+import { useToast } from '@/providers/ToastProvider';
 
 const PatientsPage = () => {
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -27,6 +28,7 @@ const PatientsPage = () => {
   const [patientId, setPatientId] = useState<string>("");
 const [note, setNote] = useState<string>("");
 const [isPatientIdValid, setIsPatientIdValid] = useState(false);
+const { notifySuccess, notifyError } = useToast();
 
 
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -55,6 +57,7 @@ const [isPatientIdValid, setIsPatientIdValid] = useState(false);
     setPredictions([]); // Clear bounding boxes
     setIsValidImage(null); // Reset validity check
     setErrors(null); // Clear any previous errors
+    
     if (file) {
       setImagePreview(URL.createObjectURL(file)); // Show preview of uploaded image
     }
@@ -62,12 +65,12 @@ const [isPatientIdValid, setIsPatientIdValid] = useState(false);
 
   const handleUpload = async () => {
     if (!imageFile) {
-      setErrors("Please upload an image.");
+      notifyError("Please upload an image.");
       return;
     }
 
     if (!patientId.trim() || !isPatientIdValid) {
-      setErrors("Please enter a valid Patient ID.");
+      notifyError("Please enter a valid Patient ID.");
       return;
     }
   
@@ -116,14 +119,14 @@ const [isPatientIdValid, setIsPatientIdValid] = useState(false);
         };
         await saveMetadataToFirestore(metadata);
       } else {
-        setErrors("Please upload a valid X-ray image.");
+        notifyError("Please upload a valid X-ray image.");
       }
     } catch (error: any) {
       console.error("Error processing image:", error);
       if (error.response?.status && error.response.status >= 500) {
-        setErrors("An unexpected error occurred. Please try again.");
+        notifyError("An unexpected error occurred. Please try again.");
       } else {
-        setErrors(error.response?.data?.message || "Failed to process the image. Please try again.");
+        notifyError(error.response?.data?.message || "Failed to process the image. Please try again.");
       }
     } finally {
       setIsLoading(false);
