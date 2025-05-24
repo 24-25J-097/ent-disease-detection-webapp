@@ -23,6 +23,8 @@ import {useDebounce} from '@/hooks/useDebounce';
 import {useDispatch, useSelector} from 'react-redux';
 import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
 import {FilterService} from '@/services/FilterService';
+import CreatePatientModal from './CreatePatientModal';
+import TextButton from '@/components/buttons/TextButton';
 
 const IdentificationPage: NextPage = () => {
 
@@ -38,6 +40,7 @@ const IdentificationPage: NextPage = () => {
     const [file, setFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const [createPatientModalOpen, setCreatePatientModalOpen] = useState<boolean>(false);
     const [hasValidationErr, setHasValidationErr] = useState<boolean[]>([false, false]);
     const [patientIdErrMsg, setPatientIdErrMsg] = useState<string>("");
     const [fileErrMsg, setFileErrMsg] = useState<string>("");
@@ -288,6 +291,17 @@ const IdentificationPage: NextPage = () => {
                                     errorMessage={patientIdErrMsg}
                                     disabled={isDisable}
                                 />
+                                <div className="flex justify-end">
+                                    <TextButton
+                                        type="button"
+                                        onClick={() => setCreatePatientModalOpen(true)}
+                                        className="underline hover:text-blue-600 pb-0 sm:px-0"
+                                        title="Add new patient"
+                                        disabled={isDisable}
+                                    >
+                                        New Patient
+                                    </TextButton>
+                                </div>
                             </div>
                             <div>
                                 <TextAreaInput
@@ -473,6 +487,19 @@ const IdentificationPage: NextPage = () => {
             </ReactModal>
             <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"}/>
             <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"}/>
+
+            <CreatePatientModal 
+                isOpen={createPatientModalOpen} 
+                onClose={() => setCreatePatientModalOpen(false)} 
+                onSuccess={() => {
+                    // Refresh the patient list after creating a new patient
+                    if (selectedPatient) {
+                        fetchPatients(selectedPatient.label);
+                    } else {
+                        fetchPatients("");
+                    }
+                }}
+            />
         </>
     );
 };
