@@ -25,12 +25,52 @@ import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
 import {FilterService} from '@/services/FilterService';
 import CreatePatientModal from './CreatePatientModal';
 import TextButton from '@/components/buttons/TextButton';
+import StepsFlowCard, {Step} from '@/components/cards/StepsFlowCard';
 
 const IdentificationPage: NextPage = () => {
 
     const dispatch = useDispatch();
 
     const patientsList: SelectInputOption[] | null = useSelector((state: any) => state.filters.patientsList);
+
+    // Define steps data for the Cholesteatoma Identification Process
+    const identificationSteps: Step[] = [
+        {
+            number: 1,
+            title: "Patient Selection",
+            description: "Select an existing patient or create a new patient record."
+        },
+        {
+            number: 2,
+            title: "Additional Information",
+            description: "Provide any relevant clinical information about the patient's condition."
+        },
+        {
+            number: 3,
+            title: "Upload Endoscopy Image",
+            description: "Upload a clear middle ear endoscopy image for analysis."
+        },
+        {
+            number: 4,
+            title: "AI Analysis",
+            description: "Our AI system analyzes the image to detect cholesteatoma and determine its stage."
+        },
+        {
+            number: 5,
+            title: "Review Results",
+            description: "Review the diagnosis results, including cholesteatoma presence, stage, and confidence score."
+        },
+        {
+            number: 6,
+            title: "Update Results",
+            description: "Update the diagnostic results suggestions if have anything else to add."
+        },
+        {
+            number: 7,
+            title: "Accept or Reject",
+            description: "Confirm or reject the AI diagnosis based on your clinical judgment."
+        }
+    ];
 
     const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -244,7 +284,7 @@ const IdentificationPage: NextPage = () => {
                 </div>
                 <div className="flex items-start justify-between gap-10 pb-6">
                     <div
-                        className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-xl min-h-[700px]
+                        className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-xl min-h-[725px]
                         flex flex-col"
                     >
                         <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
@@ -278,7 +318,7 @@ const IdentificationPage: NextPage = () => {
                                         async (inputValue) => await debouncedFetch(inputValue)
                                     }
                                     defaultOptions={patientsList ?? true}
-                                    noOptionsMessage={({ inputValue }) => (
+                                    noOptionsMessage={({inputValue}) => (
                                         inputValue.toLowerCase() === 'error'
                                             ? 'Simulated error message'
                                             : (inputValue.length > 0 && inputValue.length < 3)
@@ -437,26 +477,42 @@ const IdentificationPage: NextPage = () => {
                         </div>
                     </div>
 
-                    <div
-                        className="bg-white rounded-xl shadow-lg p-8 w-full min-h-[700px]
-                        flex flex-col items-center"
-                    >
-                        <h4 className="text-blue-500 text-xl font-bold mb-4">
-                            Endoscopy Preview
-                        </h4>
-                        {imagePreview ? (
-                            <Image
-                                src={imagePreview}
-                                alt="Selected Preview"
-                                className="max-w-[580px] max-h-[580px] rounded-md cursor-pointer"
-                                width={1000}
-                                height={1000}
-                                onClick={() => setModalIsOpen(true)}
-                                title="Open Image"
-                            />
-                        ) : (
-                            <p className="text-gray-500 text-sm">No image selected</p>
-                        )}
+                    <div className="relative w-full min-h-[725px]">
+                        {/* Steps Flow Card */}
+                        <StepsFlowCard
+                            title="Cholesteatoma Identification Process"
+                            steps={identificationSteps}
+                            isVisible={!imagePreview}
+                        />
+
+                        {/* Endoscopy Preview Card */}
+                        <motion.div
+                            className="absolute bg-white rounded-xl shadow-lg p-8 w-full min-h-[725px] flex flex-col items-center"
+                            initial={{opacity: 0, x: 100}}
+                            animate={{
+                                opacity: imagePreview ? 1 : 0,
+                                x: imagePreview ? 0 : -180,
+                                display: imagePreview ? 'flex' : 'none'
+                            }}
+                            transition={{duration: 1.0}}
+                        >
+                            <h4 className="text-blue-500 text-xl font-bold mb-4">
+                                Endoscopy Preview
+                            </h4>
+                            {imagePreview ? (
+                                <Image
+                                    src={imagePreview}
+                                    alt="Selected Preview"
+                                    className="max-w-[580px] max-h-[580px] rounded-md cursor-pointer"
+                                    width={1000}
+                                    height={1000}
+                                    onClick={() => setModalIsOpen(true)}
+                                    title="Open Image"
+                                />
+                            ) : (
+                                <p className="text-gray-500 text-sm">No image selected</p>
+                            )}
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -488,9 +544,9 @@ const IdentificationPage: NextPage = () => {
             <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"}/>
             <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"}/>
 
-            <CreatePatientModal 
-                isOpen={createPatientModalOpen} 
-                onClose={() => setCreatePatientModalOpen(false)} 
+            <CreatePatientModal
+                isOpen={createPatientModalOpen}
+                onClose={() => setCreatePatientModalOpen(false)}
                 onSuccess={() => {
                     // Refresh the patient list after creating a new patient
                     if (selectedPatient) {
