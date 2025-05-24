@@ -1,7 +1,6 @@
 "use client";
 
 import React, {useRef, useState} from "react";
-import TextInput from "@/components/inputs/TextInput";
 import TextAreaInput from "@/components/inputs/TextAreaInput";
 import {NextPage} from "next";
 import {If} from "@/components/utils/If";
@@ -18,8 +17,18 @@ import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
 import {URLBase} from '@/enums/navigation';
 import {Button} from '@/components/ui/button';
+import {SelectInputOption} from '@/types/FormInputs';
+import SelectInput from "@/components/inputs/SelectInput";
+import {useDebounce} from '@/hooks/useDebounce';
+import {useDispatch, useSelector} from 'react-redux';
+import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
+import {FilterService} from '@/services/FilterService';
 
 const IdentificationPage: NextPage = () => {
+
+    const dispatch = useDispatch();
+
+    const patientsList: SelectInputOption[] | null = useSelector((state: any) => state.filters.patientsList);
 
     const formRef = useRef<HTMLFormElement | null>(null);
 
@@ -36,14 +45,60 @@ const IdentificationPage: NextPage = () => {
     const [errors, setErrors] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoading2, setIsLoading2] = useState<boolean>(false);
+    const [selectedPatient, setSelectedPatient] = useState<SelectInputOption | null>(null);
 
     const router = useRouterApp();
     const {notifySuccess, notifyError} = useToast();
 
+    const fetchPatients = async (inputValue: string): Promise<SelectInputOption[]> => {
+        const trimmedInput = inputValue.trim();
+
+        if (trimmedInput.length < 3) {
+            return [];
+        }
+        setIsLoading(true);
+        try {
+            const response = await FilterService.filterPatients({
+                search: trimmedInput
+            });
+            if (response.success) {
+                const patients = response.data.patients;
+                const arrangePatients = patients.map((patient: { label: string; value: any; }) => {
+                    const userName = patient.label.split(' - ')[0].trim();
+                    return {
+                        value: patient.value,
+                        label: patient.label,
+                        avatar: `https://ui-avatars.com/api/?name=${userName}&background=random`
+                    };
+                });
+                dispatch(revalidateFilterPatients(arrangePatients));
+                return arrangePatients;
+            }
+        } catch (error) {
+            let errMsg;
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
+                errMsg = "An unexpected error occurred. Please try again.";
+            } else {
+                errMsg = (axiosError?.response?.data?.message || "An error occurred.");
+            }
+            console.error(`GET FILTERED PATIENTS: ${errMsg}`);
+            return [{
+                value: 'error',
+                label: 'Failed to load patients'
+            }];
+        } finally {
+            setIsLoading(false);
+        }
+        return [];
+    };
+
+    const [debouncedFetch] = useDebounce(fetchPatients, 1000);
+
     const validateFields = () => {
         setHasValidationErr([]);
         if (!patientId) {
-            const errorText = "Please enter the Patient ID.";
+            const errorText = "Please select the Patient.";
             setPatientIdErrMsg(errorText);
             setTimeout(() => setPatientIdErrMsg(""), 3000);
             hasValidationErr.push(true);
@@ -205,15 +260,31 @@ const IdentificationPage: NextPage = () => {
                                 </motion.div>
                             </If>
                             <div>
-                                <TextInput
+                                <SelectInput
+                                    label="Patient"
                                     name="patientId"
-                                    label="Patient Id *"
-                                    type="text"
-                                    value={patientId}
-                                    placeholder="Enter Patient ID"
-                                    inputClassName="w-full"
-                                    onTextChange={(e) => setPatientId(e.target.value)}
-                                    design="regular-form"
+                                    placeholder="Search by Patient Name, ID, or Email"
+                                    value={selectedPatient}
+                                    onChange={(selected) => {
+                                        const selectedOpt = selected as SelectInputOption;
+                                        setSelectedPatient(selectedOpt);
+                                        setPatientId(selectedOpt.value.toString());
+                                    }}
+                                    isAsync
+                                    loadOptions={
+                                        async (inputValue) => await debouncedFetch(inputValue)
+                                    }
+                                    defaultOptions={patientsList ?? true}
+                                    noOptionsMessage={({ inputValue }) => (
+                                        inputValue.toLowerCase() === 'error'
+                                            ? 'Simulated error message'
+                                            : (inputValue.length > 0 && inputValue.length < 3)
+                                                ? 'Type at least 3 characters'
+                                                : inputValue
+                                                    ? `No patients found for: ${inputValue}`
+                                                    : 'Start typing to search patients'
+                                    )}
+                                    loadingMessage={() => "Loading patients..."}
                                     errorMessage={patientIdErrMsg}
                                     disabled={isDisable}
                                 />

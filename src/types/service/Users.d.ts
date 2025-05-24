@@ -4,6 +4,7 @@ import {Role} from "@/models/Role";
 export type UsersState = {
     usersList: User[];
     rolesList: Role[];
+    patientsList: User[];
 }
 
 export interface CreateUserData {
