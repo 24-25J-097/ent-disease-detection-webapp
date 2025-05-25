@@ -1,6 +1,6 @@
 import {ApiInstance} from "@/types/service/ApiService";
 import ApiService from "@/services/api-service/ApiService";
-import {ForgotPswData, ResetPswData, UserLoginData, UserSignUpData} from "@/types/service/Auth";
+import {ForgotPswData, ResetPswData, StudentSignUpData, UserLoginData, UserSignUpData} from "@/types/service/Auth";
 import {AppResponse, AuthResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Response";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIObj} from "@/utils/object-formatters";
@@ -51,6 +51,12 @@ export class AuthService {
         const resetData = convertToAPIObj(resetPswData);
         const ep = ApiUtils.publicUrl("reset-password");
         const res = await AuthService.api().post<ResetPswData, AxiosAppResponse<AuthResponse>>(ep, resetData);
+        return res.data;
+    }
+
+    public static async studentRegister(studentSignUpData: StudentSignUpData): Promise<AppResponse<AuthResponse>> {
+        const ep = ApiUtils.publicUrl("student/register");
+        const res = await AuthService.api().post<StudentSignUpData, AxiosAppResponse<AuthResponse>>(ep, studentSignUpData);
         return res.data;
     }
 

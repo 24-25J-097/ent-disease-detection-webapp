@@ -8,14 +8,21 @@ import {toKebabCase} from "@/utils/string-formatters";
  * @param {NextRequest} req - The incoming request object.
  * @returns {NextResponse} - The response object to handle the redirection or proceed with the request.
  */
-export function middleware(req: NextRequest) {
+export function middleware(req: NextRequest): NextResponse {
 
     const url = req.nextUrl.clone();
     const token = req.cookies.get(AccessKey.ENTI_TOKEN as any)?.value;
     const role = req.cookies.get(AccessKey.ENTI_ROLE as any)?.value;
 
     // List of public paths that don't require authentication and should be avoided by authenticated users
-    const protectedPublicPaths = ['/login', '/signup', '/forgot-password'];
+    const protectedPublicPaths = [
+        '/login',
+        '/signup',
+        '/forgot-password',
+        '/students/login',
+        '/students/signup',
+        '/students/forgot-password'
+    ];
     const isPublicPath = protectedPublicPaths.includes(url.pathname);
 
     if (!token) {
@@ -48,7 +55,7 @@ export function middleware(req: NextRequest) {
  * @type {Object}
  * @property {Array<string>} matcher - An array of path patterns that the middleware should intercept.
  */
-export const config = {
+export const config: object = {
     matcher: [
         "/admin/:path*",
         "/doctor/:path*",
@@ -57,6 +64,8 @@ export const config = {
         "/login",
         "/signup",
         "/forgot-password",
-        
+        "/students/login",
+        "/students/signup",
+        "/students/forgot-password",
     ],
 };

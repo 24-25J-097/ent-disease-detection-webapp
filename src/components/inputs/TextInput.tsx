@@ -13,6 +13,8 @@ const TextInput: React.FC<TextInputProps> = ({
                                                  design = "default",
                                                  label,
                                                  inputClassName,
+                                                 labelClassName,
+                                                 icon,
                                              }) => {
 
     switch (design) {
@@ -21,24 +23,27 @@ const TextInput: React.FC<TextInputProps> = ({
             return (
                 <div>
                     <If condition={!!label}>
-                        <label htmlFor={id} className="inline-block mb-2">
+                        <label htmlFor={id} className={`inline-block mb-2 ${labelClassName}`}>
                             {label}
                         </label>
                     </If>
-                    <input
-                        id={id}
-                        type={type}
-                        name={name}
-                        placeholder={placeholder}
-                        value={value}
-                        onChange={onTextChange}
-                        disabled={disabled}
-                        className={`w-full text-sm shadow-sm rounded-md placeholder:text-slate-400/90
-                        transition duration-200 ease-in-out focus:ring-4 focus:ring-primary focus:ring-opacity-20
-                        focus:border-primary dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
-                        dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 ${inputClassName}
-                        ${!!errorMessage ? "border border-red-500" : "border border-slate-200"}`}
-                    />
+                    <div className="relative">
+                        {icon && icon}
+                        <input
+                            id={id}
+                            type={type}
+                            name={name}
+                            placeholder={placeholder}
+                            value={value}
+                            onChange={onTextChange}
+                            disabled={disabled}
+                            className={`w-full text-sm shadow-sm rounded-md placeholder:text-slate-400/90
+                            transition duration-200 ease-in-out focus:ring-4 focus:ring-primary focus:ring-opacity-20
+                            focus:border-primary dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
+                            dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 ${inputClassName}
+                            ${!!errorMessage ? "border border-red-500" : "border border-slate-200"}`}
+                        />
+                    </div>
                     <If condition={!!errorMessage}>
                         <small className="text-red-500 px-2">{errorMessage}</small>
                     </If>

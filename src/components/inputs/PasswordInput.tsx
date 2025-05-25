@@ -11,6 +11,8 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                                                          errorMessage,
                                                          disabled,
                                                          label,
+                                                         inputClassName,
+                                                         labelClassName,
                                                          design = "default",
                                                      }) => {
 
@@ -23,7 +25,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                 return (
                     <>
                         <div className="relative">
-                            <label htmlFor={id} className="inline-block mb-2">
+                            <label htmlFor={id} className={`inline-block mb-2 ${labelClassName}`}>
                                 {label}
                             </label>
                             <input
@@ -37,7 +39,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
                                 className={`w-full text-sm shadow-sm rounded-md placeholder:text-slate-400/90
                         transition duration-200 ease-in-out focus:ring-4 focus:ring-primary focus:ring-opacity-20
                         focus:border-primary dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
-                        dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 
+                        dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 ${inputClassName}
                         ${!!errorMessage ? "border border-red-500" : "border border-slate-200"}`}
                             />
                             {passwordVisible ? (

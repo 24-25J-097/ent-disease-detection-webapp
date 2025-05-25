@@ -46,6 +46,23 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
         }
     }, [dispatch, mutate]);
 
+    const studentRegister = useCallback(async ({studentSignUpData}: IApiRequest) => {
+        try {
+            const response = await AuthService.studentRegister(studentSignUpData);
+            if (response.success) {
+                if (response.message && response.data) {
+                    dispatch(setToken(response.data.token));
+                    dispatch(setUser(response.data.user));
+                    dispatch(setRole(response.data.user.role));
+                    await mutate();
+                    return response;
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }, [dispatch, mutate]);
+
     const login = useCallback(async ({userLoginData}: IApiRequest) => {
         try {
             const response = await AuthService.login(userLoginData);
@@ -133,6 +150,7 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     return {
         user,
         register,
+        studentRegister,
         login,
         logout,
         forgotPassword,

@@ -25,6 +25,21 @@ export interface UserSignUpData {
     remember?: boolean;
 }
 
+export interface StudentSignUpData {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    dateOfBirth: string;
+    country: string;
+    institution: string;
+    studyYear: string;
+    specialization: string;
+    agreeToTerms: boolean;
+    agreeToNewsletter: boolean;
+}
+
 export interface ForgotPswData {
     email: string;
 }
@@ -36,5 +51,3 @@ export interface ResetPswData {
     password: string;
     passwordConfirmation: string;
 }
-
-
