@@ -63,7 +63,20 @@ export interface UsageByPackage {
 }
 
 export interface PackagePurchase {
-    date: string;
-    packageName: string;
-    count: number;
+    _id: string;
+    startDate: string;
+    endDate: string;
+    transactionId: string;
+    paymentMethod: string;
+    paymentStatus: string;
+    purchaseDate: string;
+    userDetails: {
+        name: string;
+        email: string;
+        role: string;
+    },
+    packageDetails: {
+        name: string;
+        price: number;
+    }
 }
