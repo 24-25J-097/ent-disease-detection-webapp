@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import {NextPage} from "next";
 import {useState} from "react";
 import {motion} from "framer-motion";
 import {
@@ -24,7 +25,7 @@ import {
 } from '@/data/student/feedback';
 import {useSelector} from 'react-redux';
 
-export default function FeedbackPage() {
+const FeedbackPage: NextPage = () => {
 
     const [activeTab, setActiveTab] = useState<"submit" | "history">("submit");
     const [selectedCategory, setSelectedCategory] = useState<string>("");
@@ -673,4 +674,6 @@ export default function FeedbackPage() {
             </main>
         </div>
     );
-}
+};
+
+export default FeedbackPage;

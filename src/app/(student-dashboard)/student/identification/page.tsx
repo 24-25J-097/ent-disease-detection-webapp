@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-
+import {NextPage} from "next";
 import {motion} from "framer-motion";
 import {useState} from "react";
 import {Upload, Camera, FileImage, Brain, CheckCircle, AlertCircle} from "lucide-react";
@@ -9,7 +9,7 @@ import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeade
 import {conditions, sampleAnalysisResult} from '@/data/student/identification';
 import {useSelector} from 'react-redux';
 
-export default function IdentificationPage() {
+const IdentificationPage: NextPage = () => {
 
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [selectedCondition, setSelectedCondition] = useState("");
@@ -292,4 +292,6 @@ export default function IdentificationPage() {
             </main>
         </div>
     );
-}
+};
+
+export default IdentificationPage;

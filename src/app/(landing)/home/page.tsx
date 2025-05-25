@@ -440,8 +440,9 @@ const HomePage: NextPage = () => {
                     transition={{duration: 0.8, delay: 1.8}}
                     className="mt-16 text-center text-slate-500"
                 >
-                    <p className="text-sm">© 2024 ENT Insight. Advancing medical education through artificial
-                        intelligence.</p>
+                    <p className="text-sm">
+                        © 2024 ENT Insight. Advancing medical education through artificial intelligence.
+                    </p>
                 </motion.div>
             </div>
         </div>

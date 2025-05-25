@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-
+import {NextPage} from "next";
 import {motion} from "framer-motion";
 import {useState, useRef, useEffect} from "react";
 import {Send, Bot, User, Paperclip, Mic, MoreVertical} from "lucide-react";
@@ -9,7 +9,7 @@ import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeade
 import {Message, sampleMessages} from '@/data/student/chat';
 import {useSelector} from 'react-redux';
 
-export default function ChatPage() {
+const ChatPage: NextPage = () => {
 
     const [messages, setMessages] = useState<Message[]>(sampleMessages);
     const [inputValue, setInputValue] = useState("");
@@ -240,4 +240,6 @@ export default function ChatPage() {
             </main>
         </div>
     );
-}
+};
+
+export default ChatPage;

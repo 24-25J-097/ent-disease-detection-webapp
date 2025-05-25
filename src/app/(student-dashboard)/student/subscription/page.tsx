@@ -1,5 +1,6 @@
 "use client";
 
+import {NextPage} from "next";
 import {motion} from "framer-motion";
 import {useState} from "react";
 import {
@@ -22,7 +23,7 @@ import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeade
 import {billingHistory, getUsageColor, getUsagePercentage, pricingTiers, usageData} from '@/data/student/subscription';
 import {useSelector} from 'react-redux';
 
-export default function SubscriptionPage() {
+const SubscriptionPage: NextPage = () => {
 
     const [currentPlan] = useState("free");
     const [billingPeriod, setBillingPeriod] = useState<"month" | "year">("month");
@@ -678,4 +679,6 @@ export default function SubscriptionPage() {
             </main>
         </div>
     );
-}
+};
+
+export default SubscriptionPage;

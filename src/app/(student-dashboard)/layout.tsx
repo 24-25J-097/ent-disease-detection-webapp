@@ -29,7 +29,7 @@ export default function RootLayoutStudent({ children }: Readonly<{ children: Rea
                             enableSystem
                             disableTransitionOnChange
                         >
-                            <main className="bg-blue-50 dark:bg-[#020817]">
+                            <main className="bg-gradient-student">
                                 <ToastProvider>
                                     <>
                                         {children}

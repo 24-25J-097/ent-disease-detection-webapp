@@ -226,8 +226,7 @@ const SignUpPage: NextPage = () => {
 
     return (
         <div
-            className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900
-        flex items-center justify-center p-4"
+            className="min-h-screen w-full bg-gradient-student flex items-center justify-center p-4"
         >
             {/* Background Effects */}
             <div className="absolute inset-0 overflow-hidden">

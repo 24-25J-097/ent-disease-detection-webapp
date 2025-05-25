@@ -11,6 +11,7 @@ import {ThemeToggle} from '@/components/dashboard/ThemeToggle';
 import Breadcrumb from '@/components/dashboard/Breadcrumb';
 import {User} from "@/models/User";
 import Link from 'next/link';
+import {Role} from '@/enums/access';
 
 interface DashboardHeaderProps {
     user: User;
@@ -23,11 +24,11 @@ export default function StudentDashboardHeader({user}: DashboardHeaderProps) {
 
     const {logout} = useAuthService({
         middleware: 'auth',
-        redirectIfAuthenticated: '/login',
+        redirectIfAuthenticated: '/student/login',
     });
 
     const handleLogout = async () => {
-        await logout();
+        await logout(Role.STUDENT);
     };
 
     return (
@@ -107,7 +108,7 @@ export default function StudentDashboardHeader({user}: DashboardHeaderProps) {
                             <Settings className="w-5 h-5"/>
                         </button>
 
-                        <ThemeToggle/>
+                        {/*<ThemeToggle/>*/}
 
                         {/* User Menu */}
                         <div className="relative">

@@ -1,5 +1,6 @@
 "use client";
 
+import {NextPage} from "next";
 import {motion} from "framer-motion";
 import {useState} from "react";
 import {
@@ -28,7 +29,7 @@ import {
 } from '@/data/student/history';
 import {useSelector} from 'react-redux';
 
-export default function HistoryPage() {
+const HistoryPage: NextPage = () => {
 
     const [activeTab, setActiveTab] = useState<"overview" | "sessions" | "achievements">("overview");
     const [timeFilter, setTimeFilter] = useState("week");
@@ -445,4 +446,6 @@ export default function HistoryPage() {
             </main>
         </div>
     );
-}
+};
+
+export default HistoryPage;

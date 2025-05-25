@@ -23,4 +23,13 @@
   border-radius: 11px;
   height: 100%;
   width: 100%;
+  //color: #130431;
+}
+
+.bg-student-light {
+  @apply bg-gradient-to-br from-slate-700 via-purple-700 to-slate-700;
+}
+
+.bg-gradient-student {
+  @apply bg-gradient-to-br from-[#020817] via-[#130431] to-[#020817];
 }

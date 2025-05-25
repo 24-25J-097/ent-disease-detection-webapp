@@ -1,5 +1,6 @@
 "use client";
 
+import {NextPage} from "next";
 import {motion} from "framer-motion";
 import {useState} from "react";
 import {BookOpen, Clock, ExternalLink, Filter, Search, Users} from "lucide-react";
@@ -7,7 +8,7 @@ import {useSelector} from 'react-redux';
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {conditions, categories, severityLevels} from '@/data/student/conditions';
 
-export default function ConditionsPage() {
+const ConditionsPage: NextPage = () => {
 
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("All");
@@ -252,4 +253,6 @@ export default function ConditionsPage() {
             </main>
         </div>
     );
-}
+};
+
+export default ConditionsPage;

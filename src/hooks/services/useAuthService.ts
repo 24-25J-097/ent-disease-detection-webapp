@@ -7,6 +7,7 @@ import {clearUserSession, setRole, setToken, setUser} from "@/store/reducers/aut
 import {AuthService} from "@/services/AuthService";
 import {toKebabCase} from "@/utils/string-formatters";
 import useRouterApp from '@/hooks/useRouterApp';
+import { Role } from '@/enums/access';
 
 export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) => {
 
@@ -80,9 +81,14 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
         }
     }, [dispatch, mutate]);
 
-    const logout = useCallback(async () => {
+    const logout = useCallback(async (role?: Role) => {
         dispatch(clearUserSession());
-        await router.redirect('/login');
+        localStorage.removeItem('theme');
+        if (role && role === Role.STUDENT) {
+            await router.redirect('/student/login');
+        } else {
+            await router.redirect('/login');
+        }
         // try {
         //     const response = await AuthService.logout();
         //     if (response.success) {
