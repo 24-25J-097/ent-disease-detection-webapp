@@ -2,6 +2,7 @@ import {Role} from '@/enums/access';
 
 export interface User {
     id: number;
+    _id: string;
     name: string;
     email: string;
     email_verified_at: string | null;
