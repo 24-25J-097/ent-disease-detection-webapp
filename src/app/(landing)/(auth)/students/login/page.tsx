@@ -2,7 +2,7 @@
 
 import React, {useState} from "react";
 import {motion} from "framer-motion";
-import {Mail, Shield, Sparkles} from "lucide-react";
+import {Shield, Sparkles} from "lucide-react";
 import {NextPage} from 'next';
 import Image from 'next/image';
 import {useAuthService} from "@/hooks/services/useAuthService";
@@ -19,6 +19,7 @@ import {ErrorResponseData} from '@/types/Common';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import Link from 'next/link';
+import {Role} from '@/enums/access';
 
 const LoginPage: NextPage = () => {
 
@@ -81,7 +82,7 @@ const LoginPage: NextPage = () => {
         try {
             if (!validateData(userLoginData).includes(true)) {
                 setIsLoading(true);
-                const res = await login({userLoginData});
+                const res = await login({userLoginData}, Role.STUDENT);
                 notifySuccess(res!.message);
             } else {
                 setIsLoading(false);
@@ -90,11 +91,12 @@ const LoginPage: NextPage = () => {
         } catch (error) {
             setIsLoading(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         }
     };

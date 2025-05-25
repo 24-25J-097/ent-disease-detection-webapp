@@ -30,8 +30,7 @@ import {trimText} from "@/utils/string-formatters";
 import Link from 'next/link';
 
 interface FormData {
-    firstName: string;
-    lastName: string;
+    name: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -58,8 +57,7 @@ const SignUpPage: NextPage = () => {
 
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState<FormData>({
-        firstName: "",
-        lastName: "",
+        name: "",
         email: "",
         password: "",
         confirmPassword: "",
@@ -87,8 +85,7 @@ const SignUpPage: NextPage = () => {
         const newErrors: FormErrors = {};
 
         if (step === 1) {
-            if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-            if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+            if (!formData.name.trim()) newErrors.name = "Name is required";
             if (!formData.email.trim()) {
                 newErrors.email = "Email is required";
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -143,8 +140,7 @@ const SignUpPage: NextPage = () => {
 
         try {
             const studentSignUpData: StudentSignUpData = {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
+                name: formData.name,
                 email: formData.email,
                 password: formData.password,
                 confirmPassword: formData.confirmPassword,
@@ -154,19 +150,21 @@ const SignUpPage: NextPage = () => {
                 studyYear: formData.studyYear,
                 specialization: formData.specialization,
                 agreeToTerms: formData.agreeToTerms,
-                agreeToNewsletter: formData.agreeToNewsletter
+                agreeToNewsletter: formData.agreeToNewsletter,
+                role: 'student',
+                remember: false,
             };
-
             const res = await studentRegister({studentSignUpData});
             notifySuccess(res!.message);
         } catch (error) {
             setIsLoading(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setApiError("An unexpected error occurred. Please try again.");
             } else {
-                setApiError(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setApiError(errMsg);
+                notifyError(errMsg);
             }
         }
     };
@@ -328,61 +326,31 @@ const SignUpPage: NextPage = () => {
                                 <h2 className="text-xl font-semibold text-white mb-2">Personal Information</h2>
                                 <p className="text-slate-400 text-sm">Tell us about yourself</p>
                             </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <TextInput
-                                        type="text"
-                                        name="firstName"
-                                        label="First Name *"
-                                        placeholder="John"
-                                        value={formData.firstName}
-                                        onTextChange={(e) => (
-                                            handleInputChange("firstName", e.target.value)
-                                        )}
-                                        errorMessage={errors.firstName}
-                                        disabled={isLoading}
-                                        inputClassName="pl-10 pr-4 py-3 bg-slate-800/50 border rounded-xl text-white
+                            <div>
+                                <TextInput
+                                    type="text"
+                                    name="name"
+                                    label="Full Name *"
+                                    placeholder="John Mac"
+                                    value={formData.name}
+                                    onTextChange={(e) => (
+                                        handleInputChange("name", e.target.value)
+                                    )}
+                                    errorMessage={errors.name}
+                                    disabled={isLoading}
+                                    inputClassName="pl-10 pr-4 py-3 bg-slate-800/50 border rounded-xl text-white
                                     placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-transparent
                                     transition-all duration-200"
-                                        labelClassName="block text-sm font-medium text-slate-200 mb-2"
-                                        icon={
-                                            <User
-                                                className="absolute left-3 top-1/2 transform -translate-y-1/2
-                                            text-slate-400 w-5 h-5 z-10"
-                                            />
-                                        }
-                                        design="regular-form"
-                                    />
-                                </div>
-
-                                <div>
-                                    <TextInput
-                                        type="text"
-                                        name="lastName"
-                                        label="Last Name *"
-                                        placeholder="Doe"
-                                        value={formData.lastName}
-                                        onTextChange={(e) => (
-                                            handleInputChange("lastName", e.target.value)
-                                        )}
-                                        errorMessage={errors.lastName}
-                                        disabled={isLoading}
-                                        inputClassName="pl-10 pr-4 py-3 bg-slate-800/50 border rounded-xl text-white
-                                    placeholder-slate-400 focus:outline-none focus:ring-2 focus:border-transparent
-                                    transition-all duration-200"
-                                        labelClassName="block text-sm font-medium text-slate-200 mb-2"
-                                        icon={
-                                            <User
-                                                className="absolute left-3 top-1/2 transform -translate-y-1/2
-                                            text-slate-400 w-5 h-5 z-10"
-                                            />
-                                        }
-                                        design="regular-form"
-                                    />
-                                </div>
+                                    labelClassName="block text-sm font-medium text-slate-200 mb-2"
+                                    icon={
+                                        <User
+                                            className="absolute left-3 top-1/2 transform -translate-y-1/2
+                                                text-slate-400 w-5 h-5 z-10"
+                                        />
+                                    }
+                                    design="regular-form"
+                                />
                             </div>
-
                             <div>
                                 <div className="relative">
                                     <TextInput

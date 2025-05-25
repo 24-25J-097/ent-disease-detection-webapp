@@ -125,11 +125,12 @@ const SignUpPage: NextPage = () => {
         } catch (error) {
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         }
     };
@@ -155,7 +156,7 @@ const SignUpPage: NextPage = () => {
     };
 
     const roleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-        setUserSignUpData((prevState) => ({...prevState, role: event.target.value}))
+        setUserSignUpData((prevState) => ({...prevState, role: event.target.value}));
     };
 
     return (
@@ -224,7 +225,9 @@ const SignUpPage: NextPage = () => {
                                 <option value="" disabled>
                                     Select Role
                                 </option>
-                                {Object.values(Role).filter((role) => role !== Role.ADMIN).map((role) => (
+                                {Object.values(Role).filter(
+                                    (role) => ![Role.ADMIN, Role.STUDENT].includes(role)
+                                ).map((role) => (
                                     <option key={role} value={role}>
                                         {role.charAt(0).toUpperCase() + role.slice(1)}
                                     </option>

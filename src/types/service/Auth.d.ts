@@ -26,8 +26,7 @@ export interface UserSignUpData {
 }
 
 export interface StudentSignUpData {
-    firstName: string;
-    lastName: string;
+    name: string;
     email: string;
     password: string;
     confirmPassword: string;
@@ -38,6 +37,8 @@ export interface StudentSignUpData {
     specialization: string;
     agreeToTerms: boolean;
     agreeToNewsletter: boolean;
+    role: string;
+    remember?: boolean;
 }
 
 export interface ForgotPswData {

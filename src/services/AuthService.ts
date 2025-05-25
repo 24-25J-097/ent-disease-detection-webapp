@@ -54,6 +54,12 @@ export class AuthService {
         return res.data;
     }
 
+    public static async studentLogin(userLoginData: UserLoginData): Promise<AppResponse<AuthResponse>> {
+        const ep = ApiUtils.publicUrl("student/login");
+        const res = await AuthService.api().post<UserLoginData, AxiosAppResponse<AuthResponse>>(ep, userLoginData);
+        return res.data;
+    }
+
     public static async studentRegister(studentSignUpData: StudentSignUpData): Promise<AppResponse<AuthResponse>> {
         const ep = ApiUtils.publicUrl("student/register");
         const res = await AuthService.api().post<StudentSignUpData, AxiosAppResponse<AuthResponse>>(ep, studentSignUpData);

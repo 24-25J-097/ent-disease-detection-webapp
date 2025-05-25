@@ -11,5 +11,6 @@ export type GetLucideReactIconProps = {
 
 export interface ErrorResponseData<T = any> {
     message: string;
+    error?: string;
     data?: T;
 }

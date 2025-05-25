@@ -64,9 +64,14 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
         }
     }, [dispatch, mutate]);
 
-    const login = useCallback(async ({userLoginData}: IApiRequest) => {
+    const login = useCallback(async ({userLoginData}: IApiRequest, role?: Role) => {
         try {
-            const response = await AuthService.login(userLoginData);
+            let response;
+            if (role && role === Role.STUDENT) {
+                response = await AuthService.studentLogin(userLoginData);
+            } else {
+                response = await AuthService.login(userLoginData);
+            }
             if (response.success) {
                 if (response.message && response.data) {
                     dispatch(setToken(response.data.token));
