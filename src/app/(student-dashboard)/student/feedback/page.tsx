@@ -114,7 +114,7 @@ export default function FeedbackPage() {
     const selectedCategoryData = feedbackCategories.find((cat) => cat.id === selectedCategory);
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen">
             <DashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">

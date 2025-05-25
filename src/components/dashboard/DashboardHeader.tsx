@@ -6,21 +6,13 @@ import React, {useState} from "react";
 import NotificationBell from '@/components/dashboard/NotificationBell';
 import NotificationCenter from '@/components/dashboard/NotificationCenter';
 import Image from 'next/image';
-import {router} from 'next/client';
 import {useAuthService} from '@/hooks/services/useAuthService';
 import {ThemeToggle} from '@/components/dashboard/ThemeToggle';
 import Breadcrumb from '@/components/dashboard/Breadcrumb';
-
-interface DashboardHeaderUser {
-    name: string;
-    email: string;
-    avatar: string;
-    progress: number;
-    streak: number;
-}
+import { User } from "@/models/User";
 
 interface DashboardHeaderProps {
-    user: DashboardHeaderUser;
+    user: User;
 }
 
 export default function DashboardHeader({user}: DashboardHeaderProps) {
@@ -71,7 +63,9 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                             <input
                                 type="text"
                                 placeholder="Search conditions, symptoms, or topics..."
-                                className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                                className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border rounded-lg
+                                text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2
+                                focus:ring-primary focus:border-transparent transition-all duration-200"
                             />
                         </div>
                     </div>
@@ -81,8 +75,8 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                         {/* Progress Indicator */}
                         <div className="hidden lg:flex items-center space-x-3">
                             <div className="text-right">
-                                <p className="text-sm font-medium text-foreground">{user.progress}% Complete</p>
-                                <p className="text-xs text-muted-foreground">{user.streak} day streak 🔥</p>
+                                <p className="text-sm font-medium text-foreground">{user?.progress}% Complete</p>
+                                <p className="text-xs text-muted-foreground">{user?.streak} day streak 🔥</p>
                             </div>
                             <div className="w-12 h-12 relative">
                                 <svg className="w-12 h-12 transform -rotate-90" viewBox="0 0 36 36">
@@ -91,12 +85,12 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                                         fill="none"
                                         stroke="currentColor"
                                         strokeWidth="2"
-                                        strokeDasharray={`${user.progress}, 100`}
+                                        strokeDasharray={`${user?.progress}, 100`}
                                         className="text-primary"
                                     />
                                 </svg>
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-xs font-medium text-foreground">{user.progress}%</span>
+                                    <span className="text-xs font-medium text-foreground">{user?.progress}%</span>
                                 </div>
                             </div>
                         </div>
@@ -119,12 +113,12 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                                 className="flex items-center space-x-2 p-2 rounded-lg hover:bg-muted/50 transition-colors"
                             >
                                 <img
-                                    src={user.avatar || "/images/profile.webp"}
-                                    alt={user.name}
+                                    src={user?.profile_photo_url || "/images/profile.webp"}
+                                    alt={user?.name}
                                     className="w-8 h-8 rounded-full border-2 border-primary/20"
                                 />
                                 <div className="hidden md:block text-left">
-                                    <p className="text-sm font-medium text-foreground">{user.name}</p>
+                                    <p className="text-sm font-medium text-foreground">{user?.name}</p>
                                     <p className="text-xs text-muted-foreground">Medical Student</p>
                                 </div>
                             </button>

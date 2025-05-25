@@ -3,7 +3,6 @@
 import {NextPage} from "next";
 import {motion} from "framer-motion";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import {ThemeToggle} from '@/components/dashboard/ThemeToggle';
 import BentoGrid from "@/components/dashboard/BentoGrid";
 import {useSelector} from 'react-redux';
 
@@ -14,7 +13,7 @@ const StudentDashboard: NextPage = () => {
     const isConnected = false;
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen">
             <DashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">

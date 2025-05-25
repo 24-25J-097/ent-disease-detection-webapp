@@ -57,28 +57,3 @@
     @apply bg-background text-foreground;
   }
 }
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dark .glass-card {
-  background: rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.gradient-border {
-  background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4);
-  padding: 1px;
-  border-radius: 12px;
-}
-
-.gradient-border-inner {
-  background: hsl(var(--background));
-  border-radius: 11px;
-  height: 100%;
-  width: 100%;
-}
