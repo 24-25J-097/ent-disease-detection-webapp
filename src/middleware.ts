@@ -29,7 +29,7 @@ export function middleware(req: NextRequest): NextResponse {
         if (isPublicPath) {
             return NextResponse.next();
         }
-        return NextResponse.redirect(new URL("/login", req.url));
+        return NextResponse.redirect(new URL("/", req.url));
     } else {
         if (role) {
             const roleURL = toKebabCase(role);
