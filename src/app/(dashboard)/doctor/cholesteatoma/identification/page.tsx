@@ -105,7 +105,7 @@ const IdentificationPage: NextPage = () => {
                 search: trimmedInput
             });
             if (response.success) {
-                const patients = response.data.patients;
+                const patients = response.data;
                 const arrangePatients = patients.map((patient: { label: string; value: any; }) => {
                     const userName = patient.label.split(' - ')[0].trim();
                     return {
