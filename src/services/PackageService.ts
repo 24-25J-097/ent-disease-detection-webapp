@@ -6,11 +6,9 @@ import {AxiosAppResponse} from "@/types/service/Response";
 class PackageService {
     private static instance: PackageService;
     private readonly apiService: ApiService;
-    private readonly baseUrl: string;
 
     private constructor() {
         this.apiService = ApiService.getInstance();
-        this.baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
     }
 
     public static getInstance(): PackageService {
