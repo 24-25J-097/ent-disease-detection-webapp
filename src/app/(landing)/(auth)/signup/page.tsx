@@ -217,8 +217,7 @@ const SignUpPage: NextPage = () => {
                                 onChange={roleChange}
                                 className={`w-full text-sm shadow-sm py-3 px-4 rounded-xl placeholder:text-slate-400/90
                             transition duration-200 ease-in-out focus:ring-4 focus:ring-primary focus:ring-opacity-20
-                            focus:border-primary dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
-                            dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 
+                            focus:border-primary 
                             ${!!roleErrMsg ? "border border-red-500" : "border border-slate-200"}`}
                                 disabled={isDisable}
                             >
@@ -246,9 +245,7 @@ const SignUpPage: NextPage = () => {
                                 }
                                 disabled={isDisable}
                                 className={`h-4 w-4 shadow-sm rounded-md transition duration-200 ease-in-out
-                                focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary 
-                                dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
-                                dark:focus:ring-opacity-50 `}
+                                focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary`}
                             />
                             <label htmlFor="remember" className="ml-2 text-sm text-gray-700">
                                 Remember Me
