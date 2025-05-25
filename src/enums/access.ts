@@ -3,6 +3,7 @@ export enum Role {
     DOCTOR = "doctor",
     RADIOLOGIST = "radiologist",
     STUDENT = "student",
+    PATIENT = "patient",
 }
 
 export enum Permission {
