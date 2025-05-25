@@ -1,16 +1,19 @@
 "use client";
 
-import { NextPage } from "next";
+import {NextPage} from "next";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import ReportService, { UsageByPackage, UsageByRole } from "@/services/ReportService";
+import {useEffect, useState} from "react";
+import ReportService from "@/services/ReportService";
 import PackageService from "@/services/PackageService";
-import { Package } from "@/models/Package";
+import {Package} from "@/models/Package";
+import {UserService} from "@/services/UserService";
+import {User} from "@/models/User";
+import {RequestLog, RequestLogResponse} from "@/models/RequestLog";
 
 const AdminDashboard: NextPage = () => {
+    const [users, setUsers] = useState<User[]>([] as User[]);
     const [packageCount, setPackageCount] = useState<number>(0);
-    const [usageByRole, setUsageByRole] = useState<UsageByRole[]>([]);
-    const [usageByPackage, setUsageByPackage] = useState<UsageByPackage[]>([]);
+    const [requestLogs, setRequestLogs] = useState<RequestLogResponse>()
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -20,17 +23,15 @@ const AdminDashboard: NextPage = () => {
                 const reportService = ReportService.getInstance();
                 const packageService = PackageService.getInstance();
 
+                const userResponse = await UserService.getAllUsers();
+                setUsers(userResponse);
                 // Fetch packages
                 const packages = await packageService.getAllPackages();
                 setPackageCount(packages.length);
 
-                // Fetch usage by role
-                const roleUsage = await reportService.getUsageByRole();
-                setUsageByRole(roleUsage);
-
                 // Fetch usage by package
-                const packageUsage = await reportService.getUsageByPackage();
-                setUsageByPackage(packageUsage);
+                const requestLogs = await reportService.getAllApiUsages();
+                setRequestLogs(requestLogs);
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
             } finally {
@@ -49,7 +50,8 @@ const AdminDashboard: NextPage = () => {
 
                     {isLoading ? (
                         <div className="flex justify-center items-center h-64">
-                            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                            <div
+                                className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
                         </div>
                     ) : (
                         <>
@@ -58,15 +60,18 @@ const AdminDashboard: NextPage = () => {
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h3 className="text-lg font-semibold mb-2">Packages</h3>
                                     <p className="text-3xl font-bold text-blue-600">{packageCount}</p>
-                                    <Link href="/admin/packages" className="text-sm text-blue-500 hover:underline mt-2 inline-block">
+                                    <Link href="/admin/packages"
+                                          className="text-sm text-blue-500 hover:underline mt-2 inline-block">
                                         Manage Packages →
                                     </Link>
                                 </div>
 
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h3 className="text-lg font-semibold mb-2">Roles</h3>
-                                    <p className="text-3xl font-bold text-blue-600">{usageByRole.length}</p>
-                                    <Link href="/admin/roles" className="text-sm text-blue-500 hover:underline mt-2 inline-block">
+                                    <p className="text-3xl font-bold text-blue-600">5</p>
+                                    {/*<p className="text-3xl font-bold text-blue-600">{usageByRole.length}</p>*/}
+                                    <Link href="/admin/roles"
+                                          className="text-sm text-blue-500 hover:underline mt-2 inline-block">
                                         Manage Roles →
                                     </Link>
                                 </div>
@@ -74,9 +79,10 @@ const AdminDashboard: NextPage = () => {
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h3 className="text-lg font-semibold mb-2">Users</h3>
                                     <p className="text-3xl font-bold text-blue-600">
-                                        {usageByRole.reduce((sum, role) => sum + role.userCount, 0)}
+                                        {users.length}
                                     </p>
-                                    <Link href="/admin/users" className="text-sm text-blue-500 hover:underline mt-2 inline-block">
+                                    <Link href="/admin/users"
+                                          className="text-sm text-blue-500 hover:underline mt-2 inline-block">
                                         Manage Users →
                                     </Link>
                                 </div>
@@ -84,9 +90,10 @@ const AdminDashboard: NextPage = () => {
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h3 className="text-lg font-semibold mb-2">Total API Usage</h3>
                                     <p className="text-3xl font-bold text-blue-600">
-                                        {usageByRole.reduce((sum, role) => sum + role.usageCount, 0)}
+                                        {requestLogs?.totalRequests}
                                     </p>
-                                    <Link href="/admin/reports" className="text-sm text-blue-500 hover:underline mt-2 inline-block">
+                                    <Link href="/admin/reports"
+                                          className="text-sm text-blue-500 hover:underline mt-2 inline-block">
                                         View Reports →
                                     </Link>
                                 </div>
@@ -97,10 +104,11 @@ const AdminDashboard: NextPage = () => {
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h2 className="text-xl font-bold mb-4">Package Management</h2>
                                     <p className="text-gray-600 mb-4">
-                                        Create, edit, and manage payment packages. Set pricing, daily limits, and durations.
+                                        Create, edit, and manage payment packages. Set pricing, daily limits, and
+                                        durations.
                                     </p>
-                                    <Link 
-                                        href="/admin/packages" 
+                                    <Link
+                                        href="/admin/packages"
                                         className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block"
                                     >
                                         Manage Packages
@@ -110,10 +118,11 @@ const AdminDashboard: NextPage = () => {
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h2 className="text-xl font-bold mb-4">Role Access Policy</h2>
                                     <p className="text-gray-600 mb-4">
-                                        Configure access policies for different roles. Set unlimited access or require package purchase.
+                                        Configure access policies for different roles. Set unlimited access or require
+                                        package purchase.
                                     </p>
-                                    <Link 
-                                        href="/admin/roles" 
+                                    <Link
+                                        href="/admin/roles"
                                         className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block"
                                     >
                                         Manage Roles
@@ -123,10 +132,11 @@ const AdminDashboard: NextPage = () => {
                                 <div className="bg-white rounded-lg shadow p-6">
                                     <h2 className="text-xl font-bold mb-4">User Plan Management</h2>
                                     <p className="text-gray-600 mb-4">
-                                        View and manage user subscription plans. Track usage and assign packages to users.
+                                        View and manage user subscription plans. Track usage and assign packages to
+                                        users.
                                     </p>
-                                    <Link 
-                                        href="/admin/users" 
+                                    <Link
+                                        href="/admin/users"
                                         className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block"
                                     >
                                         Manage Users
@@ -138,8 +148,8 @@ const AdminDashboard: NextPage = () => {
                                     <p className="text-gray-600 mb-4">
                                         View detailed analytics on API usage, package purchases, and user activity.
                                     </p>
-                                    <Link 
-                                        href="/admin/reports" 
+                                    <Link
+                                        href="/admin/reports"
                                         className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 inline-block"
                                     >
                                         View Reports
