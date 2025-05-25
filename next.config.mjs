@@ -6,7 +6,14 @@ const nextConfig = {
         includePaths: [path.join(process.cwd(), 'styles')],
     },
     images: {
-        domains: ['ui-avatars.com', 'localhost', 'entinsight.com', 'firebasestorage.googleapis.com'], // TODO: must change when going production
+        domains: [
+            'ui-avatars.com',
+            'localhost',
+            'entinsight.com',
+            'api.entinsight.com',
+            'ai.entinsight.com',
+            'firebasestorage.googleapis.com'
+        ], // TODO: must change when going production
         dangerouslyAllowSVG: true,
     },
 };
