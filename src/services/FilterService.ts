@@ -11,7 +11,7 @@ export class FilterService {
         return ApiService.getInstance().getApi();
     }
 
-    public static async filterPatients(filter: UserFilterData): Promise<AppResponse<CommonResponse<SelectInputOption[]>>> {
+    public static async filterPatients(filter: UserFilterData): Promise<AppResponse<SelectInputOption[]>> {
         const filterParams = Object.entries(filter).filter(
             ([_, value]) => value
         ).map(([key, value]) => (
