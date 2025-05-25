@@ -22,7 +22,7 @@ export function ThemeToggle() {
             whileHover={{scale: 1.05}}
             whileTap={{scale: 0.95}}
             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-            className="relative p-2 rounded-lg bg-muted/50 hover:bg-muted transition-colors border border-border"
+            className="relative p-2 rounded-lg bg-blue-gray-900/50 hover:bg-blue-gray-900 transition-colors border border-border"
         >
             <motion.div initial={false} animate={{rotate: theme === "dark" ? 0 : 180}} transition={{duration: 0.3}}>
                 {theme === "dark" ? <Moon className="h-4 w-4 text-foreground"/> :

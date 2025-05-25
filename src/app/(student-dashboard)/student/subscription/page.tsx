@@ -18,7 +18,7 @@ import {
     Users,
     X,
 } from "lucide-react";
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {billingHistory, getUsageColor, getUsagePercentage, pricingTiers, usageData} from '@/data/student/subscription';
 import {useSelector} from 'react-redux';
 
@@ -39,7 +39,7 @@ export default function SubscriptionPage() {
 
     return (
         <div className="min-h-screen">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">
                 <motion.div
@@ -59,7 +59,7 @@ export default function SubscriptionPage() {
                     transition={{duration: 0.6, delay: 0.1}}
                     className="mb-8"
                 >
-                    <div className="flex space-x-1 bg-muted/50 p-1 rounded-lg w-fit">
+                    <div className="flex space-x-1 bg-blue-gray-900/50 p-1 rounded-lg w-fit">
                         {[
                             {id: "plans", label: "Plans & Pricing", icon: CreditCard},
                             {id: "usage", label: "Usage & Limits", icon: TrendingUp},
@@ -112,7 +112,7 @@ export default function SubscriptionPage() {
 
                         {/* Billing Period Toggle */}
                         <div className="flex justify-center">
-                            <div className="flex items-center space-x-4 bg-muted/50 p-1 rounded-lg">
+                            <div className="flex items-center space-x-4 bg-blue-gray-900/50 p-1 rounded-lg">
                                 <button
                                     onClick={() => setBillingPeriod("month")}
                                     className={`px-4 py-2 rounded-md transition-all duration-200 ${
@@ -221,7 +221,7 @@ export default function SubscriptionPage() {
                                                 ? "bg-green-500/10 text-green-500 cursor-not-allowed"
                                                 : tier.popular
                                                     ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                                                    : "bg-muted hover:bg-muted/80 text-foreground"
+                                                    : "bg-blue-gray-900 hover:bg-blue-gray-900/80 text-foreground"
                                         }`}
                                     >
                                         {currentPlan === tier.id ? "Current Plan" : tier.price === 0 ? "Current Plan" : "Upgrade"}
@@ -303,7 +303,7 @@ export default function SubscriptionPage() {
                                         className="text-2xl font-bold text-foreground">{usageData.current.dailyAnalyses}</span>
                                     <span className="text-muted-foreground">/ {usageData.limits.dailyAnalyses}</span>
                                 </div>
-                                <div className="w-full bg-muted rounded-full h-2">
+                                <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{
@@ -344,7 +344,7 @@ export default function SubscriptionPage() {
                                         className="text-2xl font-bold text-foreground">{usageData.current.monthlyAnalyses}</span>
                                     <span className="text-muted-foreground">/ {usageData.limits.monthlyAnalyses}</span>
                                 </div>
-                                <div className="w-full bg-muted rounded-full h-2">
+                                <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{
@@ -381,7 +381,7 @@ export default function SubscriptionPage() {
                                         className="text-2xl font-bold text-foreground">{usageData.current.aiChatMessages}</span>
                                     <span className="text-muted-foreground">/ {usageData.limits.aiChatMessages}</span>
                                 </div>
-                                <div className="w-full bg-muted rounded-full h-2">
+                                <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{
@@ -415,7 +415,7 @@ export default function SubscriptionPage() {
                                         className="text-2xl font-bold text-foreground">{usageData.current.conditionsStudied}</span>
                                     <span className="text-muted-foreground">/ 50</span>
                                 </div>
-                                <div className="w-full bg-muted rounded-full h-2">
+                                <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{width: `${(usageData.current.conditionsStudied / 50) * 100}%`}}
@@ -595,7 +595,7 @@ export default function SubscriptionPage() {
                                         initial={{opacity: 0, x: -20}}
                                         animate={{opacity: 1, x: 0}}
                                         transition={{duration: 0.6, delay: 0.6 + index * 0.1}}
-                                        className="flex items-center justify-between p-4 bg-muted/50 rounded-xl"
+                                        className="flex items-center justify-between p-4 bg-blue-gray-900/50 rounded-xl"
                                     >
                                         <div className="flex items-center space-x-4">
                                             <div className="p-2 bg-green-500/10 rounded-lg">
@@ -663,7 +663,7 @@ export default function SubscriptionPage() {
                             <div className="flex space-x-3">
                                 <button
                                     onClick={() => setShowUpgradeModal(false)}
-                                    className="flex-1 py-3 px-4 bg-muted text-foreground rounded-xl hover:bg-muted/80 transition-colors"
+                                    className="flex-1 py-3 px-4 bg-blue-gray-900 text-foreground rounded-xl hover:bg-blue-gray-900/80 transition-colors"
                                 >
                                     Cancel
                                 </button>

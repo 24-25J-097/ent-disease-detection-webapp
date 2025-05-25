@@ -110,14 +110,14 @@ export default function NotificationCenter({isOpen, onClose}: NotificationCenter
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50"
+                                    className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-blue-gray-900/50"
                                 >
                                     <X className="w-5 h-5"/>
                                 </button>
                             </div>
 
                             {/* Filter Tabs */}
-                            <div className="flex space-x-1 bg-muted/50 p-1 rounded-lg">
+                            <div className="flex space-x-1 bg-blue-gray-900/50 p-1 rounded-lg">
                                 {[
                                     {id: "all", label: "All", count: notifications.length},
                                     {id: "unread", label: "Unread", count: 0},
@@ -170,7 +170,7 @@ export default function NotificationCenter({isOpen, onClose}: NotificationCenter
                         <div className="flex-1 overflow-y-auto">
                             <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                                 <div
-                                    className="w-16 h-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                                    className="w-16 h-16 bg-blue-gray-900/50 rounded-full flex items-center justify-center mb-4">
                                     <Bell className="w-8 h-8 text-muted-foreground"/>
                                 </div>
                                 <h3 className="text-lg font-medium text-foreground mb-2">

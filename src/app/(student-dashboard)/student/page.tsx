@@ -2,7 +2,7 @@
 
 import {NextPage} from "next";
 import {motion} from "framer-motion";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import StudentDashboardHeader from "@/components/dashboard/StudentDashboardHeader";
 import BentoGrid from "@/components/dashboard/BentoGrid";
 import {useSelector} from 'react-redux';
 
@@ -14,7 +14,7 @@ const StudentDashboard: NextPage = () => {
 
     return (
         <div className="min-h-screen">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">
                 <motion.div

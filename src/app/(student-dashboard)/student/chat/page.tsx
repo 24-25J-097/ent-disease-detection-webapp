@@ -5,7 +5,7 @@ import type React from "react";
 import {motion} from "framer-motion";
 import {useState, useRef, useEffect} from "react";
 import {Send, Bot, User, Paperclip, Mic, MoreVertical} from "lucide-react";
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {Message, sampleMessages} from '@/data/student/chat';
 import {useSelector} from 'react-redux';
 
@@ -66,7 +66,7 @@ export default function ChatPage() {
 
     return (
         <div className="min-h-screen flex flex-col">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="flex-1 container mx-auto px-4 py-8 flex flex-col">
                 <motion.div
@@ -75,7 +75,7 @@ export default function ChatPage() {
                     transition={{duration: 0.6}}
                     className="mb-6"
                 >
-                    <h1 className="text-3xl font-bold text-foreground mb-2">AI ENT Teacher</h1>
+                    <h1 className="text-3xl font-bold text-foreground mb-2">AI Medical Teacher</h1>
                     <p className="text-muted-foreground">Get instant answers about ENT topics with evidence-based
                         citations</p>
                 </motion.div>
@@ -95,7 +95,7 @@ export default function ChatPage() {
                                 <Bot className="w-6 h-6 text-primary-foreground"/>
                             </div>
                             <div>
-                                <h3 className="font-semibold text-foreground">AI ENT Teacher</h3>
+                                <h3 className="font-semibold text-foreground">AI Medical Teacher</h3>
                                 <p className="text-xs text-primary flex items-center">
                                     <div className="w-2 h-2 bg-primary rounded-full mr-2"></div>
                                     Online
@@ -103,7 +103,7 @@ export default function ChatPage() {
                             </div>
                         </div>
 
-                        <button className="p-2 hover:bg-muted rounded-lg transition-colors">
+                        <button className="p-2 hover:bg-blue-gray-900 rounded-lg transition-colors">
                             <MoreVertical className="w-5 h-5 text-muted-foreground"/>
                         </button>
                     </div>
@@ -140,7 +140,7 @@ export default function ChatPage() {
                                         className={`flex flex-col ${message.type === "user" ? "items-end" : "items-start"}`}>
                                         <div
                                             className={`px-4 py-3 rounded-2xl ${
-                                                message.type === "user" ? "bg-primary text-primary-foreground" : "bg-muted text-foreground"
+                                                message.type === "user" ? "bg-primary text-primary-foreground" : "bg-blue-gray-900 text-foreground"
                                             }`}
                                         >
                                             <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -180,7 +180,7 @@ export default function ChatPage() {
                                         <Bot className="w-4 h-4 text-primary-foreground"/>
                                     </div>
                                 </div>
-                                <div className="bg-muted px-4 py-3 rounded-2xl">
+                                <div className="bg-blue-gray-900 px-4 py-3 rounded-2xl">
                                     <div className="flex space-x-1">
                                         <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
                                         <div
@@ -199,7 +199,7 @@ export default function ChatPage() {
                     <div className="border-t border-border p-4">
                         <div className="flex items-end space-x-3">
                             <button
-                                className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50">
+                                className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-blue-gray-900/50">
                                 <Paperclip className="w-5 h-5"/>
                             </button>
 
@@ -211,7 +211,7 @@ export default function ChatPage() {
                                     onChange={(e) => setInputValue(e.target.value)}
                                     onKeyPress={handleKeyPress}
                                     placeholder="Ask about ENT conditions, symptoms, treatments..."
-                                    className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 pr-12"
+                                    className="w-full px-4 py-3 bg-blue-gray-900/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 pr-12"
                                 />
                                 <button
                                     className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-muted-foreground hover:text-foreground transition-colors">

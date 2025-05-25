@@ -177,7 +177,7 @@ export const getStatusColor = (status: string) => {
         case "failed":
             return "text-foreground bg-red-500/10 dark:bg-red-500/20";
         default:
-            return "text-foreground bg-muted";
+            return "text-foreground bg-blue-gray-900";
     }
 };
 

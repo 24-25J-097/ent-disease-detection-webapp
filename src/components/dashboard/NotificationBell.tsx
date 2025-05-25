@@ -16,7 +16,7 @@ export default function NotificationBell({onClick}: NotificationBellProps) {
             onClick={onClick}
             whileHover={{scale: 1.05}}
             whileTap={{scale: 0.95}}
-            className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50"
+            className="relative p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-blue-gray-900/50"
         >
             <Bell className="w-5 h-5"/>
             {unreadCount > 0 && (

@@ -9,13 +9,14 @@ import Image from 'next/image';
 import {useAuthService} from '@/hooks/services/useAuthService';
 import {ThemeToggle} from '@/components/dashboard/ThemeToggle';
 import Breadcrumb from '@/components/dashboard/Breadcrumb';
-import { User } from "@/models/User";
+import {User} from "@/models/User";
+import Link from 'next/link';
 
 interface DashboardHeaderProps {
     user: User;
 }
 
-export default function DashboardHeader({user}: DashboardHeaderProps) {
+export default function StudentDashboardHeader({user}: DashboardHeaderProps) {
 
     const [showUserMenu, setShowUserMenu] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -39,21 +40,23 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
             <div className="container mx-auto px-4 py-4">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <div className="flex items-center space-x-3">
-                        <div className="w-10">
-                            <Image
-                                src={"/images/ent-insight-logo-w.png"}
-                                alt="Logo"
-                                className="w-full cursor-pointer"
-                                width={1000}
-                                height={1000}
-                            />
+                    <Link href={'/student'}>
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10">
+                                <Image
+                                    src={"/images/ent-insight-logo.png"}
+                                    alt="Logo"
+                                    className="w-full cursor-pointer"
+                                    width={1000}
+                                    height={1000}
+                                />
+                            </div>
+                            <div>
+                                <h1 className="text-xl font-bold text-foreground">ENT Insight Academic</h1>
+                                <p className="text-xs text-muted-foreground">Medical Education Platform</p>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="text-xl font-bold text-foreground">ENT Insight Academic</h1>
-                            <p className="text-xs text-muted-foreground">Medical Education Platform</p>
-                        </div>
-                    </div>
+                    </Link>
 
                     {/* Search Bar */}
                     <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
@@ -63,7 +66,7 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                             <input
                                 type="text"
                                 placeholder="Search conditions, symptoms, or topics..."
-                                className="w-full pl-10 pr-4 py-2 bg-muted/50 border border-border rounded-lg
+                                className="w-full pl-10 pr-4 py-2 bg-blue-gray-900/50 border border-border rounded-lg
                                 text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2
                                 focus:ring-primary focus:border-transparent transition-all duration-200"
                             />
@@ -100,7 +103,7 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
 
                         {/* Settings */}
                         <button
-                            className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50">
+                            className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-blue-gray-900/50">
                             <Settings className="w-5 h-5"/>
                         </button>
 
@@ -110,7 +113,7 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                         <div className="relative">
                             <button
                                 onClick={() => setShowUserMenu(!showUserMenu)}
-                                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-gray-900/50 transition-colors"
                             >
                                 <img
                                     src={user?.profile_photo_url || "/images/profile.webp"}
@@ -128,12 +131,14 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
                                     initial={{opacity: 0, scale: 0.95, y: -10}}
                                     animate={{opacity: 1, scale: 1, y: 0}}
                                     exit={{opacity: 0, scale: 0.95, y: -10}}
-                                    className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg py-2 z-50"
+                                    className="absolute right-0 mt-2 w-48 bg-blue-gray-900/50 border border-border
+                                    rounded-lg shadow-lg p-2 z-50"
                                 >
                                     <button
                                         type="button"
                                         onClick={handleLogout}
-                                        className="flex items-center px-4 py-2 text-sm text-foreground hover:bg-muted/50 transition-colors"
+                                        className="flex items-center px-4 py-2 text-sm text-foreground
+                                        hover:bg-blue-gray-900/50 rounded-md transition-colors"
                                     >
                                         <LogOut className="w-4 h-4 mr-3"/>
                                         Sign Out
@@ -147,7 +152,7 @@ export default function DashboardHeader({user}: DashboardHeaderProps) {
 
             {/* Breadcrumbs */}
             <div className="container mx-auto px-4 pb-2">
-                <Breadcrumb />
+                <Breadcrumb/>
             </div>
 
             <NotificationCenter isOpen={showNotifications} onClose={() => setShowNotifications(false)}/>

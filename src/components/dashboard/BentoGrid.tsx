@@ -129,7 +129,7 @@ export default function BentoGrid() {
                                 </div>
                                 <div className="text-right">
                                     <span
-                                        className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">{item.stats}</span>
+                                        className="text-xs text-muted-foreground bg-blue-gray-900/50 px-2 py-1 rounded-full">{item.stats}</span>
                                 </div>
                             </div>
 

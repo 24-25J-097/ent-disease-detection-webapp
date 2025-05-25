@@ -5,8 +5,9 @@ import type React from "react";
 import {motion} from "framer-motion";
 import {useState} from "react";
 import {Upload, Camera, FileImage, Brain, CheckCircle, AlertCircle} from "lucide-react";
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
-import {conditions, defaultUser, sampleAnalysisResult} from '@/data/student/identification';
+import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
+import {conditions, sampleAnalysisResult} from '@/data/student/identification';
+import {useSelector} from 'react-redux';
 
 export default function IdentificationPage() {
 
@@ -16,7 +17,7 @@ export default function IdentificationPage() {
     const [analysisResult, setAnalysisResult] = useState<any>(null);
     const [dragActive, setDragActive] = useState(false);
 
-    const user = defaultUser;
+    const user = useSelector((state: any) => state.auth.user);
 
     const handleFileSelect = (file: File) => {
         setSelectedFile(file);
@@ -61,7 +62,7 @@ export default function IdentificationPage() {
 
     return (
         <div className="min-h-screen">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">
                 <motion.div
@@ -265,7 +266,7 @@ export default function IdentificationPage() {
                                         <div>
                                           <textarea
                                               placeholder="Share your thoughts on this analysis..."
-                                              className="w-full p-3 bg-muted/50 border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"
+                                              className="w-full p-3 bg-blue-gray-900/50 border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"
                                               rows={3}
                                           />
                                         </div>

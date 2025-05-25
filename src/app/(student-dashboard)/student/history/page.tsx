@@ -16,7 +16,7 @@ import {
     Trophy,
     Zap,
 } from "lucide-react";
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {
     achievements,
     getRarityColor,
@@ -51,7 +51,7 @@ export default function HistoryPage() {
 
     return (
         <div className="min-h-screen">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">
                 <motion.div
@@ -74,7 +74,7 @@ export default function HistoryPage() {
                     </div>
 
                     {/* Tab Navigation */}
-                    <div className="flex space-x-1 bg-muted/50 p-1 rounded-lg w-fit">
+                    <div className="flex space-x-1 bg-blue-gray-900/50 p-1 rounded-lg w-fit">
                         {[
                             {id: "overview", label: "Overview", icon: BarChart3},
                             {id: "sessions", label: "Sessions", icon: Clock},
@@ -183,7 +183,7 @@ export default function HistoryPage() {
                                 <select
                                     value={timeFilter}
                                     onChange={(e) => setTimeFilter(e.target.value)}
-                                    className="px-3 py-1 bg-muted border border-border rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                                    className="px-3 py-1 bg-blue-gray-900 border border-border rounded-lg text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                                 >
                                     <option value="week">This Week</option>
                                     <option value="month">This Month</option>
@@ -229,7 +229,7 @@ export default function HistoryPage() {
                                         initial={{opacity: 0, scale: 0.95}}
                                         animate={{opacity: 1, scale: 1}}
                                         transition={{duration: 0.6, delay: 0.7 + index * 0.1}}
-                                        className="flex items-center space-x-3 p-4 bg-muted/50 rounded-xl"
+                                        className="flex items-center space-x-3 p-4 bg-blue-gray-900/50 rounded-xl"
                                     >
                                         <div
                                             className={`p-2 bg-gradient-to-r ${getRarityColor(achievement.rarity)} rounded-lg`}>
@@ -263,7 +263,7 @@ export default function HistoryPage() {
                             <select
                                 value={sessionFilter}
                                 onChange={(e) => setSessionFilter(e.target.value)}
-                                className="px-3 py-2 bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                className="px-3 py-2 bg-blue-gray-900 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                             >
                                 <option value="all">All Sessions</option>
                                 <option value="identification">Image Analysis</option>
@@ -415,7 +415,7 @@ export default function HistoryPage() {
                           {achievement.progress}/{achievement.maxProgress}
                         </span>
                                             </div>
-                                            <div className="w-full bg-muted rounded-full h-2">
+                                            <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                                 <motion.div
                                                     initial={{width: 0}}
                                                     animate={{

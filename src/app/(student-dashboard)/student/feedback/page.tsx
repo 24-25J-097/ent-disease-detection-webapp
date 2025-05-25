@@ -17,7 +17,7 @@ import {
     X,
     Zap,
 } from "lucide-react";
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {
     feedbackCategories,
     recentFeedback,
@@ -90,9 +90,9 @@ export default function FeedbackPage() {
             case "resolved":
                 return "text-foreground bg-green-500/10 dark:bg-green-500/20";
             case "closed":
-                return "text-foreground bg-muted";
+                return "text-foreground bg-blue-gray-900";
             default:
-                return "text-foreground bg-muted";
+                return "text-foreground bg-blue-gray-900";
         }
     };
 
@@ -107,7 +107,7 @@ export default function FeedbackPage() {
             case "critical":
                 return "text-foreground bg-red-500/10 dark:bg-red-500/20";
             default:
-                return "text-foreground bg-muted";
+                return "text-foreground bg-blue-gray-900";
         }
     };
 
@@ -115,7 +115,7 @@ export default function FeedbackPage() {
 
     return (
         <div className="min-h-screen">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">
                 <motion.div
@@ -182,7 +182,7 @@ export default function FeedbackPage() {
                     transition={{duration: 0.6, delay: 0.1}}
                     className="mb-8"
                 >
-                    <div className="flex space-x-1 bg-muted/50 p-1 rounded-lg w-fit">
+                    <div className="flex space-x-1 bg-blue-gray-900/50 p-1 rounded-lg w-fit">
                         {[
                             {id: "submit", label: "Submit Feedback", icon: MessageSquare},
                             {id: "history", label: "My Feedback", icon: Settings},
@@ -224,7 +224,7 @@ export default function FeedbackPage() {
                                         transition={{duration: 0.6, delay: index * 0.1}}
                                         onClick={() => setSelectedCategory(category.id)}
                                         className={`p-4 rounded-xl text-left transition-all duration-200 ${
-                                            selectedCategory === category.id ? "ring-2 ring-primary bg-primary/5" : "hover:bg-muted/50"
+                                            selectedCategory === category.id ? "ring-2 ring-primary bg-primary/5" : "hover:bg-blue-gray-900/50"
                                         }`}
                                     >
                                         <div className="flex items-start space-x-3">
@@ -324,7 +324,7 @@ export default function FeedbackPage() {
                                                         type="button"
                                                         onClick={() => setPriority(p.value as "low" | "medium" | "high" | "critical")}
                                                         className={`p-3 rounded-lg text-center transition-all duration-200 ${
-                                                            priority === p.value ? "ring-2 ring-primary bg-primary/5" : "bg-muted/50 hover:bg-muted"
+                                                            priority === p.value ? "ring-2 ring-primary bg-primary/5" : "bg-blue-gray-900/50 hover:bg-blue-gray-900"
                                                         }`}
                                                     >
                                                         <div className="text-lg mb-1">{p.icon}</div>
@@ -348,7 +348,7 @@ export default function FeedbackPage() {
                                             value={title}
                                             onChange={(e) => setTitle(e.target.value)}
                                             placeholder="Brief summary of your feedback"
-                                            className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                                            className="w-full px-4 py-3 bg-blue-gray-900/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
                                             required
                                         />
                                     </div>
@@ -365,7 +365,7 @@ export default function FeedbackPage() {
                                             onChange={(e) => setDescription(e.target.value)}
                                             placeholder="Please provide detailed information about your feedback or issue..."
                                             rows={6}
-                                            className="w-full px-4 py-3 bg-muted/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"
+                                            className="w-full px-4 py-3 bg-blue-gray-900/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200 resize-none"
                                             required
                                         />
                                     </div>
@@ -403,7 +403,7 @@ export default function FeedbackPage() {
                                                 <div className="space-y-2">
                                                     {attachments.map((file, index) => (
                                                         <div key={index}
-                                                             className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                                                             className="flex items-center justify-between p-3 bg-blue-gray-900/50 rounded-lg">
                                                             <div className="flex items-center space-x-3">
                                                                 <div className="p-2 bg-primary/10 rounded-lg">
                                                                     <Upload className="w-4 h-4 text-primary"/>
@@ -601,7 +601,7 @@ export default function FeedbackPage() {
                                         </div>
 
                                         {feedback.response && (
-                                            <div className="mt-4 p-4 bg-muted/50 rounded-xl">
+                                            <div className="mt-4 p-4 bg-blue-gray-900/50 rounded-xl">
                                                 <div className="flex items-center space-x-2 mb-2">
                                                     <div
                                                         className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">

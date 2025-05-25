@@ -4,7 +4,7 @@ import {motion} from "framer-motion";
 import {useState} from "react";
 import {BookOpen, Clock, ExternalLink, Filter, Search, Users} from "lucide-react";
 import {useSelector} from 'react-redux';
-import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {conditions, categories, severityLevels} from '@/data/student/conditions';
 
 export default function ConditionsPage() {
@@ -32,7 +32,7 @@ export default function ConditionsPage() {
         if (severity.includes("Mild")) return "text-foreground bg-green-500/10 dark:bg-green-500/20";
         if (severity.includes("Moderate")) return "text-foreground bg-yellow-500/10 dark:bg-yellow-500/20";
         if (severity.includes("Severe")) return "text-foreground bg-red-500/10 dark:bg-red-500/20";
-        return "text-foreground bg-muted";
+        return "text-foreground bg-blue-gray-900";
     };
 
     const getPrevalenceColor = (prevalence: string) => {
@@ -46,13 +46,13 @@ export default function ConditionsPage() {
             case "Rare":
                 return "text-foreground bg-red-500/10 dark:bg-red-500/20";
             default:
-                return "text-foreground bg-muted";
+                return "text-foreground bg-blue-gray-900";
         }
     };
 
     return (
         <div className="min-h-screen">
-            <DashboardHeader user={user}/>
+            <StudentDashboardHeader user={user}/>
 
             <main className="container mx-auto px-4 py-8">
                 <motion.div
@@ -83,7 +83,9 @@ export default function ConditionsPage() {
                             placeholder="Search conditions, symptoms, or keywords..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                            className="w-full pl-10 pr-4 py-3 bg-blue-gray-900/50 border border-border rounded-xl
+                            text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2
+                            focus:ring-primary focus:border-transparent transition-all duration-200"
                         />
                     </div>
 
@@ -91,7 +93,7 @@ export default function ConditionsPage() {
                     <div className="flex items-center justify-between">
                         <button
                             onClick={() => setShowFilters(!showFilters)}
-                            className="flex items-center space-x-2 px-4 py-2 bg-muted/50 hover:bg-muted rounded-lg transition-colors"
+                            className="flex items-center space-x-2 px-4 py-2 bg-blue-gray-900/50 hover:bg-blue-gray-900 rounded-lg transition-colors"
                         >
                             <Filter className="w-4 h-4"/>
                             <span>Filters</span>
@@ -116,7 +118,7 @@ export default function ConditionsPage() {
                                     <select
                                         value={selectedCategory}
                                         onChange={(e) => setSelectedCategory(e.target.value)}
-                                        className="w-full p-2 bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                        className="w-full p-2 bg-blue-gray-900 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                                     >
                                         {categories.map((category) => (
                                             <option key={category} value={category}>
@@ -131,7 +133,7 @@ export default function ConditionsPage() {
                                     <select
                                         value={selectedSeverity}
                                         onChange={(e) => setSelectedSeverity(e.target.value)}
-                                        className="w-full p-2 bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                                        className="w-full p-2 bg-blue-gray-900 border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                                     >
                                         {severityLevels.map((severity) => (
                                             <option key={severity} value={severity}>
@@ -195,14 +197,14 @@ export default function ConditionsPage() {
                                 <div className="flex flex-wrap gap-2 mb-4">
                                     {condition.tags.slice(0, 2).map((tag) => (
                                         <span key={tag}
-                                              className="px-2 py-1 bg-muted/50 text-xs text-muted-foreground rounded-md"
+                                              className="px-2 py-1 bg-blue-gray-900/50 text-xs text-muted-foreground rounded-md"
                                         >
                                         {tag}
                                       </span>
                                     ))}
                                     {condition.tags.length > 2 && (
                                         <span
-                                            className="px-2 py-1 bg-muted/50 text-xs text-muted-foreground rounded-md"
+                                            className="px-2 py-1 bg-blue-gray-900/50 text-xs text-muted-foreground rounded-md"
                                         >
                                           +{condition.tags.length - 2}
                                         </span>
