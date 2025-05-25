@@ -152,43 +152,138 @@ const ReportsPage: NextPage = () => {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Top Users */}
+                    {/* Daily API Usage Summary */}
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold mb-4">Top 10 Users by API Usage</h2>
-                        {topUsers.length === 0 ? (
+                        <h2 className="text-xl font-bold mb-4">Daily API Usage Summary</h2>
+                        {!requestLogs || requestLogs.dailySummary.length === 0 ? (
                             <p className="text-gray-500">No data available for the selected date range.</p>
                         ) : (
                             <div className="space-y-4">
-                                {topUsers.map((user, index) => (
-                                    <div key={user.userDetails._id} className="flex items-center">
-                                        <div className="w-8 text-gray-500 font-semibold">{index + 1}.</div>
-                                        <div className="flex-1">
-                                            <div className="text-sm font-medium">{user.userDetails.name}</div>
-                                            <div className="text-xs text-gray-500">{user.userDetails.email}</div>
-                                        </div>
-                                        <div className="text-sm font-semibold">{user.count} calls</div>
-                                    </div>
-                                ))}
+                                <div className="flex justify-between items-center mb-2">
+                                    <div className="text-sm font-medium">Total Requests:</div>
+                                    <div className="text-lg font-bold text-blue-600">{requestLogs.totalRequests}</div>
+                                </div>
+                                <div className="space-y-2">
+                                    {requestLogs.dailySummary.map((day, index) => {
+                                        const maxCount = Math.max(...requestLogs.dailySummary.map(d => d.count));
+                                        const percentage = (day.count / maxCount) * 100;
+
+                                        return (
+                                            <div key={day.date} className="flex items-center">
+                                                <div className="w-24 text-sm text-gray-500">
+                                                    {new Date(day.date).toLocaleDateString()}
+                                                </div>
+                                                <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                                                    <div
+                                                        className={`h-full ${getColor(index)} rounded-full`}
+                                                        style={{ width: `${percentage}%` }}
+                                                    ></div>
+                                                </div>
+                                                <div className="w-16 text-right text-sm font-semibold ml-2">
+                                                    {day.count}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         )}
                     </div>
 
-                    {/* Usage by Role */}
+                    {/* Recent API Requests */}
                     <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold mb-4">API Usage by Role</h2>
-                        <p className="text-gray-500">No data available for the selected date range.</p>
-                    </div>
-
-                    {/* Usage by Package */}
-                    <div className="bg-white shadow-md rounded-lg p-6">
-                        <h2 className="text-xl font-bold mb-4">API Usage by Package</h2>
-                        <p className="text-gray-500">No data available for the selected date range.</p>
+                        <h2 className="text-xl font-bold mb-4">Recent API Requests</h2>
+                        {!requestLogs || requestLogs.data.length === 0 ? (
+                            <p className="text-gray-500">No data available for the selected date range.</p>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Endpoint</th>
+                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
+                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+                                            <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {requestLogs.data.slice(0, 10).map((log, index) => (
+                                            <tr key={log._id}>
+                                                <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                    {log.user ? log.user.name : 'Unknown'}
+                                                </td>
+                                                <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                    <span className="max-w-xs truncate block">{log.endpoint}</span>
+                                                </td>
+                                                <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                    <span className={`px-2 py-1 rounded-full text-xs ${
+                                                        log.method === 'GET' ? 'bg-blue-100 text-blue-800' :
+                                                        log.method === 'POST' ? 'bg-green-100 text-green-800' :
+                                                        log.method === 'PUT' ? 'bg-yellow-100 text-yellow-800' :
+                                                        log.method === 'DELETE' ? 'bg-red-100 text-red-800' :
+                                                        'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                        {log.method}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                    <span className={`px-2 py-1 rounded-full text-xs ${
+                                                        log.statusCode >= 200 && log.statusCode < 300 ? 'bg-green-100 text-green-800' :
+                                                        log.statusCode >= 400 && log.statusCode < 500 ? 'bg-yellow-100 text-yellow-800' :
+                                                        log.statusCode >= 500 ? 'bg-red-100 text-red-800' :
+                                                        'bg-gray-100 text-gray-800'
+                                                    }`}>
+                                                        {log.statusCode}
+                                                    </span>
+                                                </td>
+                                                <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                    {log.responseTime}ms
+                                                </td>
+                                                <td className="px-4 py-2 whitespace-nowrap text-sm">
+                                                    {new Date(log.timestamp).toLocaleString()}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                     </div>
 
                     {/* Package Purchases */}
                     <div className="bg-white shadow-md rounded-lg p-6">
                         <h2 className="text-xl font-bold mb-4">Package Purchases</h2>
-                        <p className="text-gray-500">No data available for the selected date range.</p>
+                        {packagePurchases.length === 0 ? (
+                            <p className="text-gray-500">No data available for the selected date range.</p>
+                        ) : (
+                            <div className="space-y-4">
+                                {packagePurchases.map((purchase, index) => {
+                                    // Group purchases by package name for visualization
+                                    const maxPrice = Math.max(...packagePurchases.map(p => p.packageDetails.price));
+                                    const percentage = (purchase.packageDetails.price / maxPrice) * 100;
+
+                                    return (
+                                        <div key={`${purchase._id}`} className="flex items-center">
+                                            <div className="w-32 text-sm text-gray-500">
+                                                {new Date(purchase.purchaseDate).toLocaleDateString()}
+                                            </div>
+                                            <div className="w-32 text-sm font-medium">{purchase.packageDetails.name}</div>
+                                            <div className="flex-1 h-6 bg-gray-100 rounded-full overflow-hidden">
+                                                <div
+                                                    className={`h-full ${getColor(index)} rounded-full`}
+                                                    style={{ width: `${percentage}%` }}
+                                                ></div>
+                                            </div>
+                                            <div className="w-16 text-right text-sm font-semibold ml-2">
+                                                ${purchase.packageDetails.price}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
