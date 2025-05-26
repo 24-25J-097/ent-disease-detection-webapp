@@ -13,6 +13,8 @@ export type TextInputProps = {
     design?: "regular-form" | "default";
     label?: string;
     inputClassName?: string;
+    labelClassName?: string;
+    icon?: React.ReactNode;
 }
 
 export type PasswordInputProps = {
@@ -24,6 +26,8 @@ export type PasswordInputProps = {
     disabled?: boolean;
     design?: "regular-form" | "default";
     label?: string;
+    inputClassName?: string;
+    labelClassName?: string;
 }
 
 export type SingleFileUploadProps = {

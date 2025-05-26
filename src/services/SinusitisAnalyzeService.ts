@@ -14,8 +14,7 @@ export class SinusitisAnalyzeService {
     }
 
     public static async analyze(sinusFormData: SinusitisDiagnosisData): Promise<AppResponse<Sinusitis>> {
-        // const ep = ApiUtils.fastApiUrl + "/api/sinusitis/analyze";
-        const ep = ApiUtils.doctorUrl("diagnosis/sinusitis");
+        const ep = ApiUtils.publicUrl("diagnosis/sinusitis"); // TODO: just use public instead of doctor coz time limitation
         console.log(ep)
         const formData = convertToAPIFormData(sinusFormData, true);
         const res = await SinusitisAnalyzeService.api().post<SinusitisDiagnosisData, AxiosAppResponse<Sinusitis>>(ep, formData);
@@ -23,7 +22,7 @@ export class SinusitisAnalyzeService {
     }
 
     public static async sinusitisDiagnosisAccept(diagnosisAcceptance: SinusitisDiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
-        const ep = ApiUtils.doctorUrl("diagnosis/sinusitis/accept");
+        const ep = ApiUtils.publicUrl("diagnosis/sinusitis/accept"); // TODO: just use public instead of doctor coz time limitation
         const res = await SinusitisAnalyzeService.api().post<SinusitisDiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
         return res.data;
     }

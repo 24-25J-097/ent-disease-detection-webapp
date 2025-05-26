@@ -125,11 +125,12 @@ const SignUpPage: NextPage = () => {
         } catch (error) {
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         }
     };
@@ -155,7 +156,7 @@ const SignUpPage: NextPage = () => {
     };
 
     const roleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
-        setUserSignUpData((prevState) => ({...prevState, role: event.target.value}))
+        setUserSignUpData((prevState) => ({...prevState, role: event.target.value}));
     };
 
     return (
@@ -217,15 +218,16 @@ const SignUpPage: NextPage = () => {
                                 onChange={roleChange}
                                 className={`w-full text-sm shadow-sm py-3 px-4 rounded-xl placeholder:text-slate-400/90
                             transition duration-200 ease-in-out focus:ring-4 focus:ring-primary focus:ring-opacity-20
-                            focus:border-primary dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
-                            dark:focus:ring-opacity-50 dark:placeholder:text-slate-500/80 
+                            focus:border-primary 
                             ${!!roleErrMsg ? "border border-red-500" : "border border-slate-200"}`}
                                 disabled={isDisable}
                             >
                                 <option value="" disabled>
                                     Select Role
                                 </option>
-                                {Object.values(Role).filter((role) => role !== Role.ADMIN).map((role) => (
+                                {Object.values(Role).filter(
+                                    (role) => ![Role.ADMIN, Role.STUDENT].includes(role)
+                                ).map((role) => (
                                     <option key={role} value={role}>
                                         {role.charAt(0).toUpperCase() + role.slice(1)}
                                     </option>
@@ -246,9 +248,7 @@ const SignUpPage: NextPage = () => {
                                 }
                                 disabled={isDisable}
                                 className={`h-4 w-4 shadow-sm rounded-md transition duration-200 ease-in-out
-                                focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary 
-                                dark:bg-darkmode-800 dark:border-transparent dark:focus:ring-slate-700
-                                dark:focus:ring-opacity-50 `}
+                                focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary`}
                             />
                             <label htmlFor="remember" className="ml-2 text-sm text-gray-700">
                                 Remember Me

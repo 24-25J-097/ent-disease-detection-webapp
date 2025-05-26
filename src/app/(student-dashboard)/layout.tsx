@@ -2,21 +2,21 @@ import React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../../styles/globals.scss";
+import "./globals.scss";
 
 import ThemeProvider from "@/providers/ThemeProvider";
 import { ToastProvider } from "@/providers/ToastProvider";
 import InitDashboardProvider from "@/providers/InitDashboardProvider";
-import DashboardMenus from "@/components/dashboard/theme/navigations/DashboardMenus";
 import AppReduxProvider from "@/providers/AppReduxProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "ENT Insight | Dashboard",
+    title: "ENT Insight | Student Dashboard",
     description: "ENT Insight",
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayoutStudent({ children }: Readonly<{ children: React.ReactNode }>) {
 
     return (
         <html lang="en" suppressHydrationWarning>
@@ -25,23 +25,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                     <InitDashboardProvider>
                         <ThemeProvider
                             attribute="class"
-                            defaultTheme="light"
+                            defaultTheme="dark"
                             enableSystem
                             disableTransitionOnChange
                         >
-                            <main className="relative flex justify-center items-center flex-col overflow-hidden w-full">
+                            <main className="bg-gradient-student">
                                 <ToastProvider>
                                     <>
-                                        <div
-                                            className="rubick px-2 sm:pr-8 sm:pl-3 py-5 before:content-['']
-                                                before:bg-gradient-to-b before:from-theme-1 before:to-theme-2
-                                                dark:before:from-darkmode-800 dark:before:to-darkmode-800 before:fixed
-                                                before:inset-0 before:z-[-1] w-full"
-                                        >
-                                            <DashboardMenus>
-                                                {children}
-                                            </DashboardMenus>
-                                        </div>
+                                        {children}
                                     </>
                                 </ToastProvider>
                             </main>

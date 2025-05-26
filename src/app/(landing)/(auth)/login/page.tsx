@@ -1,10 +1,10 @@
 "use client";
 
-import { NextPage } from "next";
-import React, { useState } from "react";
+import {NextPage} from "next";
+import React, {useState} from "react";
 import Link from "next/link";
 import GoogleIcon from "@/components/icons/GoogleIcon";
-import { useAuthService } from "@/hooks/services/useAuthService";
+import {useAuthService} from "@/hooks/services/useAuthService";
 import debugLog from "@/utils/debug-console";
 import {UserLoginData} from "@/types/service/Auth";
 import {If} from "@/components/utils/If";
@@ -35,13 +35,13 @@ const LoginPage: NextPage = () => {
     const [errors, setErrors] = useState<any>(null);
     const [isDisable, setIsDisable] = useState<boolean>(false);
 
-    const { login } = useAuthService({
+    const {login} = useAuthService({
         middleware: 'guest',
         redirectIfAuthenticated: '/',
     });
 
     const router = useRouterApp();
-    const { notifySuccess, notifyError } = useToast();
+    const {notifySuccess, notifyError} = useToast();
 
     const validateData = (data: any): boolean[] => {
         setHasValidationErr([]);
@@ -75,7 +75,7 @@ const LoginPage: NextPage = () => {
         }
         debugLog("validateData =>", data);
         return hasValidationErr;
-    }
+    };
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -93,23 +93,27 @@ const LoginPage: NextPage = () => {
         } catch (error) {
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
+            }
+            if (errMsg === "Student logins are not allowed through this form.") {
+                setTimeout(() => router.push(`/students/login`), 1500);
             }
         }
     };
 
     const emailChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserLoginData((prevState) => ({ ...prevState, email: trimmedValue }));
+        setUserLoginData((prevState) => ({...prevState, email: trimmedValue}));
     };
 
     const passwordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserLoginData((prevState) => ({ ...prevState, password: trimmedValue }));
+        setUserLoginData((prevState) => ({...prevState, password: trimmedValue}));
     };
 
     return (
@@ -133,7 +137,7 @@ const LoginPage: NextPage = () => {
                         </div>
                     </If>
 
-                    <form className="flex flex-col gap-4 mt-8" onSubmit={handleLogin} >
+                    <form className="flex flex-col gap-4 mt-8" onSubmit={handleLogin}>
                         <TextInput
                             type="email"
                             name="email"

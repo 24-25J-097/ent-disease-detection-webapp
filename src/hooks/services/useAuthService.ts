@@ -7,6 +7,7 @@ import {clearUserSession, setRole, setToken, setUser} from "@/store/reducers/aut
 import {AuthService} from "@/services/AuthService";
 import {toKebabCase} from "@/utils/string-formatters";
 import useRouterApp from '@/hooks/useRouterApp';
+import { Role } from '@/enums/access';
 
 export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) => {
 
@@ -46,9 +47,9 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
         }
     }, [dispatch, mutate]);
 
-    const login = useCallback(async ({userLoginData}: IApiRequest) => {
+    const studentRegister = useCallback(async ({studentSignUpData}: IApiRequest) => {
         try {
-            const response = await AuthService.login(userLoginData);
+            const response = await AuthService.studentRegister(studentSignUpData);
             if (response.success) {
                 if (response.message && response.data) {
                     dispatch(setToken(response.data.token));
@@ -63,9 +64,36 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
         }
     }, [dispatch, mutate]);
 
-    const logout = useCallback(async () => {
+    const login = useCallback(async ({userLoginData}: IApiRequest, role?: Role) => {
+        try {
+            let response;
+            if (role && role === Role.STUDENT) {
+                response = await AuthService.studentLogin(userLoginData);
+            } else {
+                response = await AuthService.login(userLoginData);
+            }
+            if (response.success) {
+                if (response.message && response.data) {
+                    dispatch(setToken(response.data.token));
+                    dispatch(setUser(response.data.user));
+                    dispatch(setRole(response.data.user.role));
+                    await mutate();
+                    return response;
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }, [dispatch, mutate]);
+
+    const logout = useCallback(async (role?: Role) => {
         dispatch(clearUserSession());
-        await router.redirect('/login');
+        localStorage.removeItem('theme');
+        if (role && role === Role.STUDENT) {
+            await router.redirect('/student/login');
+        } else {
+            await router.redirect('/login');
+        }
         // try {
         //     const response = await AuthService.logout();
         //     if (response.success) {
@@ -133,6 +161,7 @@ export const useAuthService = ({middleware, redirectIfAuthenticated}: IUseAuth) 
     return {
         user,
         register,
+        studentRegister,
         login,
         logout,
         forgotPassword,
