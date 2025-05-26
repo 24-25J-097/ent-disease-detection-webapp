@@ -135,7 +135,7 @@ const HomePage: NextPage = () => {
                                 flex items-center justify-center space-x-2"
                             >
                                 <Building2 className="w-4 h-4"/>
-                                <span>Access</span>
+                                <span>Professional Access</span>
                             </Link>
 
                             {/* Mobile Menu Button */}
