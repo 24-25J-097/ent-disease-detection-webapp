@@ -145,8 +145,8 @@ const SignUpPage: NextPage = () => {
     };
 
     const nameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const trimmedValue = trimText(event.target.value, true).toString();
-        setUserSignUpData((prevState) => ({...prevState, name: trimmedValue}));
+        // const trimmedValue = trimText(event.target.value, false).toString();
+        setUserSignUpData((prevState) => ({...prevState, name: event.target.value}));
     };
 
     const emailChange = (event: React.ChangeEvent<HTMLInputElement>): void => {

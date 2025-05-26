@@ -120,16 +120,16 @@ const HomePage: NextPage = () => {
                         {/* Action Buttons */}
                         <div className="flex items-center space-x-3">
                             <Link
-                                href="/students/signup"
+                                href="/students/login"
                                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white
                                     px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-700
                                     hover:to-purple-700 transition-all duration-200 flex items-center space-x-2"
                             >
                                 <GraduationCap className="w-4 h-4"/>
-                                <span>Join</span>
+                                <span>Student</span>
                             </Link>
                             <Link
-                                href="/signup"
+                                href="/login"
                                 className="bg-white text-slate-800 text-sm font-semibold py-2 px-4 rounded-lg
                                 shadow-lg border border-slate-200 hover:bg-slate-50 transition-all duration-200
                                 flex items-center justify-center space-x-2"
