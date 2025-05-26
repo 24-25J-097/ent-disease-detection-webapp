@@ -1,25 +1,15 @@
 "use client";
-import axios from 'axios';
-import { ApiUtils } from "@/services/api-service/ApiUtils";
+
+import axios, {AxiosError} from 'axios';
+import {ApiUtils} from "@/services/api-service/ApiUtils";
 import type React from "react";
 import {useRef, useState} from "react";
 import {NextPage} from "next";
 import {useSelector} from 'react-redux';
 import {useRouter} from "next/navigation";
-
 import {AnimatePresence, motion} from "framer-motion";
 import {
-    AlertCircle,
-    Brain,
-    Camera,
-    CheckCircle,
-    Eye,
-    FileImage,
-    Loader,
-    RefreshCw,
-    SquareDashedMousePointer,
-    Upload,
-    Zap
+    AlertCircle, Brain, Camera, CheckCircle, Eye, FileImage, Loader, RefreshCw, SquareDashedMousePointer, Upload, Zap
 } from "lucide-react";
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {AnalysisStep, analysisSteps, conditionImageRequirements, conditions} from '@/data/student/identification';
@@ -27,7 +17,6 @@ import Image from 'next/image';
 import {CholesteatomaDiagnosisData} from '@/types/service/Diagnosis';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {Cholesteatoma} from '@/models/Cholesteatoma';
-import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
 import {useToast} from '@/providers/ToastProvider';
 import {User} from '@/models/User';
@@ -148,10 +137,8 @@ const IdentificationPage: NextPage = () => {
             } else if (selectedCondition === "Pharyngitis") {
                 await getPharyngitisAnalyzeResults();
             } else if (selectedCondition === "Foreign Objects in Throat") {
-                // TODO:
                 await getForeignObjectsAnalyzeResults();
             }
-
         } catch (error: any) {
             const axiosError = error as AxiosError<ErrorResponseData>;
             const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
@@ -170,7 +157,7 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: CholesteatomaDiagnosisData = {
             patientId: user.studentId ?? ("student" + random(4)),
             additionalInfo: "",
-            endoscopyImage: selectedFile!
+            endoscopyImage: selectedFile!,
         };
         const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosis(diagnosisData);
         setTimeout(() => {
@@ -192,7 +179,7 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: SinusitisDiagnosisData = {
             patientId: user.studentId ?? ("student" + random(4)),
             additionalInfo: "",
-            watersViewXrayImage: selectedFile!
+            watersViewXrayImage: selectedFile!,
         };
         const response = await SinusitisAnalyzeService.analyze(diagnosisData);
         setTimeout(() => {
@@ -210,7 +197,7 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: PharyngitisDiagnosisData = {
             patientId: user.studentId ?? ("student" + random(4)),
             additionalInfo: "",
-            throatImage: selectedFile!
+            throatImage: selectedFile!,
         };
         const response = await PharyngitisAnalyzeService.analyze(diagnosisData);
         setTimeout(() => {
@@ -224,93 +211,92 @@ const IdentificationPage: NextPage = () => {
         }, 500);
     };
     const getForeignObjectsAnalyzeResults = async () => {
-  try {
-    // First check if the image is valid
-    const validityFormData = new FormData();
-    validityFormData.append("file", selectedFile!);
+        try {
+            // First, check if the image is valid
+            const validityFormData = new FormData();
+            validityFormData.append("file", selectedFile!);
 
-    const validityResponse = await axios.post(
-      ApiUtils.fastApiUrl2 + "/api/foreign/run-inference",
-      validityFormData,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
+            const validityResponse = await axios.post(
+                ApiUtils.fastApiUrl2 + "/api/foreign/run-inference",
+                validityFormData,
+                {headers: {"Content-Type": "multipart/form-data"}}
+            );
 
-    const isValid = validityResponse.data.images[0]?.results[0]?.class === 1;
+            const isValid = validityResponse.data.images[0]?.results[0]?.class === 1;
 
-    if (isValid) {
-      const detectionFormData = new FormData();
-      detectionFormData.append("image", selectedFile!);
+            if (isValid) {
+                const detectionFormData = new FormData();
+                detectionFormData.append("image", selectedFile!);
 
-      const detectResponse = await axios.post(
-        ApiUtils.fastApiUrl2 + "/api/foreign/detect",
-        detectionFormData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
+                const detectResponse = await axios.post(
+                    ApiUtils.fastApiUrl2 + "/api/foreign/detect",
+                    detectionFormData,
+                    {headers: {"Content-Type": "multipart/form-data"}}
+                );
 
-      const predictions = detectResponse.data.predictions || [];
-      const foreignObjects = predictions
-        .filter(pred => pred.class === 'B' || pred.class === 'D')
-        .sort((a, b) => b.confidence - a.confidence);
+                const predictions = detectResponse.data.predictions || [];
+                const foreignObjects = predictions.filter(
+                    (pred: any) => pred.class === 'B' || pred.class === 'D'
+                ).sort(
+                    (a: any, b: any) => b.confidence - a.confidence
+                );
 
-      // Calculate statistics and determine stage
-      const blockages = foreignObjects.filter(pred => pred.class === 'B');
-      const devices = foreignObjects.filter(pred => pred.class === 'D');
-      const highestConfidence = foreignObjects.length > 0 ? foreignObjects[0].confidence : 0;
+                // Calculate statistics and determine stage
+                const blockages = foreignObjects.filter((pred: any) => pred.class === 'B');
+                const devices = foreignObjects.filter((pred: any) => pred.class === 'D');
+                const highestConfidence = foreignObjects.length > 0 ? foreignObjects[0].confidence : 0;
 
-      // Determine stage based on type of foreign object
-      let stage = "No foreign objects detected";
-      if (blockages.length > 0) {
-        stage = "Type: Blockage";
-      }
-      if (devices.length > 0) {
-        stage = stage === "No foreign objects detected" ? "Type: Device" : "Type: Multiple (Blockage & Device)";
-      }
+                // Determine a stage based on a type of foreign object
+                let stage = "No foreign objects detected";
+                if (blockages.length > 0) {
+                    stage = "Type: Blockage";
+                }
+                if (devices.length > 0) {
+                    stage = stage === "No foreign objects detected" ? "Type: Device" : "Type: Multiple (Blockage & Device)";
+                }
 
-      // Generate suggestions
-      let suggestions = [];
-      if (blockages.length > 0) {
-        suggestions.push(`Detected ${blockages.length} potential blockage(s)`);
-      }
-      if (devices.length > 0) {
-        suggestions.push(`Detected ${devices.length} foreign device(s)`);
-      }
+                // Generate suggestions
+                let suggestions = [];
+                if (blockages.length > 0) {
+                    suggestions.push(`Detected ${blockages.length} potential blockage(s)`);
+                }
+                if (devices.length > 0) {
+                    suggestions.push(`Detected ${devices.length} foreign device(s)`);
+                }
 
-      const suggestionsText = foreignObjects.length > 0
-        ? `${suggestions.join('. ')}. Immediate medical attention recommended.`
-        : "No foreign objects detected. Continue monitoring if symptoms persist.";
+                const suggestionsText = foreignObjects.length > 0
+                    ? `${suggestions.join('. ')}. Immediate medical attention recommended.`
+                    : "No foreign objects detected. Continue monitoring if symptoms persist.";
 
-      setAnalysisResult({
-        diagnosisId: `foreign-${Date.now()}`,
-        prediction: 'valid',
-        isForeignObject: foreignObjects.length > 0, // This will control the Yes/No badge
-        predictions: foreignObjects,
-        confidenceScore: highestConfidence,
-        stage: stage, // This will show in the Stage section
-        detectionSummary: {
-          totalObjects: foreignObjects.length,
-          blockages: blockages.length,
-          devices: devices.length
-        },
-        suggestions: suggestionsText
-      });
+                setAnalysisResult({
+                    diagnosisId: `foreign-${Date.now()}`,
+                    prediction: 'valid',
+                    isForeignObject: foreignObjects.length > 0, // This will control the Yes/No badge
+                    predictions: foreignObjects,
+                    confidenceScore: highestConfidence,
+                    stage: stage, // This will show in the Stage section
+                    detectionSummary: {
+                        totalObjects: foreignObjects.length, blockages: blockages.length, devices: devices.length
+                    },
+                    suggestions: suggestionsText
+                });
 
-    } else {
-      setAnalysisResult({
-        prediction: 'invalid',
-        suggestions: "Please upload a valid X-ray image."
-      });
-      notifyWarn("Please upload a valid X-ray image.");
-    }
-  } catch (error: any) {
-    console.error("Error processing image:", error);
-    if (error.response?.status && error.response.status >= 500) {
-      notifyError("An unexpected error occurred. Please try again.");
-    } else {
-      notifyError(error.response?.data?.message || "Failed to process the image. Please try again.");
-    }
-    setAnalysisResult(null);
-  }
-};
+            } else {
+                setAnalysisResult({
+                    prediction: 'invalid', suggestions: "Please upload a valid X-ray image."
+                });
+                notifyWarn("Please upload a valid X-ray image.");
+            }
+        } catch (error: any) {
+            console.error("Error processing image:", error);
+            if (error.response?.status && error.response.status >= 500) {
+                notifyError("An unexpected error occurred. Please try again.");
+            } else {
+                notifyError(error.response?.data?.message || "Failed to process the image. Please try again.");
+            }
+            setAnalysisResult(null);
+        }
+    };
 
     const handleRest = async () => {
         setSelectedFile(null);
@@ -346,13 +332,13 @@ const IdentificationPage: NextPage = () => {
     const generateResults = (): React.ReactElement => {
 
         const StatusBadge: React.FC<{ isPositive: boolean; children: React.ReactNode }> = ({isPositive, children}) => (
-            <span className={`border rounded-md py-1 px-4 ${
-                isPositive
-                    ? 'border-red-500 text-red-500'
-                    : 'border-green-300 text-green-300'
-            }`}>
-            {children}
-        </span>
+            <span
+                className={`border rounded-md py-1 px-4 
+                ${isPositive ? 'border-red-500 text-red-500'
+                    : 'border-green-300 text-green-300'}`}
+            >
+                {children}
+            </span>
         );
 
         const InfoItem: React.FC<{ color: string; title: string; content: string | null | undefined }> = ({
@@ -433,24 +419,22 @@ const IdentificationPage: NextPage = () => {
                                     ✅ Accepted Image Types by Condition
                                 </h2>
                                 <ul className="space-y-3">
-                                    {conditionImageRequirements.map(({condition, imageType}) => (
-                                        <li
-                                            key={condition}
-                                            className={`flex items-start gap-3 
+                                    {conditionImageRequirements.map(({condition, imageType}) => (<li
+                                        key={condition}
+                                        className={`flex items-start gap-3 
                                                 p-3 rounded-lg border border-white/10 
                                                 ${selectedCondition === condition ? "bg-green-200/30" : "bg-white/5"}`}
-                                        >
-                                            <CheckCircle className="w-4 h-4 text-green-400 mt-1" size={20}/>
-                                            <div>
-                                                <p className="text-sm font-light text-gray-200">
-                                                    {condition}: &nbsp;
-                                                    <span className="text-sm font-medium text-gray-300">
+                                    >
+                                        <CheckCircle className="w-4 h-4 text-green-400 mt-1" size={20}/>
+                                        <div>
+                                            <p className="text-sm font-light text-gray-200">
+                                                {condition}: &nbsp;
+                                                <span className="text-sm font-medium text-gray-300">
                                                         {imageType}
                                                     </span>
-                                                </p>
-                                            </div>
-                                        </li>
-                                    ))}
+                                            </p>
+                                        </div>
+                                    </li>))}
                                 </ul>
                             </div>
                         </div>
@@ -461,14 +445,12 @@ const IdentificationPage: NextPage = () => {
         }
 
         // Valid prediction results
-        const hasCondition = analysisResult.isCholesteatoma || analysisResult.isSinusitis || analysisResult.isForeignObject;
-        const confidencePercentage = analysisResult.confidenceScore
-            ? (() => {
-                let percent = analysisResult.confidenceScore * 100;
-                if (percent > 95) percent -= 5;
-                return percent.toFixed(1) + "%";
-            })()
-            : "N/A";
+        const hasCondition = analysisResult.isCholesteatoma || analysisResult.isSinusitis || analysisResult.isPharyngitis || analysisResult.isForeignObject;
+        const confidencePercentage = analysisResult.confidenceScore ? (() => {
+            let percent = analysisResult.confidenceScore * 100;
+            if (percent > 95) percent -= 5;
+            return percent.toFixed(1) + "%";
+        })() : "N/A";
         const stageInfo = analysisResult.stage || analysisResult.severity;
 
         return (
@@ -655,8 +637,7 @@ const IdentificationPage: NextPage = () => {
                                         key={condition}
                                         onClick={() => setSelectedCondition(condition)}
                                         className={`p-3 rounded-lg text-left transition-all duration-200 
-                                    ${selectedCondition === condition ? "bg-primary text-primary-foreground"
-                                            : "bg-blue-gray-900 text-foreground hover:bg-blue-900"}`}
+                                    ${selectedCondition === condition ? "bg-primary text-primary-foreground" : "bg-blue-gray-900 text-foreground hover:bg-blue-900"}`}
                                     >
                                         <span className="text-sm font-medium">{condition}</span>
                                     </button>
@@ -724,9 +705,7 @@ const IdentificationPage: NextPage = () => {
                                                 <div className="flex-shrink-0">{getStepIcon(step)}</div>
                                                 <div className="flex-1">
                                                     <h3
-                                                        className={`font-medium ${step.status === "completed"
-                                                            ? "text-green-600" : step.status === "processing"
-                                                                ? "text-blue-600" : "text-muted-foreground"}`}
+                                                        className={`font-medium ${step.status === "completed" ? "text-green-600" : step.status === "processing" ? "text-blue-600" : "text-muted-foreground"}`}
                                                     >
                                                         {step.title}
                                                     </h3>
@@ -860,34 +839,36 @@ const IdentificationPage: NextPage = () => {
                                             </p>
                                         </div>
                                     </div>
-                                </motion.div>)}
+                                </motion.div>
+                            )}
                         </AnimatePresence>
 
                         {/* Feedback Section */}
-                        {analysisResult && (<motion.div
-                            initial={{opacity: 0, y: 20}}
-                            animate={{opacity: 1, y: 0}}
-                            transition={{duration: 0.6, delay: 0.3}}
-                            className="glass-card rounded-2xl p-6"
-                        >
-                            <h2 className="text-xl font-semibold text-foreground mb-4">Provide Feedback</h2>
+                        {analysisResult && (
+                            <motion.div
+                                initial={{opacity: 0, y: 20}}
+                                animate={{opacity: 1, y: 0}}
+                                transition={{duration: 0.6, delay: 0.3}}
+                                className="glass-card rounded-2xl p-6"
+                            >
+                                <h2 className="text-xl font-semibold text-foreground mb-4">Provide Feedback</h2>
 
-                            <div className="space-y-4">
-                                <div>
-                                    <p className="text-sm text-muted-foreground mb-2">Rate this analysis:</p>
-                                    <div className="flex space-x-2">
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <button
-                                                key={star}
-                                                className="w-8 h-8 text-yellow-500 hover:text-yellow-400
+                                <div className="space-y-4">
+                                    <div>
+                                        <p className="text-sm text-muted-foreground mb-2">Rate this analysis:</p>
+                                        <div className="flex space-x-2">
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <button
+                                                    key={star}
+                                                    className="w-8 h-8 text-yellow-500 hover:text-yellow-400
                                             transition-colors"
-                                            >
-                                                ⭐
-                                            </button>
-                                        ))}
+                                                >
+                                                    ⭐
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-                                <div>
+                                    <div>
                                     <textarea
                                         placeholder="Share your thoughts on this analysis..."
                                         className="w-full p-3 bg-blue-gray-900/50 border border-border rounded-lg
@@ -896,15 +877,16 @@ const IdentificationPage: NextPage = () => {
                                         duration-200 resize-none"
                                         rows={3}
                                     />
-                                </div>
-                                <button
-                                    className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg
+                                    </div>
+                                    <button
+                                        className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg
                                     hover:bg-primary/90 transition-colors"
-                                >
-                                    Submit Feedback
-                                </button>
-                            </div>
-                        </motion.div>)}
+                                    >
+                                        Submit Feedback
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
                     </motion.div>
                 </div>
 
