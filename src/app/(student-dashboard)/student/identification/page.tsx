@@ -15,7 +15,7 @@ import {
     CheckCircle,
     Eye,
     FileImage,
-    Loader,
+    Loader, OctagonAlert,
     RefreshCw,
     SquareDashedMousePointer,
     Upload,
@@ -38,6 +38,7 @@ import {PharyngitisDiagnosisData} from '@/types/service/PharyngitisDiagnosisData
 import {PharyngitisAnalyzeService} from '@/services/PharyngitisAnalyzeService';
 import ReactModal from 'react-modal';
 import {Role} from '@/enums/access';
+import {If} from '@/components/utils/If';
 
 const IdentificationPage: NextPage = () => {
 
@@ -699,6 +700,17 @@ const IdentificationPage: NextPage = () => {
                         transition={{duration: 0.6, delay: 0.4}}
                         className="space-y-6"
                     >
+                        <If condition={!!errors}>
+                            <div
+                                className="bg-red-900/30 text-red-200 p-4 rounded-xl border border-red-500/50
+                                 mb-6"
+                            >
+                                <p className="flex items-center">
+                                    <OctagonAlert className="w-5 h-5 mr-2"/>
+                                    {errors}
+                                </p>
+                            </div>
+                        </If>
                         {/* Analysis Steps */}
                         {(isAnalyzing || analysisResult) ? (
                             <motion.div
