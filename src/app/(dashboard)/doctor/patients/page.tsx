@@ -13,6 +13,7 @@ import LoadingModal from "@/components/loaders/LoadingModal";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {PatientData} from "@/types/service/Patient";
+import CreatePatientModal from "@/components/modals/CreatePatientModal";
 
 const calculateAge = (dateOfBirth: string): number => {
     const dob = new Date(dateOfBirth);
@@ -32,12 +33,13 @@ const PatientsPage: NextPage = () => {
     const [filteredPatients, setFilteredPatients] = useState<PatientData[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [createPatientModalOpen, setCreatePatientModalOpen] = useState<boolean>(false);
 
     // Filter states
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [genderFilter, setGenderFilter] = useState<string>("all");
 
-    const { notifyError } = useToast();
+    const { notifyError, notifySuccess } = useToast();
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -105,7 +107,12 @@ const PatientsPage: NextPage = () => {
         <section className="bg-blue-50 min-h-screen px-4">
             <div className="flex py-8 justify-between items-center">
                 <h1 className="text-slate-600 text-3xl font-bold text-center">Patient List</h1>
-                <Button className="bg-blue-900 text-white">Add New Patient</Button>
+                <Button 
+                    className="bg-blue-900 text-white"
+                    onClick={() => setCreatePatientModalOpen(true)}
+                >
+                    Add New Patient
+                </Button>
             </div>
 
             {/* Filters */}
@@ -194,6 +201,37 @@ const PatientsPage: NextPage = () => {
             </div>
 
             <LoadingModal isOpen={isLoading} text="Loading patients..." imagePath="/images/loading-circle.gif" />
+
+            <CreatePatientModal
+                isOpen={createPatientModalOpen}
+                onClose={() => setCreatePatientModalOpen(false)}
+                onSuccess={() => {
+                    // Refresh the patients list after creating a new patient
+                    const fetchPatients = async () => {
+                        setIsLoading(true);
+                        setError(null);
+                        try {
+                            const patients = await PatientService.getAllPatients();
+                            if (patients) {
+                                setPatients(patients);
+                                setFilteredPatients(patients);
+                                notifySuccess("Patient list refreshed successfully");
+                            } else {
+                                setError("Failed to fetch patients");
+                                notifyError("Failed to fetch patients");
+                            }
+                        } catch (error) {
+                            const axiosError = error as AxiosError<ErrorResponseData>;
+                            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
+                            setError(errMsg);
+                            notifyError(errMsg);
+                        } finally {
+                            setIsLoading(false);
+                        }
+                    };
+                    fetchPatients();
+                }}
+            />
         </section>
     );
 };
