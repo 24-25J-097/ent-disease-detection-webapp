@@ -3,7 +3,7 @@ import ApiService from "@/services/api-service/ApiService";
 import {AppResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Response";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
-import {CholesteatomaDiagnosisData, DiagnosisAcceptance} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData, CholesteatomaDiagnosisAcceptance} from '@/types/service/CholesteatomaDiagnosis';
 import {CholesteatomaReportsData} from '@/types/Charts';
 import {Role} from '@/enums/access';
 
@@ -25,14 +25,14 @@ export class CholesteatomaDiagnosisService {
         return res.data;
     }
 
-    public static async cholesteatomaDiagnosisAccept(diagnosisAcceptance: DiagnosisAcceptance, role?: Role): Promise<AppResponse<CommonResponse>> {
+    public static async cholesteatomaDiagnosisAccept(diagnosisAcceptance: CholesteatomaDiagnosisAcceptance, role?: Role): Promise<AppResponse<CommonResponse>> {
         let ep;
         if (role && role === Role.STUDENT) {
             ep = ApiUtils.studentUrl("diagnosis/cholesteatoma/accept");
         } else {
             ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma/accept");
         }
-        const res = await CholesteatomaDiagnosisService.api().post<DiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
+        const res = await CholesteatomaDiagnosisService.api().post<CholesteatomaDiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
         return res.data;
     }
 

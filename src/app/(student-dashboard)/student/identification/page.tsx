@@ -27,7 +27,7 @@ import {
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {AnalysisStep, analysisSteps, conditionImageRequirements, conditions} from '@/data/student/identification';
 import Image from 'next/image';
-import {CholesteatomaDiagnosisData} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData} from '@/types/service/CholesteatomaDiagnosis';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {Cholesteatoma} from '@/models/Cholesteatoma';
 import {ErrorResponseData} from '@/types/Common';
@@ -174,6 +174,7 @@ const IdentificationPage: NextPage = () => {
             patientId: user.studentId ?? ("student" + random(4)),
             additionalInfo: "",
             endoscopyImage: selectedFile!,
+            isLearningPurpose: true,
         };
         const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosis(
             diagnosisData,
@@ -199,6 +200,7 @@ const IdentificationPage: NextPage = () => {
             patientId: user.studentId ?? ("student" + random(4)),
             additionalInfo: "",
             watersViewXrayImage: selectedFile!,
+            isLearningPurpose: true,
         };
         const response = await SinusitisAnalyzeService.analyze(
             diagnosisData,
@@ -220,6 +222,7 @@ const IdentificationPage: NextPage = () => {
             patientId: user.studentId ?? ("student" + random(4)),
             additionalInfo: "",
             throatImage: selectedFile!,
+            isLearningPurpose: true,
         };
         const response = await PharyngitisAnalyzeService.analyze(
             diagnosisData,

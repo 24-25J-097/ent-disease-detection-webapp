@@ -6,7 +6,7 @@ import {NextPage} from "next";
 import {If} from "@/components/utils/If";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {CholesteatomaDiagnosisData, DiagnosisAcceptance, DiagnosisResult} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData, CholesteatomaDiagnosisAcceptance, CholesteatomaDiagnosisResult} from '@/types/service/CholesteatomaDiagnosis';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
@@ -36,7 +36,7 @@ const IdentificationPage: NextPage = () => {
 
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | null>(null);
+    const [diagnosisResult, setDiagnosisResult] = useState<CholesteatomaDiagnosisResult | null>(null);
     const [patientId, setPatientId] = useState<string>("");
     const [additionalInfo, setAdditionalInfo] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
@@ -137,7 +137,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: CholesteatomaDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            endoscopyImage: file!
+            endoscopyImage: file!,
+            isLearningPurpose: false,
         };
 
         try {
@@ -187,7 +188,7 @@ const IdentificationPage: NextPage = () => {
         try {
             setIsLoading2(true);
             setIsDisable(true);
-            const data: DiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
+            const data: CholesteatomaDiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
             const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosisAccept(data);
             if (response.success) {
                 notifySuccess(response.message);

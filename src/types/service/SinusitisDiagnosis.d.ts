@@ -11,6 +11,7 @@ export interface SinusitisDiagnosisData {
     patientId: string;
     additionalInfo?: string;
     watersViewXrayImage: File;
+    isLearningPurpose: boolean;
 }
 
 export interface SinusitisDiagnosisAcceptance {

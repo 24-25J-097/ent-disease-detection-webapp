@@ -195,7 +195,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: PharyngitisDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            throatImage: file!
+            throatImage: file!,
+            isLearningPurpose: false,
         };
 
         try {

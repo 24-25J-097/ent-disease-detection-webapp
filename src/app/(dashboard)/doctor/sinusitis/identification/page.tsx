@@ -196,7 +196,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: SinusitisDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            watersViewXrayImage: file!
+            watersViewXrayImage: file!,
+            isLearningPurpose: false,
         };
 
         try {
