@@ -14,12 +14,10 @@ import {
     Camera,
     CheckCircle,
     Eye,
-    FileImage,
-    Loader, OctagonAlert,
+    FileImage, Loader, OctagonAlert,
     RefreshCw,
-    SquareDashedMousePointer,
-    Upload,
-    Zap
+    SquareDashedMousePointer, ThumbsDown, ThumbsUp,
+    Upload, Zap
 } from "lucide-react";
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {AnalysisStep, analysisSteps, conditionImageRequirements, conditions} from '@/data/student/identification';
@@ -52,6 +50,7 @@ const IdentificationPage: NextPage = () => {
     const [imagePreview, setImagePreview] = useState<string>("");
     const [errors, setErrors] = useState<any>(null);
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const [showQuickFeedback, setShowQuickFeedback] = useState<boolean>(true);
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
@@ -395,6 +394,53 @@ const IdentificationPage: NextPage = () => {
             </motion.button>
         );
 
+        const QuickFeedback = () => (
+            <motion.div
+                initial={{opacity: 0, y: -20}}
+                animate={{opacity: 1, y: 0}}
+                exit={{opacity: 0, y: -10}}
+                transition={{duration: 0.6}}
+                className="glass-card rounded-2xl p-4 mb-8 border border-primary/20 bg-primary/5"
+            >
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                        <div>
+                            <p className="font-semibold text-foreground p-0 m-0">How was the response?</p>
+                            <small className="text-muted-foreground">
+                                Your quick feedback helps us improve
+                            </small>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                        <button
+                            onClick={() => {
+                                setShowQuickFeedback(false);
+                                // handleQuickFeedback("positive");
+                            }}
+                            className="flex items-center space-x-2 px-4 py-2 bg-green-500/10
+                            dark:bg-green-500/20 text-foreground rounded-lg hover:bg-green-500/20
+                            dark:hover:bg-green-500/30 transition-colors text-xs"
+                        >
+                            <ThumbsUp className="w-4 h-4"/>
+                            <span>Good</span>
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowQuickFeedback(false);
+                                // handleQuickFeedback("negative");
+                            }}
+                            className="flex items-center space-x-2 px-4 py-2 bg-red-500/10
+                            dark:bg-red-500/20 text-foreground rounded-lg hover:bg-red-500/20
+                            dark:hover:bg-red-500/30 transition-colors text-xs"
+                        >
+                            <ThumbsDown className="w-4 h-4"/>
+                            <span>Bad</span>
+                        </button>
+                    </div>
+                </div>
+            </motion.div>
+        );
+
         // Main render logic
         if (analysisResult.prediction === 'invalid') {
             return (
@@ -514,6 +560,11 @@ const IdentificationPage: NextPage = () => {
                     title="Recommendations"
                     content={analysisResult.suggestions}
                 />
+                <AnimatePresence>
+                    {showQuickFeedback && (
+                        <QuickFeedback/>
+                    )}
+                </AnimatePresence>
                 <div className="mt-6">
                     <ResetButton onClick={() => handleRest()}/>
                 </div>
