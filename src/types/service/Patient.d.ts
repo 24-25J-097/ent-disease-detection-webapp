@@ -1,5 +1,6 @@
-
 export interface PatientData {
+    _id?: string;
+    patientId?: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -7,6 +8,8 @@ export interface PatientData {
     address?: string;
     dateOfBirth: string;
     gender: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 // URL Patient Create => /api/doctor/patients <- payload PatientData
