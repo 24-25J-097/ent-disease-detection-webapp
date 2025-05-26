@@ -23,6 +23,9 @@ export interface User {
     updated_at: string | null;
 
     studentId?: string;
+    patientId?: string;
+    doctorId?: string;
+    radiologistId?: string;
 
     progress?: number;
     streak?: number;
