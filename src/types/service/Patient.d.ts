@@ -1,7 +1,7 @@
 
 export interface PatientData {
-    firstName: string;
-    lastName: string;
+    name: string;
+    nic: string;
     email: string;
     phone: string;
     address?: string;
@@ -9,7 +9,3 @@ export interface PatientData {
     gender: string;
 }
 
-// URL Patient Create => /api/doctor/patients <- payload PatientData
-// URL Patient Get all => /api/doctor/patients
-// URL Patient Get one => /api/doctor/patients/id -> res Patient Model
-// etc.
