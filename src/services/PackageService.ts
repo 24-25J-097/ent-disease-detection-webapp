@@ -47,9 +47,9 @@ class PackageService {
         await this.apiService.getApi().delete<null, AxiosAppResponse<Package>>(ep);
     }
 
-    public async togglePackageStatus(id: string): Promise<Package> {
+    public async togglePackageStatus(id: string, isActive:boolean): Promise<Package> {
         const ep = ApiUtils.adminUrl(`packages/${id}/status`);
-        const response = await this.apiService.getApi().patch<null, AxiosAppResponse<Package>>(ep);
+        const response = await this.apiService.getApi().post<null, AxiosAppResponse<Package>>(ep, {isActive});
         return response.data.data;
     }
 }

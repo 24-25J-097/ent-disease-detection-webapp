@@ -30,10 +30,10 @@ const PackagesPage: NextPage = () => {
         fetchPackages();
     }, []);
 
-    const handleToggleStatus = async (id: string) => {
+    const handleToggleStatus = async (id: string, status: boolean) => {
         try {
             const packageService = PackageService.getInstance();
-            await packageService.togglePackageStatus(id);
+            await packageService.togglePackageStatus(id, status);
 
             // Update the local state
             setPackages(prevPackages =>
@@ -144,7 +144,7 @@ const PackagesPage: NextPage = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                     <div className="flex space-x-2">
                                         <button
-                                            onClick={() => handleToggleStatus(pkg._id)}
+                                            onClick={() => handleToggleStatus(pkg._id, !pkg.isActive)}
                                             className={`${
                                                 pkg.isActive
                                                     ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
