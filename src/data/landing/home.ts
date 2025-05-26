@@ -1,4 +1,4 @@
-import {BookOpen, Brain, Building2, Camera, Ear, GraduationCap, Microscope, Target, Zap} from 'lucide-react';
+import {Activity, BookOpen, Brain, Building2, Camera, Ear, GraduationCap, Microscope, Target, Zap} from 'lucide-react';
 
 export const medicalConditions = [
     {
@@ -59,7 +59,7 @@ export const features = [
 ];
 
 export const stats = [
-    {label: "Diagnostic Accuracy", value: "90%", icon: Target},
+    {label: "Diagnostic Accuracy", value: "90%", icon: Activity},
     {label: "Medical Students", value: "10K+", icon: GraduationCap},
     {label: "Healthcare Institutions", value: "100+", icon: Building2},
     {label: "Cases Analyzed", value: "50K+", icon: Camera},
