@@ -69,7 +69,8 @@ const SubscriptionPage: NextPage = () => {
                             <button
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id as any)}
-                                className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all duration-200 ${
+                                className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all 
+                                duration-200 ${
                                     activeTab === tab.id
                                         ? "bg-background text-foreground shadow-sm"
                                         : "text-muted-foreground hover:text-foreground"
@@ -95,9 +96,11 @@ const SubscriptionPage: NextPage = () => {
                             <div className="flex items-center justify-between mb-4">
                                 <h2 className="text-xl font-semibold text-foreground">Current Plan</h2>
                                 <span
-                                    className="px-3 py-1 bg-green-500/10 text-green-500 rounded-full text-sm font-medium">
-                  Active
-                </span>
+                                    className="px-3 py-1 bg-green-500/10 text-green-500
+                                    rounded-full text-sm font-medium"
+                                >
+                                  Active
+                                </span>
                             </div>
                             <div className="flex items-center space-x-4">
                                 <div className="p-3 bg-gradient-to-r from-gray-500 to-gray-600 rounded-xl">
@@ -105,8 +108,9 @@ const SubscriptionPage: NextPage = () => {
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-semibold text-foreground">Student Free</h3>
-                                    <p className="text-muted-foreground">Perfect for getting started with ENT
-                                        learning</p>
+                                    <p className="text-muted-foreground">
+                                        Perfect for getting started with ENT learning
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +138,10 @@ const SubscriptionPage: NextPage = () => {
                                 >
                                     <span>Yearly</span>
                                     <span
-                                        className="px-2 py-1 bg-green-500 text-white text-xs rounded-full">Save 20%</span>
+                                        className="px-2 py-1 bg-green-500 text-white text-xs rounded-full"
+                                    >
+                                        Save 20%
+                                    </span>
                                 </button>
                             </div>
                         </div>
@@ -152,66 +159,78 @@ const SubscriptionPage: NextPage = () => {
                                     } ${currentPlan === tier.id ? "ring-2 ring-green-500" : ""}`}
                                 >
                                     {tier.popular && (
-                                        <div
-                                            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                      <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-medium">
-                        Most Popular
-                      </span>
+                                        <div className="absolute top-4 right-4">
+                                          <span className="bg-primary text-primary-foreground px-3 py-1
+                                          rounded-full text-xs font-medium">
+                                            Most Popular
+                                          </span>
                                         </div>
                                     )}
 
                                     {currentPlan === tier.id && (
                                         <div className="absolute top-4 right-4">
-                      <span className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                        Current
-                      </span>
+                                          <span
+                                              className="bg-green-500 text-white px-2 py-1 rounded-full
+                                              text-xs font-medium"
+                                          >
+                                            Current
+                                          </span>
                                         </div>
                                     )}
 
                                     <div className="text-center mb-6">
                                         <div
-                                            className={`w-16 h-16 bg-gradient-to-r ${tier.color} rounded-2xl flex items-center justify-center mx-auto mb-4`}
+                                            className={`w-16 h-16 bg-gradient-to-r ${tier.color} rounded-2xl 
+                                            flex items-center justify-center mx-auto mb-4`}
                                         >
                                             <tier.icon className="w-8 h-8 text-white"/>
                                         </div>
                                         <h3 className="text-xl font-bold text-foreground mb-2">{tier.name}</h3>
                                         <p className="text-muted-foreground text-sm mb-4">{tier.description}</p>
                                         <div className="flex items-baseline justify-center">
-                      <span className="text-3xl font-bold text-foreground">
-                        ${billingPeriod === "year" ? Math.round(tier.price * 12 * 0.8) : tier.price}
-                      </span>
-                                            <span
-                                                className="text-muted-foreground ml-1">/{billingPeriod === "year" ? "year" : "month"}</span>
+                                          <span className="text-3xl font-bold text-foreground">
+                                            ${billingPeriod === "year" ? Math.round(tier.price * 12 * 0.8) : tier.price}
+                                          </span>
+                                            <span className="text-muted-foreground ml-1">
+                                                /{billingPeriod === "year" ? "year" : "month"}
+                                            </span>
                                         </div>
                                         {billingPeriod === "year" && tier.price > 0 && (
-                                            <p className="text-green-500 text-sm mt-1">Save
-                                                ${Math.round(tier.price * 12 * 0.2)}/year</p>
+                                            <p className="text-green-500 text-sm mt-1">
+                                                Save ${Math.round(tier.price * 12 * 0.2)}/year
+                                            </p>
                                         )}
                                     </div>
 
                                     <div className="space-y-3 mb-6">
-                                        {tier.features.map((feature, featureIndex) => (
-                                            <div key={featureIndex} className="flex items-start space-x-3">
-                                                {feature.included ? (
-                                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"/>
-                                                ) : (
-                                                    <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5"/>
-                                                )}
-                                                <div className="flex-1">
-                          <span
-                              className={`text-sm ${
-                                  feature.included ? "text-foreground" : "text-muted-foreground line-through"
-                              }`}
-                          >
-                            {feature.name}
-                          </span>
-                                                    {feature.limit && (
-                                                        <span
-                                                            className="text-xs text-muted-foreground ml-2">({feature.limit})</span>
+                                        {tier.features.map(
+                                            (feature, featureIndex) => (
+                                                <div key={featureIndex} className="flex items-start space-x-3">
+                                                    {feature.included ? (
+                                                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"/>
+                                                    ) : (
+                                                        <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5"/>
                                                     )}
+                                                    <div className="flex-1">
+                                                      <span
+                                                          className={`text-sm ${
+                                                              feature.included
+                                                                  ? "text-foreground"
+                                                                  : "text-muted-foreground line-through"
+                                                          }`}
+                                                      >
+                                                        {feature.name}
+                                                      </span>
+                                                        {feature.limit && (
+                                                            <span
+                                                                className="text-xs text-muted-foreground ml-2"
+                                                            >
+                                                            ({feature.limit})
+                                                        </span>
+                                                        )}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ))}
+                                            ))}
                                     </div>
 
                                     <button
@@ -225,7 +244,9 @@ const SubscriptionPage: NextPage = () => {
                                                     : "bg-blue-gray-900 hover:bg-blue-gray-900/80 text-foreground"
                                         }`}
                                     >
-                                        {currentPlan === tier.id ? "Current Plan" : tier.price === 0 ? "Current Plan" : "Upgrade"}
+                                        {currentPlan === tier.id
+                                            ? "Current Plan" : tier.price === 0
+                                                ? "Current Plan" : "Upgrade"}
                                     </button>
                                 </motion.div>
                             ))}
@@ -239,7 +260,9 @@ const SubscriptionPage: NextPage = () => {
                             className="glass-card rounded-2xl p-8 text-center"
                         >
                             <div
-                                className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                className="w-16 h-16 bg-gradient-to-r from-yellow-500 to-orange-500
+                                rounded-2xl flex items-center justify-center mx-auto mb-4"
+                            >
                                 <Users className="w-8 h-8 text-white"/>
                             </div>
                             <h3 className="text-2xl font-bold text-foreground mb-2">Enterprise & Institutions</h3>
@@ -249,21 +272,24 @@ const SubscriptionPage: NextPage = () => {
                                 integrations, and dedicated support.
                             </p>
                             <div className="flex flex-wrap justify-center gap-4 mb-6">
-                <span className="flex items-center text-sm text-muted-foreground">
-                  <Shield className="w-4 h-4 mr-2"/>
-                  HIPAA Compliant
-                </span>
                                 <span className="flex items-center text-sm text-muted-foreground">
-                  <Users className="w-4 h-4 mr-2"/>
-                  Bulk Licensing
-                </span>
+                                  <Shield className="w-4 h-4 mr-2"/>
+                                  HIPAA Compliant
+                                </span>
                                 <span className="flex items-center text-sm text-muted-foreground">
-                  <Settings className="w-4 h-4 mr-2"/>
-                  Custom Integration
-                </span>
+                                  <Users className="w-4 h-4 mr-2"/>
+                                  Bulk Licensing
+                                </span>
+                                <span className="flex items-center text-sm text-muted-foreground">
+                                  <Settings className="w-4 h-4 mr-2"/>
+                                  Custom Integration
+                                </span>
                             </div>
                             <button
-                                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-8 py-3 rounded-xl font-medium hover:from-yellow-600 hover:to-orange-600 transition-all duration-200">
+                                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white
+                                px-8 py-3 rounded-xl font-medium hover:from-yellow-600 hover:to-orange-600
+                                transition-all duration-200"
+                            >
                                 Contact Sales
                             </button>
                         </motion.div>
@@ -292,23 +318,31 @@ const SubscriptionPage: NextPage = () => {
                                     </div>
                                     <span
                                         className={`px-2 py-1 rounded-full text-xs font-medium ${getUsageColor(
-                                            getUsagePercentage(usageData.current.dailyAnalyses, usageData.limits.dailyAnalyses),
+                                            getUsagePercentage(
+                                                usageData.current.dailyAnalyses,
+                                                usageData.limits.dailyAnalyses
+                                            ),
                                         )}`}
                                     >
-                    {getUsagePercentage(usageData.current.dailyAnalyses, usageData.limits.dailyAnalyses).toFixed(0)}%
-                  </span>
+                                        {getUsagePercentage(
+                                            usageData.current.dailyAnalyses,
+                                            usageData.limits.dailyAnalyses).toFixed(0)}%
+                                      </span>
                                 </div>
                                 <h3 className="font-semibold text-foreground mb-2">Daily Analyses</h3>
                                 <div className="flex items-baseline space-x-2 mb-3">
-                                    <span
-                                        className="text-2xl font-bold text-foreground">{usageData.current.dailyAnalyses}</span>
+                                    <span className="text-2xl font-bold text-foreground">
+                                        {usageData.current.dailyAnalyses}
+                                    </span>
                                     <span className="text-muted-foreground">/ {usageData.limits.dailyAnalyses}</span>
                                 </div>
                                 <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{
-                                            width: `${getUsagePercentage(usageData.current.dailyAnalyses, usageData.limits.dailyAnalyses)}%`,
+                                            width: `${getUsagePercentage(
+                                                usageData.current.dailyAnalyses,
+                                                usageData.limits.dailyAnalyses)}%`,
                                         }}
                                         transition={{duration: 1, delay: 0.2}}
                                         className="bg-blue-500 h-2 rounded-full"
@@ -332,24 +366,31 @@ const SubscriptionPage: NextPage = () => {
                                     </div>
                                     <span
                                         className={`px-2 py-1 rounded-full text-xs font-medium ${getUsageColor(
-                                            getUsagePercentage(usageData.current.monthlyAnalyses, usageData.limits.monthlyAnalyses),
+                                            getUsagePercentage(
+                                                usageData.current.monthlyAnalyses,
+                                                usageData.limits.monthlyAnalyses),
                                         )}`}
                                     >
-                    {getUsagePercentage(usageData.current.monthlyAnalyses, usageData.limits.monthlyAnalyses).toFixed(0)}
-                                        %
-                  </span>
+                                        {getUsagePercentage(
+                                            usageData.current.monthlyAnalyses,
+                                            usageData.limits.monthlyAnalyses).toFixed(0)}%
+                                      </span>
                                 </div>
                                 <h3 className="font-semibold text-foreground mb-2">Monthly Analyses</h3>
                                 <div className="flex items-baseline space-x-2 mb-3">
                                     <span
-                                        className="text-2xl font-bold text-foreground">{usageData.current.monthlyAnalyses}</span>
+                                        className="text-2xl font-bold text-foreground">
+                                        {usageData.current.monthlyAnalyses}
+                                    </span>
                                     <span className="text-muted-foreground">/ {usageData.limits.monthlyAnalyses}</span>
                                 </div>
                                 <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{
-                                            width: `${getUsagePercentage(usageData.current.monthlyAnalyses, usageData.limits.monthlyAnalyses)}%`,
+                                            width: `${getUsagePercentage(
+                                                usageData.current.monthlyAnalyses,
+                                                usageData.limits.monthlyAnalyses)}%`,
                                         }}
                                         transition={{duration: 1, delay: 0.3}}
                                         className="bg-purple-500 h-2 rounded-full"
@@ -370,23 +411,30 @@ const SubscriptionPage: NextPage = () => {
                                     </div>
                                     <span
                                         className={`px-2 py-1 rounded-full text-xs font-medium ${getUsageColor(
-                                            getUsagePercentage(usageData.current.aiChatMessages, usageData.limits.aiChatMessages),
+                                            getUsagePercentage(
+                                                usageData.current.aiChatMessages,
+                                                usageData.limits.aiChatMessages),
                                         )}`}
                                     >
-                    {getUsagePercentage(usageData.current.aiChatMessages, usageData.limits.aiChatMessages).toFixed(0)}%
-                  </span>
+                                        {getUsagePercentage(
+                                            usageData.current.aiChatMessages,
+                                            usageData.limits.aiChatMessages).toFixed(0)}%
+                                    </span>
                                 </div>
                                 <h3 className="font-semibold text-foreground mb-2">AI Chat Messages</h3>
                                 <div className="flex items-baseline space-x-2 mb-3">
-                                    <span
-                                        className="text-2xl font-bold text-foreground">{usageData.current.aiChatMessages}</span>
+                                    <span className="text-2xl font-bold text-foreground">
+                                        {usageData.current.aiChatMessages}
+                                    </span>
                                     <span className="text-muted-foreground">/ {usageData.limits.aiChatMessages}</span>
                                 </div>
                                 <div className="w-full bg-blue-gray-900 rounded-full h-2">
                                     <motion.div
                                         initial={{width: 0}}
                                         animate={{
-                                            width: `${getUsagePercentage(usageData.current.aiChatMessages, usageData.limits.aiChatMessages)}%`,
+                                            width: `${getUsagePercentage(
+                                                usageData.current.aiChatMessages,
+                                                usageData.limits.aiChatMessages)}%`,
                                         }}
                                         transition={{duration: 1, delay: 0.4}}
                                         className="bg-green-500 h-2 rounded-full"
@@ -406,14 +454,19 @@ const SubscriptionPage: NextPage = () => {
                                         <BookOpen className="w-6 h-6 text-white"/>
                                     </div>
                                     <span
-                                        className="px-2 py-1 rounded-full text-xs font-medium text-blue-500 bg-blue-500/10">
-                    Unlimited
-                  </span>
+                                        className="px-2 py-1 rounded-full text-xs font-medium
+                                    text-blue-500 bg-blue-500/10"
+                                    >
+                                        Unlimited
+                                      </span>
                                 </div>
                                 <h3 className="font-semibold text-foreground mb-2">Conditions Studied</h3>
                                 <div className="flex items-baseline space-x-2 mb-3">
                                     <span
-                                        className="text-2xl font-bold text-foreground">{usageData.current.conditionsStudied}</span>
+                                        className="text-2xl font-bold text-foreground"
+                                    >
+                                        {usageData.current.conditionsStudied}
+                                    </span>
                                     <span className="text-muted-foreground">/ 50</span>
                                 </div>
                                 <div className="w-full bg-blue-gray-900 rounded-full h-2">
@@ -435,8 +488,13 @@ const SubscriptionPage: NextPage = () => {
                             transition={{duration: 0.6, delay: 0.5}}
                             className="space-y-4"
                         >
-                            {getUsagePercentage(usageData.current.dailyAnalyses, usageData.limits.dailyAnalyses) >= 80 && (
-                                <div className="glass-card rounded-2xl p-4 border border-yellow-500/20 bg-yellow-500/5">
+                            {getUsagePercentage(
+                                usageData.current.dailyAnalyses,
+                                usageData.limits.dailyAnalyses) >= 80 && (
+                                <div
+                                    className="glass-card rounded-2xl p-4 border border-yellow-500/20
+                                    bg-yellow-500/5"
+                                >
                                     <div className="flex items-start space-x-3">
                                         <AlertCircle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5"/>
                                         <div>
@@ -449,7 +507,8 @@ const SubscriptionPage: NextPage = () => {
                                         </div>
                                         <button
                                             onClick={() => handleUpgrade("pro")}
-                                            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors text-sm font-medium"
+                                            className="px-4 py-2 bg-yellow-500 text-white rounded-lg
+                                            hover:bg-yellow-600 transition-colors text-sm font-medium"
                                         >
                                             Upgrade
                                         </button>
@@ -479,7 +538,8 @@ const SubscriptionPage: NextPage = () => {
                                 </div>
                                 <button
                                     onClick={() => handleUpgrade("pro")}
-                                    className="bg-primary text-primary-foreground px-6 py-3 rounded-xl hover:bg-primary/90 transition-colors font-medium"
+                                    className="bg-primary text-primary-foreground px-6 py-3 rounded-xl
+                                    hover:bg-primary/90 transition-colors font-medium"
                                 >
                                     Upgrade Now
                                 </button>
@@ -505,7 +565,9 @@ const SubscriptionPage: NextPage = () => {
                                 className="glass-card rounded-2xl p-6"
                             >
                                 <div className="flex items-center justify-between mb-4">
-                                    <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl">
+                                    <div
+                                        className="p-3 bg-gradient-to-r from-green-500 to-emerald-500 rounded-xl"
+                                    >
                                         <CreditCard className="w-6 h-6 text-white"/>
                                     </div>
                                 </div>
@@ -567,7 +629,9 @@ const SubscriptionPage: NextPage = () => {
                                 <p className="text-muted-foreground text-sm mb-4">Add a payment method to upgrade to a
                                     paid plan</p>
                                 <button
-                                    className="bg-primary text-primary-foreground px-6 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                                    className="bg-primary text-primary-foreground px-6 py-2 rounded-lg
+                                    hover:bg-primary/90 transition-colors"
+                                >
                                     Add Card
                                 </button>
                             </div>
@@ -583,7 +647,9 @@ const SubscriptionPage: NextPage = () => {
                             <div className="flex items-center justify-between mb-6">
                                 <h2 className="text-xl font-semibold text-foreground">Billing History</h2>
                                 <button
-                                    className="flex items-center space-x-2 text-primary hover:text-primary/80 transition-colors text-sm font-medium">
+                                    className="flex items-center space-x-2 text-primary hover:text-primary/80
+                                    transition-colors text-sm font-medium"
+                                >
                                     <Download className="w-4 h-4"/>
                                     <span>Download All</span>
                                 </button>
@@ -596,7 +662,8 @@ const SubscriptionPage: NextPage = () => {
                                         initial={{opacity: 0, x: -20}}
                                         animate={{opacity: 1, x: 0}}
                                         transition={{duration: 0.6, delay: 0.6 + index * 0.1}}
-                                        className="flex items-center justify-between p-4 bg-blue-gray-900/50 rounded-xl"
+                                        className="flex items-center justify-between p-4 bg-blue-gray-900/50
+                                        rounded-xl"
                                     >
                                         <div className="flex items-center space-x-4">
                                             <div className="p-2 bg-green-500/10 rounded-lg">
@@ -604,14 +671,20 @@ const SubscriptionPage: NextPage = () => {
                                             </div>
                                             <div>
                                                 <h4 className="font-medium text-foreground">{bill.plan}</h4>
-                                                <p className="text-sm text-muted-foreground">{bill.date.toLocaleDateString()}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {bill.date.toLocaleDateString()}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center space-x-4">
                                             <span
-                                                className="font-medium text-foreground">${bill.amount.toFixed(2)}</span>
+                                                className="font-medium text-foreground">
+                                                ${bill.amount.toFixed(2)}
+                                            </span>
                                             <button
-                                                className="text-primary hover:text-primary/80 transition-colors text-sm">Download
+                                                className="text-primary hover:text-primary/80 transition-colors text-sm"
+                                            >
+                                                Download
                                             </button>
                                         </div>
                                     </motion.div>
@@ -627,7 +700,8 @@ const SubscriptionPage: NextPage = () => {
                         initial={{opacity: 0}}
                         animate={{opacity: 1}}
                         exit={{opacity: 0}}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center
+                        justify-center p-4"
                         onClick={() => setShowUpgradeModal(false)}
                     >
                         <motion.div
@@ -639,7 +713,9 @@ const SubscriptionPage: NextPage = () => {
                         >
                             <div className="text-center mb-6">
                                 <div
-                                    className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-500
+                                    rounded-2xl flex items-center justify-center mx-auto mb-4"
+                                >
                                     <Sparkles className="w-8 h-8 text-white"/>
                                 </div>
                                 <h3 className="text-xl font-bold text-foreground mb-2">Upgrade to Medical Pro</h3>
@@ -664,12 +740,15 @@ const SubscriptionPage: NextPage = () => {
                             <div className="flex space-x-3">
                                 <button
                                     onClick={() => setShowUpgradeModal(false)}
-                                    className="flex-1 py-3 px-4 bg-blue-gray-900 text-foreground rounded-xl hover:bg-blue-gray-900/80 transition-colors"
+                                    className="flex-1 py-3 px-4 bg-blue-gray-900 text-foreground rounded-xl
+                                    hover:bg-blue-gray-900/80 transition-colors"
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    className="flex-1 py-3 px-4 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-colors">
+                                    className="flex-1 py-3 px-4 bg-primary text-primary-foreground rounded-xl
+                                    hover:bg-primary/90 transition-colors"
+                                >
                                     Upgrade Now
                                 </button>
                             </div>
