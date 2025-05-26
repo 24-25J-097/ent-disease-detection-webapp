@@ -9,7 +9,17 @@ import {useSelector} from 'react-redux';
 import {useRouter} from "next/navigation";
 import {AnimatePresence, motion} from "framer-motion";
 import {
-    AlertCircle, Brain, Camera, CheckCircle, Eye, FileImage, Loader, RefreshCw, SquareDashedMousePointer, Upload, Zap
+    AlertCircle,
+    Brain,
+    Camera,
+    CheckCircle,
+    Eye,
+    FileImage,
+    Loader,
+    RefreshCw,
+    SquareDashedMousePointer,
+    Upload,
+    Zap
 } from "lucide-react";
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {AnalysisStep, analysisSteps, conditionImageRequirements, conditions} from '@/data/student/identification';
@@ -27,6 +37,7 @@ import {Sinusitis} from '@/models/Sinusitis';
 import {PharyngitisDiagnosisData} from '@/types/service/PharyngitisDiagnosisData';
 import {PharyngitisAnalyzeService} from '@/services/PharyngitisAnalyzeService';
 import ReactModal from 'react-modal';
+import {Role} from '@/enums/access';
 
 const IdentificationPage: NextPage = () => {
 
@@ -159,7 +170,10 @@ const IdentificationPage: NextPage = () => {
             additionalInfo: "",
             endoscopyImage: selectedFile!,
         };
-        const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosis(diagnosisData);
+        const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosis(
+            diagnosisData,
+            Role.STUDENT
+        );
         setTimeout(() => {
             if (response.success && response.data) {
                 const results = response.data as Cholesteatoma;
@@ -181,7 +195,10 @@ const IdentificationPage: NextPage = () => {
             additionalInfo: "",
             watersViewXrayImage: selectedFile!,
         };
-        const response = await SinusitisAnalyzeService.analyze(diagnosisData);
+        const response = await SinusitisAnalyzeService.analyze(
+            diagnosisData,
+            Role.STUDENT
+        );
         setTimeout(() => {
             if (response.success && response.data) {
                 const results = response.data as Sinusitis;
@@ -199,7 +216,10 @@ const IdentificationPage: NextPage = () => {
             additionalInfo: "",
             throatImage: selectedFile!,
         };
-        const response = await PharyngitisAnalyzeService.analyze(diagnosisData);
+        const response = await PharyngitisAnalyzeService.analyze(
+            diagnosisData,
+            Role.STUDENT
+        );
         setTimeout(() => {
             if (response.success && response.data) {
                 const results = response.data;
