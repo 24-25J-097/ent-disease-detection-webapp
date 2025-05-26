@@ -12,6 +12,18 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.glass-card-blue {
+  background: rgba(0, 119, 255, 0.14);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .glass-card-blue {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .gradient-border {
   background: linear-gradient(45deg, #3b82f6, #8b5cf6, #06b6d4);
   padding: 1px;
