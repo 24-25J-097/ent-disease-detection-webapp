@@ -1,5 +1,6 @@
 "use client";
-
+import axios from 'axios';
+import { ApiUtils } from "@/services/api-service/ApiUtils";
 import type React from "react";
 import {useRef, useState} from "react";
 import {NextPage} from "next";
@@ -148,7 +149,7 @@ const IdentificationPage: NextPage = () => {
                 await getPharyngitisAnalyzeResults();
             } else if (selectedCondition === "Foreign Objects in Throat") {
                 // TODO:
-                notifyWarn("This feature is under development. Subscribe to get notified!");
+                await getForeignObjectsAnalyzeResults();
             }
 
         } catch (error: any) {
@@ -222,6 +223,94 @@ const IdentificationPage: NextPage = () => {
             }
         }, 500);
     };
+    const getForeignObjectsAnalyzeResults = async () => {
+  try {
+    // First check if the image is valid
+    const validityFormData = new FormData();
+    validityFormData.append("file", selectedFile!);
+
+    const validityResponse = await axios.post(
+      ApiUtils.fastApiUrl2 + "/api/foreign/run-inference",
+      validityFormData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    const isValid = validityResponse.data.images[0]?.results[0]?.class === 1;
+
+    if (isValid) {
+      const detectionFormData = new FormData();
+      detectionFormData.append("image", selectedFile!);
+
+      const detectResponse = await axios.post(
+        ApiUtils.fastApiUrl2 + "/api/foreign/detect",
+        detectionFormData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+
+      const predictions = detectResponse.data.predictions || [];
+      const foreignObjects = predictions
+        .filter(pred => pred.class === 'B' || pred.class === 'D')
+        .sort((a, b) => b.confidence - a.confidence);
+
+      // Calculate statistics and determine stage
+      const blockages = foreignObjects.filter(pred => pred.class === 'B');
+      const devices = foreignObjects.filter(pred => pred.class === 'D');
+      const highestConfidence = foreignObjects.length > 0 ? foreignObjects[0].confidence : 0;
+
+      // Determine stage based on type of foreign object
+      let stage = "No foreign objects detected";
+      if (blockages.length > 0) {
+        stage = "Type: Blockage";
+      }
+      if (devices.length > 0) {
+        stage = stage === "No foreign objects detected" ? "Type: Device" : "Type: Multiple (Blockage & Device)";
+      }
+
+      // Generate suggestions
+      let suggestions = [];
+      if (blockages.length > 0) {
+        suggestions.push(`Detected ${blockages.length} potential blockage(s)`);
+      }
+      if (devices.length > 0) {
+        suggestions.push(`Detected ${devices.length} foreign device(s)`);
+      }
+
+      const suggestionsText = foreignObjects.length > 0
+        ? `${suggestions.join('. ')}. Immediate medical attention recommended.`
+        : "No foreign objects detected. Continue monitoring if symptoms persist.";
+
+      setAnalysisResult({
+        diagnosisId: `foreign-${Date.now()}`,
+        prediction: 'valid',
+        isForeignObject: foreignObjects.length > 0, // This will control the Yes/No badge
+        predictions: foreignObjects,
+        confidenceScore: highestConfidence,
+        stage: stage, // This will show in the Stage section
+        detectionSummary: {
+          totalObjects: foreignObjects.length,
+          blockages: blockages.length,
+          devices: devices.length
+        },
+        suggestions: suggestionsText
+      });
+
+    } else {
+      setAnalysisResult({
+        prediction: 'invalid',
+        suggestions: "Please upload a valid X-ray image."
+      });
+      notifyWarn("Please upload a valid X-ray image.");
+    }
+  } catch (error: any) {
+    console.error("Error processing image:", error);
+    if (error.response?.status && error.response.status >= 500) {
+      notifyError("An unexpected error occurred. Please try again.");
+    } else {
+      notifyError(error.response?.data?.message || "Failed to process the image. Please try again.");
+    }
+    setAnalysisResult(null);
+  }
+};
 
     const handleRest = async () => {
         setSelectedFile(null);
@@ -372,7 +461,7 @@ const IdentificationPage: NextPage = () => {
         }
 
         // Valid prediction results
-        const hasCondition = analysisResult.isCholesteatoma || analysisResult.isSinusitis;
+        const hasCondition = analysisResult.isCholesteatoma || analysisResult.isSinusitis || analysisResult.isForeignObject;
         const confidencePercentage = analysisResult.confidenceScore
             ? (() => {
                 let percent = analysisResult.confidenceScore * 100;
