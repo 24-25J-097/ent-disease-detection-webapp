@@ -14,14 +14,14 @@ export class CholesteatomaDiagnosisService {
     }
 
     public static async cholesteatomaDiagnosis(diagnosisData: CholesteatomaDiagnosisData): Promise<AppResponse<CommonResponse>> {
-        const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma");
+        const ep = ApiUtils.publicUrl("diagnosis/cholesteatoma"); // TODO: just use public instead of doctor coz time limitation
         const formData = convertToAPIFormData(diagnosisData, true);
         const res = await CholesteatomaDiagnosisService.api().post<CholesteatomaDiagnosisData, AxiosAppResponse<CommonResponse>>(ep, formData);
         return res.data;
     }
 
     public static async cholesteatomaDiagnosisAccept(diagnosisAcceptance: DiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
-        const ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma/accept");
+        const ep = ApiUtils.publicUrl("diagnosis/cholesteatoma/accept"); // TODO: just use public instead of doctor coz time limitation
         const res = await CholesteatomaDiagnosisService.api().post<DiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
         return res.data;
     }
