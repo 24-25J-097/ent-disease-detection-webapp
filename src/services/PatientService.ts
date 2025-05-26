@@ -34,9 +34,9 @@ export class PatientService {
         return res.data;
     }
 
-    public static async getAllPatients(): Promise<AppResponse<CommonResponse>> {
+    public static async getAllPatients(): Promise<PatientData[]> {
         const ep = ApiUtils.doctorUrl("patients");
-        const res = await PatientService.api().get(ep);
-        return res.data;
+        const res = await PatientService.api().get<null, AxiosAppResponse<PatientData[]>>(ep);
+        return res.data.data;
     }
 }
