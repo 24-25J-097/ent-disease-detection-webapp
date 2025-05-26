@@ -23,7 +23,7 @@ import {useDebounce} from '@/hooks/useDebounce';
 import {useDispatch, useSelector} from 'react-redux';
 import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
 import {FilterService} from '@/services/FilterService';
-import CreatePatientModal from './CreatePatientModal';
+import CreatePatientModal from '@/components/modals/CreatePatientModal';
 import TextButton from '@/components/buttons/TextButton';
 import StepsFlowCard, {Step} from '@/components/cards/StepsFlowCard';
 
