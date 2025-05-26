@@ -19,6 +19,7 @@ export interface UserLoginData {
 export interface UserSignUpData {
     name: string;
     email: string;
+    licenseId: string;
     password: string;
     confirmPassword: string;
     role: string;
