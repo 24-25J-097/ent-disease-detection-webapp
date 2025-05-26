@@ -1,10 +1,11 @@
 "use client";
 
 import {motion} from "framer-motion";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {
     ArrowRight,
+    ArrowUp,
     BookOpen,
     Brain,
     Building2,
@@ -29,6 +30,17 @@ const HomePage: NextPage = () => {
     const router = useRouterApp();
 
     const [hoveredCondition, setHoveredCondition] = useState<number | null>(null);
+    const [showScrollTop, setShowScrollTop] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            // Show button when the page is scrolled down 300px
+            setShowScrollTop(window.scrollY > 300);
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     return (<div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
         {/* Background Effects */}
@@ -75,22 +87,22 @@ const HomePage: NextPage = () => {
                         {/* Navigation Links */}
                         <div className="hidden md:flex items-center space-x-8">
                             <Link
-                                href="#features"
+                                href={"#features"}
                                 className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium"
                             >
                                 Features
                             </Link>
                             <Link
-                                href="#conditions"
+                                href={"#conditions"}
                                 className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium"
                             >
                                 Conditions
                             </Link>
-                            <Link href="#about"
+                            <Link href={"#about"}
                                   className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium">
                                 About
                             </Link>
-                            <Link href="#contact"
+                            <Link href={"#contact"}
                                   className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium">
                                 Contact
                             </Link>
@@ -667,6 +679,23 @@ const HomePage: NextPage = () => {
                     © 2025 ENT Insight. Advancing medical education through artificial intelligence.
                 </p>
             </motion.div>
+
+            {/* Scroll to Top Button */}
+            {showScrollTop && (
+                <motion.button
+                    initial={{opacity: 0, scale: 0.5}}
+                    animate={{opacity: 1, scale: 1}}
+                    exit={{opacity: 0, scale: 0.5}}
+                    className="fixed bottom-8 right-8 p-3 rounded-full glass-card-blue shadow-lg 
+                        hover:shadow-xl hover:scale-110 hover:bg-blue-100/30 transition-all duration-300 
+                        z-50 border border-blue-200/30 group"
+                    onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+                    aria-label="Scroll to top"
+                >
+                    <ArrowUp
+                        className="w-5 h-5 text-blue-600 group-hover:text-purple-600 transition-colors duration-300"/>
+                </motion.button>
+            )}
         </div>
     </div>);
 };
