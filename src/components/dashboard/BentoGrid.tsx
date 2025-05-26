@@ -24,7 +24,7 @@ const gridItems = [
         icon: Camera,
         color: "from-blue-500 to-cyan-500",
         size: "medium",
-        stats: "75% accuracy",
+        stats: "90% accuracy",
         route: "/student/identification",
     },
     {
