@@ -5,12 +5,12 @@ import Link from "next/link";
 import {useEffect, useState} from "react";
 import ReportService from "@/services/ReportService";
 import PackageService from "@/services/PackageService";
-import {Package} from "@/models/Package";
 import {UserService} from "@/services/UserService";
 import {User} from "@/models/User";
-import {RequestLog, RequestLogResponse} from "@/models/RequestLog";
+import {RequestLogResponse} from "@/models/RequestLog";
 
 const AdminDashboard: NextPage = () => {
+
     const [users, setUsers] = useState<User[]>([] as User[]);
     const [packageCount, setPackageCount] = useState<number>(0);
     const [requestLogs, setRequestLogs] = useState<RequestLogResponse>()
