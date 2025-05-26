@@ -3,6 +3,7 @@ import ApiService from "@/services/api-service/ApiService";
 import {AppResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Response";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {PatientData} from '@/types/service/Patient';
+import {Patient} from '@/models/Patient';
 
 export class PatientService {
 
@@ -34,9 +35,9 @@ export class PatientService {
         return res.data;
     }
 
-    public static async getAllPatients(): Promise<PatientData[]> {
+    public static async getAllPatients(): Promise<Patient[]> {
         const ep = ApiUtils.doctorUrl("patients");
-        const res = await PatientService.api().get<null, AxiosAppResponse<PatientData[]>>(ep);
+        const res = await PatientService.api().get<null, AxiosAppResponse<Patient[]>>(ep);
         return res.data.data;
     }
 }

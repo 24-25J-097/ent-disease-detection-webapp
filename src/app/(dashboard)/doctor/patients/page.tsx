@@ -12,8 +12,9 @@ import {ErrorResponseData} from "@/types/Common";
 import LoadingModal from "@/components/loaders/LoadingModal";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {PatientData} from "@/types/service/Patient";
 import CreatePatientModal from '@/app/(dashboard)/doctor/patients/CreatePatientModal';
+import {Patient} from '@/models/Patient';
+import {toTitleCase} from '@/utils/string-formatters';
 
 const calculateAge = (dateOfBirth: string): number => {
     const dob = new Date(dateOfBirth);
@@ -29,8 +30,9 @@ const calculateAge = (dateOfBirth: string): number => {
 };
 
 const PatientsPage: NextPage = () => {
-    const [patients, setPatients] = useState<PatientData[]>([]);
-    const [filteredPatients, setFilteredPatients] = useState<PatientData[]>([]);
+
+    const [patients, setPatients] = useState<Patient[]>([]);
+    const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [createPatientModalOpen, setCreatePatientModalOpen] = useState<boolean>(false);
@@ -39,7 +41,7 @@ const PatientsPage: NextPage = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [genderFilter, setGenderFilter] = useState<string>("all");
 
-    const { notifyError, notifySuccess } = useToast();
+    const {notifyError, notifySuccess} = useToast();
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -65,7 +67,7 @@ const PatientsPage: NextPage = () => {
             }
         };
 
-        fetchPatients();
+        fetchPatients().then();
     }, [notifyError]);
 
     // Apply filters whenever filter values change
@@ -77,8 +79,8 @@ const PatientsPage: NextPage = () => {
         // Apply search filter
         if (searchTerm) {
             const search = searchTerm.toLowerCase();
-            result = result.filter(patient => 
-                `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(search) ||
+            result = result.filter(patient =>
+                patient.name.toLowerCase().includes(search) ||
                 patient.email.toLowerCase().includes(search) ||
                 patient.phone.toLowerCase().includes(search)
             );
@@ -86,7 +88,7 @@ const PatientsPage: NextPage = () => {
 
         // Apply gender filter
         if (genderFilter && genderFilter !== 'all') {
-            result = result.filter(patient => 
+            result = result.filter(patient =>
                 patient.gender.toLowerCase() === genderFilter.toLowerCase()
             );
         }
@@ -96,10 +98,10 @@ const PatientsPage: NextPage = () => {
 
     const formatDate = (dateString: string): string => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
         });
     };
 
@@ -107,7 +109,7 @@ const PatientsPage: NextPage = () => {
         <section className="bg-blue-50 min-h-screen px-4">
             <div className="flex py-8 justify-between items-center">
                 <h1 className="text-slate-600 text-3xl font-bold text-center">Patient List</h1>
-                <Button 
+                <Button
                     className="bg-blue-900 text-white"
                     onClick={() => setCreatePatientModalOpen(true)}
                 >
@@ -132,7 +134,7 @@ const PatientsPage: NextPage = () => {
                         <label className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
                         <Select value={genderFilter} onValueChange={setGenderFilter}>
                             <SelectTrigger>
-                                <SelectValue placeholder="All Genders" />
+                                <SelectValue placeholder="All Genders"/>
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="all">All Genders</SelectItem>
@@ -170,12 +172,14 @@ const PatientsPage: NextPage = () => {
                             {filteredPatients.length > 0 ? (
                                 filteredPatients.map((patient) => (
                                     <TableRow key={patient._id} className="border-b hover:bg-gray-50">
-                                        <TableCell className="p-3">{patient.patientId ?? patient._id?.substring(0, 8)}</TableCell>
-                                        <TableCell className="p-3">{`${patient.firstName} ${patient.lastName}`}</TableCell>
+                                        <TableCell className="p-3">
+                                            {patient.patientId ?? patient._id?.substring(0, 8)}
+                                        </TableCell>
+                                        <TableCell className="p-3">{toTitleCase(patient.name)}</TableCell>
                                         <TableCell className="p-3">{patient.email}</TableCell>
                                         <TableCell className="p-3">{patient.phone}</TableCell>
                                         <TableCell className="p-3">{calculateAge(patient.dateOfBirth)}</TableCell>
-                                        <TableCell className="p-3">{patient.gender}</TableCell>
+                                        <TableCell className="p-3">{toTitleCase(patient.gender)}</TableCell>
                                         <TableCell className="p-3">{formatDate(patient.createdAt!)}</TableCell>
                                         {/*<TableCell className="p-3 text-center">
                                             <Button
@@ -200,7 +204,7 @@ const PatientsPage: NextPage = () => {
                 </Card>
             </div>
 
-            <LoadingModal isOpen={isLoading} text="Loading patients..." imagePath="/images/loading-circle.gif" />
+            <LoadingModal isOpen={isLoading} text="Loading patients..." imagePath="/images/loading-circle.gif"/>
 
             <CreatePatientModal
                 isOpen={createPatientModalOpen}
@@ -229,7 +233,7 @@ const PatientsPage: NextPage = () => {
                             setIsLoading(false);
                         }
                     };
-                    fetchPatients();
+                    fetchPatients().then();
                 }}
             />
         </section>

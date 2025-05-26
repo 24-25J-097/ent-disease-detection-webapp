@@ -1,8 +1,7 @@
 import {ApiInstance} from "@/types/service/ApiService";
 import ApiService from "@/services/api-service/ApiService";
-import {AppResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Response";
+import {AxiosAppResponse} from "@/types/service/Response";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
-import {PatientData} from '@/types/service/Patient';
 import {User} from "@/models/User";
 
 export class UserService {
