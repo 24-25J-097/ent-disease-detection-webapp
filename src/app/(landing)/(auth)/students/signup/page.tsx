@@ -91,7 +91,17 @@ const SignUpPage: NextPage = () => {
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
                 newErrors.email = "Please enter a valid email address";
             }
-            if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth is required";
+            if (!formData.dateOfBirth) {
+                newErrors.dateOfBirth = "Date of birth is required";
+            } else {
+                const birthDate = new Date(formData.dateOfBirth);
+                const today = new Date();
+                const minAgeDate = new Date(today);
+                minAgeDate.setFullYear(today.getFullYear() - 7);
+                if (birthDate > minAgeDate) {
+                    newErrors.dateOfBirth = "Student must be at least 7 years old";
+                }
+            }
             if (!formData.country) newErrors.country = "Country is required";
         }
 
@@ -391,10 +401,14 @@ const SignUpPage: NextPage = () => {
                                         onChange={(e) => (
                                             handleInputChange("dateOfBirth", e.target.value)
                                         )}
+                                        max={(() => {
+                                            const today = new Date();
+                                            return today.toISOString().split('T')[0];
+                                        })()}
                                         className={`w-full pl-10 pr-4 py-3 bg-slate-800/50 border rounded-xl 
-                                text-white placeholder-slate-400 focus:outline-none focus:ring-2 
-                                focus:border-transparent transition-all duration-200 
-                                ${errors.dateOfBirth ? "border-red-500 focus:ring-red-500"
+                                        text-white placeholder-slate-400 focus:outline-none focus:ring-2 
+                                        focus:border-transparent transition-all duration-200 
+                                        ${errors.dateOfBirth ? "border-red-500 focus:ring-red-500"
                                             : "border-slate-600 focus:ring-blue-500"}`}
                                     />
                                 </div>
