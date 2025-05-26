@@ -26,7 +26,7 @@ export const medicalConditions = [
         name: "Foreign Objects in Throat",
         description: "AI-powered identification of unexpected obstructions in the throat using advanced image analysis",
         icon: Target,
-        accuracy: "88%",
+        accuracy: "96%",
         color: "from-red-500 to-red-600",
     },
 ];
