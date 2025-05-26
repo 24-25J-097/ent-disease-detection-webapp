@@ -4,22 +4,21 @@ import {motion} from "framer-motion";
 import React, {useState} from "react";
 import Link from "next/link";
 import {
-    Stethoscope,
-    Brain,
-    Sparkles,
-    Building2,
-    GraduationCap,
-    Camera,
-    BookOpen,
-    Shield,
-    Zap,
-    Target,
     ArrowRight,
+    BookOpen,
+    Brain,
+    Building2,
+    Camera,
     CheckCircle,
-    Star,
-    TrendingUp,
-    Eye,
+    Ear,
+    GraduationCap,
     Microscope,
+    Shield,
+    Sparkles,
+    Star,
+    Target,
+    TrendingUp,
+    Zap,
 } from "lucide-react";
 import {NextPage} from 'next';
 import useRouterApp from '@/hooks/useRouterApp';
@@ -27,32 +26,32 @@ import Image from 'next/image';
 
 const medicalConditions = [
     {
-        name: "Foreign Objects in Throat",
-        description: "AI-powered identification of unexpected obstructions in the throat using advanced image analysis",
-        icon: Target,
-        accuracy: "94%",
-        color: "from-red-500 to-red-600",
-    },
-    {
         name: "Sinusitis",
         description: "Detection of sinus tissue inflammation caused by infections or allergies with precision diagnostics",
         icon: Brain,
-        accuracy: "91%",
+        accuracy: "90%",
         color: "from-blue-500 to-blue-600",
     },
     {
         name: "Cholesteatoma",
         description: "Early identification of destructive and expanding growth in the middle ear through ML algorithms",
-        icon: Eye,
-        accuracy: "89%",
+        icon: Ear,
+        accuracy: "92%",
         color: "from-purple-500 to-purple-600",
     },
     {
         name: "Pharyngitis",
         description: "Automated detection of pharynx inflammation causing throat discomfort with clinical accuracy",
         icon: Microscope,
-        accuracy: "92%",
+        accuracy: "87%",
         color: "from-green-500 to-green-600",
+    },
+    {
+        name: "Foreign Objects in Throat",
+        description: "AI-powered identification of unexpected obstructions in the throat using advanced image analysis",
+        icon: Target,
+        accuracy: "88%",
+        color: "from-red-500 to-red-600",
     },
 ];
 
@@ -84,9 +83,9 @@ const features = [
 ];
 
 const stats = [
-    {label: "Diagnostic Accuracy", value: "92%", icon: Target},
+    {label: "Diagnostic Accuracy", value: "90%", icon: Target},
     {label: "Medical Students", value: "10K+", icon: GraduationCap},
-    {label: "Healthcare Institutions", value: "150+", icon: Building2},
+    {label: "Healthcare Institutions", value: "100+", icon: Building2},
     {label: "Cases Analyzed", value: "50K+", icon: Camera},
 ];
 
@@ -111,13 +110,108 @@ const HomePage: NextPage = () => {
                     bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-500"></div>
             </div>
 
+            {/* Top Navigation Bar */}
+            <motion.nav
+                initial={{opacity: 0, y: -20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.8}}
+                className="relative z-20 w-full px-4 py-4"
+            >
+                <div className="max-w-7xl mx-auto">
+                    <div className="glass-card-blue rounded-2xl px-6 py-3 border border-white/10">
+                        <div className="flex items-center justify-between">
+                            {/* Logo */}
+                            <Link href="/" className="flex items-center space-x-3">
+                                <div className="w-10">
+                                    <Image
+                                        src={"/images/ent-insight-logo.png"}
+                                        alt="ENT Insight Logo"
+                                        className="w-full cursor-pointer"
+                                        width={1000}
+                                        height={1000}
+                                        onClick={() => router.push("/")}
+                                    />
+                                </div>
+                                <span
+                                    className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                  ENT Insight
+                                </span>
+                            </Link>
+
+                            {/* Navigation Links */}
+                            <div className="hidden md:flex items-center space-x-8">
+                                <Link
+                                    href="#features"
+                                    className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium"
+                                >
+                                    Features
+                                </Link>
+                                <Link
+                                    href="#conditions"
+                                    className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium"
+                                >
+                                    Conditions
+                                </Link>
+                                <Link href="#about"
+                                   className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium">
+                                    About
+                                </Link>
+                                <Link href="#contact"
+                                   className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium">
+                                    Contact
+                                </Link>
+                                <Link
+                                    href="/docs/2024-25J-097-Proposal-Presentaion.pdf"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium flex items-center space-x-1"
+                                >
+                                    <BookOpen className="w-4 h-4"/>
+                                    <span>Research</span>
+                                </Link>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex items-center space-x-3">
+                                <Link
+                                    href="/students/signup"
+                                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white
+                                    px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-700
+                                    hover:to-purple-700 transition-all duration-200 flex items-center space-x-2"
+                                >
+                                    <GraduationCap className="w-4 h-4"/>
+                                    <span>Join</span>
+                                </Link>
+                                <Link
+                                    href="/signup"
+                                    className="bg-white text-slate-800 text-sm font-semibold py-2 px-4 rounded-lg
+                                shadow-lg border border-slate-200 hover:bg-slate-50 transition-all duration-200
+                                flex items-center justify-center space-x-2"
+                                >
+                                    <Building2 className="w-4 h-4"/>
+                                    <span>Access</span>
+                                </Link>
+
+                                {/* Mobile Menu Button */}
+                                <button className="md:hidden p-2 text-slate-600 hover:text-slate-800 transition-colors">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                                              d="M4 6h16M4 12h16M4 18h16"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </motion.nav>
+
             <div className="relative z-10 flex flex-col items-center px-4 py-10">
                 {/* Logo Section */}
                 <motion.div
                     initial={{opacity: 0, y: -20}}
                     animate={{opacity: 1, y: 0}}
                     transition={{duration: 0.8}}
-                    className="mb-8 w-72"
+                    className="mb-8"
                 >
                     <div className="flex items-center justify-center">
                         <div className="w-60">
@@ -131,7 +225,9 @@ const HomePage: NextPage = () => {
                             />
                         </div>
                     </div>
-                    <p className="text-center text-slate-600">AI-Powered Medical Education Platform</p>
+                    <p className="text-center text-slate-600">
+                        AI-Powered Medical Conditions Analysis Platform
+                    </p>
                 </motion.div>
 
                 {/* Hero Section */}
@@ -141,15 +237,15 @@ const HomePage: NextPage = () => {
                     transition={{duration: 0.8, delay: 0.2}}
                     className="text-center max-w-4xl mb-16"
                 >
-                    <h2 className="text-5xl font-extrabold text-slate-800 mb-6 leading-tight">
-                        Revolutionizing ENT Education with{" "}
+                    <h2 className="text-5xl font-extrabold text-slate-800 mb-8 leading-tight">
+                        Revolutionizing Diagnosis & Learning with{" "}
                         <span
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+                            className="text-6xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
                         >
                           Artificial Intelligence
                         </span>
                     </h2>
-                    <p className="text-xl text-slate-600 leading-relaxed mb-8">
+                    <p className="text-xl text-slate-600 leading-relaxed mb-10">
                         The Ear, Nose, and Throat (ENT) clinical environment is among the most diverse in healthcare.
                         Leveraging
                         advanced <strong>AI-powered image analysis</strong>, ENT Insight enhances detection and
@@ -160,14 +256,14 @@ const HomePage: NextPage = () => {
                     </p>
 
                     {/* Stats Row */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
                         {stats.map((stat, index) => (
                             <motion.div
                                 key={stat.label}
                                 initial={{opacity: 0, scale: 0.95}}
                                 animate={{opacity: 1, scale: 1}}
                                 transition={{duration: 0.6, delay: 0.4 + index * 0.1}}
-                                className="glass-card rounded-xl p-4 text-center"
+                                className="glass-card-blue rounded-xl p-4 text-center"
                             >
                                 <div
                                     className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg
@@ -193,7 +289,7 @@ const HomePage: NextPage = () => {
                         <motion.div
                             whileHover={{scale: 1.02, y: -2}}
                             whileTap={{scale: 0.98}}
-                            className="glass-card rounded-2xl p-8 text-center group cursor-pointer border-2
+                            className="glass-card-blue rounded-2xl p-8 text-center group cursor-pointer border-2
                             border-transparent hover:border-blue-500/20 transition-all duration-300 h-full"
                         >
                             <div
@@ -233,7 +329,7 @@ const HomePage: NextPage = () => {
                         <motion.div
                             whileHover={{scale: 1.02, y: -2}}
                             whileTap={{scale: 0.98}}
-                            className="glass-card rounded-2xl p-8 text-center group cursor-pointer border-2
+                            className="glass-card-blue rounded-2xl p-8 text-center group cursor-pointer border-2
                             border-transparent hover:border-purple-500/20 transition-all duration-300 h-full"
                         >
                             <div
@@ -296,7 +392,7 @@ const HomePage: NextPage = () => {
                                 transition={{duration: 0.6, delay: 1 + index * 0.1}}
                                 onMouseEnter={() => setHoveredCondition(index)}
                                 onMouseLeave={() => setHoveredCondition(null)}
-                                className="glass-card rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group"
+                                className="glass-card-blue rounded-2xl p-6 hover:shadow-xl transition-all duration-300 group"
                             >
                                 <div className="flex items-start space-x-4">
                                     <div
@@ -357,7 +453,7 @@ const HomePage: NextPage = () => {
                                 initial={{opacity: 0, scale: 0.95}}
                                 animate={{opacity: 1, scale: 1}}
                                 transition={{duration: 0.6, delay: 1.4 + index * 0.1}}
-                                className="glass-card rounded-2xl p-6 text-center group hover:shadow-lg
+                                className="glass-card-blue rounded-2xl p-6 text-center group hover:shadow-lg
                                 transition-all duration-300"
                             >
                                 <div
@@ -382,7 +478,7 @@ const HomePage: NextPage = () => {
                     className="max-w-4xl w-full text-center"
                 >
                     <div
-                        className="glass-card rounded-2xl p-8 bg-gradient-to-r from-blue-500/5
+                        className="glass-card-blue rounded-2xl p-8 bg-gradient-to-r from-blue-500/5
                         to-purple-500/5 border border-blue-200/20"
                     >
                         <div className="flex items-center justify-center mb-6">
@@ -393,9 +489,10 @@ const HomePage: NextPage = () => {
                                 <Sparkles className="w-8 h-8 text-white"/>
                             </div>
                         </div>
-                        <h2 className="text-3xl font-bold text-slate-800 mb-4">Ready to Transform ENT Education?</h2>
+                        <h2 className="text-3xl font-bold text-slate-800 mb-4">Ready to Revolutionize ENT Practice?</h2>
                         <p className="text-lg text-slate-600 mb-8">
-                            Join the future of medical education with AI-powered learning tools and diagnostic support
+                            Advancing medical education for students and providing clinical decision support for
+                            healthcare professionals and hospitals.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
@@ -418,20 +515,21 @@ const HomePage: NextPage = () => {
                                 <span>Healthcare Access</span>
                             </Link>
                         </div>
-                        <div className="mt-6">
-                            <Link
-                                href="/docs/2024-25J-097-Proposal-Presentaion.pdf"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-slate-600 hover:text-slate-800 font-medium underline
-                                transition-colors flex items-center justify-center space-x-2"
-                            >
-                                <BookOpen className="w-4 h-4"/>
-                                <span>Learn More About Our Research</span>
-                            </Link>
-                        </div>
                     </div>
                 </motion.div>
+
+                <div className="mt-6">
+                    <Link
+                        href="/docs/2024-25J-097-Proposal-Presentaion.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-slate-600 hover:text-slate-800 font-medium underline
+                                transition-colors flex items-center justify-center space-x-2"
+                    >
+                        <BookOpen className="w-4 h-4"/>
+                        <span>Learn More About Our Research</span>
+                    </Link>
+                </div>
 
                 {/* Footer */}
                 <motion.div
@@ -441,7 +539,7 @@ const HomePage: NextPage = () => {
                     className="mt-16 text-center text-slate-500"
                 >
                     <p className="text-sm">
-                        © 2024 ENT Insight. Advancing medical education through artificial intelligence.
+                        © 2025 ENT Insight. Advancing medical education through artificial intelligence.
                     </p>
                 </motion.div>
             </div>

@@ -152,7 +152,7 @@ const LoginPage: NextPage = () => {
                         </div>
                     </div>
                     <h1 className="text-3xl font-bold text-white mb-2">ENT Insight Academic</h1>
-                    <p className="text-slate-300 text-sm">AI-Powered Medical Education Platform</p>
+                    <p className="text-slate-300 text-sm">AI-Powered Medical Conditions Analysis Platform</p>
                 </motion.div>
 
                 {/* Login Form */}
