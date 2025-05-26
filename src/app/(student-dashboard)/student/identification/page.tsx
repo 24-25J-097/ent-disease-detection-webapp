@@ -14,10 +14,15 @@ import {
     Camera,
     CheckCircle,
     Eye,
-    FileImage, Loader, OctagonAlert,
+    FileImage, Handshake,
+    Loader,
+    OctagonAlert,
     RefreshCw,
-    SquareDashedMousePointer, ThumbsDown, ThumbsUp,
-    Upload, Zap
+    SquareDashedMousePointer,
+    ThumbsDown,
+    ThumbsUp,
+    Upload,
+    Zap
 } from "lucide-react";
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {AnalysisStep, analysisSteps, conditionImageRequirements, conditions} from '@/data/student/identification';
@@ -512,12 +517,17 @@ const IdentificationPage: NextPage = () => {
         }
 
         // Valid prediction results
-        const hasCondition = analysisResult.isCholesteatoma || analysisResult.isSinusitis || analysisResult.isPharyngitis || analysisResult.isForeignObject;
+        const hasCondition = analysisResult.isCholesteatoma
+            || analysisResult.isSinusitis
+            || analysisResult.isPharyngitis
+            || analysisResult.isForeignObject;
+
         const confidencePercentage = analysisResult.confidenceScore ? (() => {
             let percent = analysisResult.confidenceScore * 100;
             if (percent > 95) percent -= 5;
             return percent.toFixed(1) + "%";
         })() : "N/A";
+
         const stageInfo = analysisResult.stage || analysisResult.severity;
 
         return (
@@ -754,12 +764,25 @@ const IdentificationPage: NextPage = () => {
                         <If condition={!!errors}>
                             <div
                                 className="bg-red-900/30 text-red-200 p-4 rounded-xl border border-red-500/50
-                                 mb-6"
+                                 mb-6 flex justify-between"
                             >
                                 <p className="flex items-center">
                                     <OctagonAlert className="w-5 h-5 mr-2"/>
                                     {errors}
                                 </p>
+                                {errors === "Payment Required: No active package found" && (
+                                    <motion.button
+                                        onClick={() => router.push("/student/subscription") }
+                                        whileHover={{ scale: 1.02 }}
+                                        whileTap={{ scale: 0.98 }}
+                                        className="px-4 py-2 bg-gradient-to-r from-green-50 to-green-100
+                                        text-gray-900 rounded-lg shadow-md hover:from-green-100 hover:to-green-200
+                                        transition-all duration-200 flex items-center text-sm"
+                                    >
+                                        <Handshake className="w-5 h-5 mr-2" />
+                                        Activate Plan
+                                    </motion.button>
+                                )}
                             </div>
                         </If>
                         {/* Analysis Steps */}
