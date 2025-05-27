@@ -45,11 +45,11 @@ export default function StudentDashboardHeader({user}: DashboardHeaderProps) {
                         <div className="flex items-center space-x-3">
                             <div className="w-10">
                                 <Image
-                                    src={"/images/ent-insight-logo.png"}
+                                    src={"/images/ent-insight-logo-b.png"}
                                     alt="Logo"
                                     className="w-full cursor-pointer"
-                                    width={1000}
-                                    height={1000}
+                                    width={100}
+                                    height={100}
                                 />
                             </div>
                             <div>

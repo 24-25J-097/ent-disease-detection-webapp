@@ -70,11 +70,11 @@ const HomePage: NextPage = () => {
                         <Link href="/" className="flex items-center space-x-3">
                             <div className="w-10">
                                 <Image
-                                    src={"/images/ent-insight-logo.png"}
+                                    src={"/images/ent-insight-logo-b.png"}
                                     alt="ENT Insight Logo"
                                     className="w-full cursor-pointer"
-                                    width={1000}
-                                    height={1000}
+                                    width={100}
+                                    height={100}
                                     onClick={() => router.push("/")}
                                 />
                             </div>
@@ -107,7 +107,7 @@ const HomePage: NextPage = () => {
                                 Contact
                             </Link>
                             <Link
-                                href="/docs/2024-25J-097-Proposal-Presentaion.pdf"
+                                href="https://research.entinsight.com"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-slate-600 hover:text-blue-600 transition-colors text-sm font-medium flex items-center space-x-1"
@@ -657,7 +657,7 @@ const HomePage: NextPage = () => {
 
             <div className="mt-6">
                 <Link
-                    href="/docs/2024-25J-097-Proposal-Presentaion.pdf"
+                    href="https://research.entinsight.com"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-slate-600 hover:text-slate-800 font-medium underline
