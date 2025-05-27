@@ -25,7 +25,7 @@ import {useDebounce} from '@/hooks/useDebounce';
 import {useDispatch, useSelector} from 'react-redux';
 import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
 import {FilterService} from '@/services/FilterService';
-import CreatePatientModal from '@/components/modals/CreatePatientModal';
+import CreatePatientModal from '@/app/(dashboard)/doctor/patients/CreatePatientModal';
 import TextButton from '@/components/buttons/TextButton';
 import StepsFlowCard, {Step} from '@/components/cards/StepsFlowCard';
 
@@ -195,7 +195,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: PharyngitisDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            throatImage: file!
+            throatImage: file!,
+            isLearningPurpose: false,
         };
 
         try {

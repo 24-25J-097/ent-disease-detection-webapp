@@ -11,6 +11,7 @@ export interface PharyngitisDiagnosisData {
     patientId: string;
     additionalInfo?: string;
     throatImage: File;
+    isLearningPurpose: boolean;
 }
 
 export interface PharyngitisDiagnosisAcceptance {

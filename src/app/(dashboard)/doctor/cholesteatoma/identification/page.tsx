@@ -6,7 +6,7 @@ import {NextPage} from "next";
 import {If} from "@/components/utils/If";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {CholesteatomaDiagnosisData, DiagnosisAcceptance, DiagnosisResult} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData, CholesteatomaDiagnosisAcceptance, CholesteatomaDiagnosisResult} from '@/types/service/CholesteatomaDiagnosis';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
@@ -23,9 +23,10 @@ import {useDebounce} from '@/hooks/useDebounce';
 import {useDispatch, useSelector} from 'react-redux';
 import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
 import {FilterService} from '@/services/FilterService';
-import CreatePatientModal from '@/components/modals/CreatePatientModal';
+import CreatePatientModal from '@/app/(dashboard)/doctor/patients/CreatePatientModal';
 import TextButton from '@/components/buttons/TextButton';
-import StepsFlowCard, {Step} from '@/components/cards/StepsFlowCard';
+import StepsFlowCard from '@/components/cards/StepsFlowCard';
+import {identificationSteps} from '@/data/identifications/cholesteatoma';
 
 const IdentificationPage: NextPage = () => {
 
@@ -33,48 +34,9 @@ const IdentificationPage: NextPage = () => {
 
     const patientsList: SelectInputOption[] | null = useSelector((state: any) => state.filters.patientsList);
 
-    // Define steps data for the Cholesteatoma Identification Process
-    const identificationSteps: Step[] = [
-        {
-            number: 1,
-            title: "Patient Selection",
-            description: "Select an existing patient or create a new patient record."
-        },
-        {
-            number: 2,
-            title: "Additional Information",
-            description: "Provide any relevant clinical information about the patient's condition."
-        },
-        {
-            number: 3,
-            title: "Upload Endoscopy Image",
-            description: "Upload a clear middle ear endoscopy image for analysis."
-        },
-        {
-            number: 4,
-            title: "AI Analysis",
-            description: "Our AI system analyzes the image to detect cholesteatoma and determine its stage."
-        },
-        {
-            number: 5,
-            title: "Review Results",
-            description: "Review the diagnosis results, including cholesteatoma presence, stage, and confidence score."
-        },
-        {
-            number: 6,
-            title: "Update Results",
-            description: "Update the diagnostic results suggestions if have anything else to add."
-        },
-        {
-            number: 7,
-            title: "Accept or Reject",
-            description: "Confirm or reject the AI diagnosis based on your clinical judgment."
-        }
-    ];
-
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | null>(null);
+    const [diagnosisResult, setDiagnosisResult] = useState<CholesteatomaDiagnosisResult | null>(null);
     const [patientId, setPatientId] = useState<string>("");
     const [additionalInfo, setAdditionalInfo] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
@@ -175,7 +137,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: CholesteatomaDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            endoscopyImage: file!
+            endoscopyImage: file!,
+            isLearningPurpose: false,
         };
 
         try {
@@ -225,7 +188,7 @@ const IdentificationPage: NextPage = () => {
         try {
             setIsLoading2(true);
             setIsDisable(true);
-            const data: DiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
+            const data: CholesteatomaDiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
             const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosisAccept(data);
             if (response.success) {
                 notifySuccess(response.message);

@@ -23,6 +23,7 @@ const SignUpPage: NextPage = () => {
     const initUserSignUpData: UserSignUpData = {
         name: "",
         email: "",
+        licenseId: "",
         password: "",
         confirmPassword: "",
         role: '',
@@ -33,6 +34,7 @@ const SignUpPage: NextPage = () => {
     const [hasValidationErr, setHasValidationErr] = useState<boolean[]>([]);
     const [nameErrMsg, setNameErrMsg] = useState<string>('');
     const [emailErrMsg, setEmailErrMsg] = useState<string>('');
+    const [licenseIdErrMsg, setLicenseIdErrMsg] = useState<string>('');
     const [passwordErrMsg, setPasswordErrMsg] = useState<string>('');
     const [confirmPasswordErrMsg, setConfirmPasswordErrMsg] = useState<string>('');
     const [roleErrMsg, setRoleErrMsg] = useState<string>('');
@@ -57,17 +59,24 @@ const SignUpPage: NextPage = () => {
             hasValidationErr.push(true);
         }
         if (data.hasOwnProperty('email') && data.email == "") {
-            const errorText = 'Please enter your email.';
-            debugLog('Please enter your email.');
+            const errorText = 'Please enter your official email.';
+            debugLog('Please enter your official email.');
             setEmailErrMsg(errorText);
             setTimeout(() => setEmailErrMsg(''), 3000);
             hasValidationErr.push(true);
 
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-            const errorText = 'Please enter valid email.';
-            debugLog('Please enter valid email.');
+            const errorText = 'Please enter a valid email.';
+            debugLog('Please enter a valid email.');
             setEmailErrMsg(errorText);
             setTimeout(() => setEmailErrMsg(''), 3000);
+            hasValidationErr.push(true);
+        }
+        if (data.hasOwnProperty('licenseId') && data.licenseId == "") {
+            const errorText = 'Please enter your license ID.';
+            debugLog('Please enter your license ID.');
+            setLicenseIdErrMsg(errorText);
+            setTimeout(() => setLicenseIdErrMsg(''), 3000);
             hasValidationErr.push(true);
         }
         if (data.hasOwnProperty('password') && data.password == "") {
@@ -92,15 +101,15 @@ const SignUpPage: NextPage = () => {
             hasValidationErr.push(true);
 
         } else if (data.password && data.password != data.confirmPassword) {
-            const errorText = 'Password and Confirm Password is not match.';
-            debugLog('Password and Confirm Password is not match.');
+            const errorText = 'Password and Confirm Password do not match.';
+            debugLog('Password and Confirm Password do not match.');
             setConfirmPasswordErrMsg(errorText);
             setTimeout(() => setConfirmPasswordErrMsg(''), 3000);
             hasValidationErr.push(true);
         }
         if (data.hasOwnProperty("role") && data.role === "") {
-            const errorText = "Please select a role.";
-            debugLog("Please select a role.");
+            const errorText = "Please select a healthcare role.";
+            debugLog("Please select a healthcare role.");
             setRoleErrMsg(errorText);
             setTimeout(() => setRoleErrMsg(""), 3000);
             hasValidationErr.push(true);
@@ -136,8 +145,8 @@ const SignUpPage: NextPage = () => {
     };
 
     const nameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const trimmedValue = trimText(event.target.value, true).toString();
-        setUserSignUpData((prevState) => ({...prevState, name: trimmedValue}));
+        // const trimmedValue = trimText(event.target.value, false).toString();
+        setUserSignUpData((prevState) => ({...prevState, name: event.target.value}));
     };
 
     const emailChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -155,6 +164,11 @@ const SignUpPage: NextPage = () => {
         setUserSignUpData((prevState) => ({...prevState, confirmPassword: trimmedValue}));
     };
 
+    const licenseIdChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const trimmedValue = trimText(event.target.value, true).toString();
+        setUserSignUpData((prevState) => ({...prevState, licenseId: trimmedValue}));
+    };
+
     const roleChange = (event: React.ChangeEvent<HTMLSelectElement>): void => {
         setUserSignUpData((prevState) => ({...prevState, role: event.target.value}));
     };
@@ -162,25 +176,27 @@ const SignUpPage: NextPage = () => {
     return (
         <section className="bg-blue-50 min-h-screen flex items-center justify-center w-full">
             <div
-                className={`bg-gray-100 bg-gradient-to-r from-gray-100 via-gray-100 to-blue-200 flex rounded-2xl
+                className={`bg-gradient-to-r from-blue-50/80 via-gray-100 to-blue-200 flex rounded-2xl
                 shadow-lg max-w-5xl items-center ${isDisable && "pointer-events-none"}`}
             >
                 <div className="md:w-1/2 px-4 md:pr-10 md:pl-4 mx-5 my-10">
-                    <h2 className="font-bold text-2xl md:text-3xl text-blue-600">Sign Up</h2>
-                    <p className="text-sm mt-4 text-[#002D74]">If you’re not registered yet, sign up effortlessly.</p>
-
+                    <h2 className="font-bold text-2xl md:text-3xl text-blue-700 text-center">
+                        Healthcare Institution Registration
+                    </h2>
+                    <p className="text-sm mt-4 text-[#002D74]">
+                        Register your healthcare institution to access our advanced clinical decision support system.
+                    </p>
                     <If condition={!!errors}>
                         <div
                             className="bg-red-100 text-red-700 p-4 rounded-2xl border-l-8 border-r-8 border-x-red-200 mt-4">
                             {errors}
                         </div>
                     </If>
-
                     <form className="flex flex-col gap-4 mt-6" onSubmit={handleSignUp}>
                         <TextInput
                             type="text"
                             name="name"
-                            placeholder="Name"
+                            placeholder="Full Name"
                             value={userSignUpData.name}
                             onTextChange={nameChange}
                             errorMessage={nameErrMsg}
@@ -189,15 +205,24 @@ const SignUpPage: NextPage = () => {
                         <TextInput
                             type="email"
                             name="email"
-                            placeholder="Email"
+                            placeholder="Official Email"
                             value={userSignUpData.email}
                             onTextChange={emailChange}
                             errorMessage={emailErrMsg}
                             disabled={isDisable}
                         />
+                        <TextInput
+                            type="text"
+                            name="licenseId"
+                            placeholder="License ID"
+                            value={userSignUpData.licenseId}
+                            onTextChange={licenseIdChange}
+                            errorMessage={licenseIdErrMsg}
+                            disabled={isDisable}
+                        />
                         <PasswordInput
                             name="password"
-                            placeholder="Password"
+                            placeholder="Secure Password"
                             password={userSignUpData.password}
                             onPasswordChange={passwordChange}
                             errorMessage={passwordErrMsg}
@@ -223,10 +248,10 @@ const SignUpPage: NextPage = () => {
                                 disabled={isDisable}
                             >
                                 <option value="" disabled>
-                                    Select Role
+                                    Select Healthcare Role
                                 </option>
                                 {Object.values(Role).filter(
-                                    (role) => ![Role.ADMIN, Role.STUDENT].includes(role)
+                                    (role) => ![Role.ADMIN, Role.STUDENT, Role.PATIENT].includes(role)
                                 ).map((role) => (
                                     <option key={role} value={role}>
                                         {role.charAt(0).toUpperCase() + role.slice(1)}
@@ -259,7 +284,7 @@ const SignUpPage: NextPage = () => {
                             ${isDisable && "pointer-events-none"}`}
                             disabled={isDisable}
                         >
-                            Sign Up
+                            Register Institution
                         </button>
                     </form>
 
@@ -304,9 +329,10 @@ const SignUpPage: NextPage = () => {
                                 onClick={() => router.push("/")}
                             />
                         </div>
-                        <h2 className="font-bold text-2xl md:text-4xl text-blue-600">Welcome Again!</h2>
-                        <p className="text-base mx-10 mt-8 text-gray-500">
-                            Log in now to access advanced tools tailored for medical analysis!
+                        <h2 className="font-bold text-2xl md:text-4xl text-blue-600">Clinical Decision Support</h2>
+                        <p className="text-base mx-10 mt-8 text-gray-600">
+                            Join our platform to access advanced diagnostic tools and clinical decision support for
+                            healthcare professionals.
                         </p>
                         <Link href={"/login"}>
                             <button className="py-3 px-8 bg-white border-none shadow-lg rounded-xl hover:scale-110

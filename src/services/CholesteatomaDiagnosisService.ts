@@ -3,9 +3,9 @@ import ApiService from "@/services/api-service/ApiService";
 import {AppResponse, AxiosAppResponse, CommonResponse} from "@/types/service/Response";
 import {ApiUtils} from "@/services/api-service/ApiUtils";
 import {convertToAPIFormData} from '@/utils/object-formatters';
-import {CholesteatomaDiagnosisData, DiagnosisAcceptance} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData, CholesteatomaDiagnosisAcceptance} from '@/types/service/CholesteatomaDiagnosis';
 import {CholesteatomaReportsData} from '@/types/Charts';
-import {AxiosRequestConfig} from 'axios';
+import {Role} from '@/enums/access';
 
 export class CholesteatomaDiagnosisService {
 
@@ -13,16 +13,26 @@ export class CholesteatomaDiagnosisService {
         return ApiService.getInstance().getApi();
     }
 
-    public static async cholesteatomaDiagnosis(diagnosisData: CholesteatomaDiagnosisData): Promise<AppResponse<CommonResponse>> {
-        const ep = ApiUtils.publicUrl("diagnosis/cholesteatoma"); // TODO: just use public instead of doctor coz time limitation
+    public static async cholesteatomaDiagnosis(diagnosisData: CholesteatomaDiagnosisData, role?: Role): Promise<AppResponse<CommonResponse>> {
+        let ep;
+        if (role && role === Role.STUDENT) {
+            ep = ApiUtils.studentUrl("diagnosis/cholesteatoma");
+        } else {
+            ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma");
+        }
         const formData = convertToAPIFormData(diagnosisData, true);
         const res = await CholesteatomaDiagnosisService.api().post<CholesteatomaDiagnosisData, AxiosAppResponse<CommonResponse>>(ep, formData);
         return res.data;
     }
 
-    public static async cholesteatomaDiagnosisAccept(diagnosisAcceptance: DiagnosisAcceptance): Promise<AppResponse<CommonResponse>> {
-        const ep = ApiUtils.publicUrl("diagnosis/cholesteatoma/accept"); // TODO: just use public instead of doctor coz time limitation
-        const res = await CholesteatomaDiagnosisService.api().post<DiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
+    public static async cholesteatomaDiagnosisAccept(diagnosisAcceptance: CholesteatomaDiagnosisAcceptance, role?: Role): Promise<AppResponse<CommonResponse>> {
+        let ep;
+        if (role && role === Role.STUDENT) {
+            ep = ApiUtils.studentUrl("diagnosis/cholesteatoma/accept");
+        } else {
+            ep = ApiUtils.doctorUrl("diagnosis/cholesteatoma/accept");
+        }
+        const res = await CholesteatomaDiagnosisService.api().post<CholesteatomaDiagnosisAcceptance, AxiosAppResponse<CommonResponse>>(ep, diagnosisAcceptance);
         return res.data;
     }
 

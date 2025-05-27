@@ -1,4 +1,4 @@
-export interface DiagnosisResult {
+export interface CholesteatomaDiagnosisResult {
     diagnosisId: string;
     isCholesteatoma: boolean;
     stage?: string;
@@ -11,9 +11,10 @@ export interface CholesteatomaDiagnosisData {
     patientId: string;
     additionalInfo?: string;
     endoscopyImage: File;
+    isLearningPurpose: boolean;
 }
 
-export interface DiagnosisAcceptance {
+export interface CholesteatomaDiagnosisAcceptance {
     diagnosisId: string;
     accept: boolean;
 }

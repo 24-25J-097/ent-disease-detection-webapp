@@ -1,7 +1,7 @@
 import React from "react";
 import {GetLucideReactIconProps} from "@/types/Common";
 import {
-    Activity, BriefcaseBusiness,
+    Activity, BarChart, BriefcaseBusiness,
     Calendar,
     ChevronDown, ClipboardPlus,
     CreditCard, Edit,
@@ -10,7 +10,7 @@ import {
     Home,
     Inbox,
     Layout, List, LockKeyholeOpen,
-    MessageSquare, ScanEye,
+    MessageSquare, Package, ScanEye,
     ShoppingBag,
     Sidebar, SquareActivity,
     Trello,
@@ -65,6 +65,10 @@ const GetLucideReactIcon: React.FC<GetLucideReactIconProps> = ({ icon, className
             return (<><ClipboardPlus className={className || "stroke-1.5 w-5 h-5"} /></>);
         case "List":
             return (<><List className={className || "stroke-1.5 w-5 h-5"} /></>);
+        case "Package":
+            return (<><Package className={className || "stroke-1.5 w-5 h-5"} /></>);
+        case "BarChart":
+            return (<><BarChart className={className || "stroke-1.5 w-5 h-5"} /></>);
         default:
             return (<></>);
     }
