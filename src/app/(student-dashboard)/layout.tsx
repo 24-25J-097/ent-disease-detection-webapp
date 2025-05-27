@@ -1,6 +1,6 @@
 import React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import {Inter} from 'next/font/google';
 import "../../styles/globals.scss";
 import "./globals.scss";
 
@@ -12,8 +12,12 @@ import AppReduxProvider from "@/providers/AppReduxProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "ENT Insight | Student Dashboard",
-    description: "ENT Insight",
+    title: "Student Dashboard",
+    description: "ENT Insight Student Dashboard - Interactive learning platform for ENT diagnosis with AI assistance",
+    openGraph: {
+        title: "ENT Insight - Student Learning Platform",
+        description: "Educational platform for medical students to learn ENT diagnosis with AI-powered tools",
+    },
 };
 
 export default function RootLayoutStudent({ children }: Readonly<{ children: React.ReactNode }>) {
