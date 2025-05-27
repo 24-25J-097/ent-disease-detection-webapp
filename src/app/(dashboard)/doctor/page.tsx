@@ -309,8 +309,6 @@ const DoctorDashboard: NextPage = () => {
                     </div>
                 </div>
             </div>
-
-            <LoadingModal isOpen={isLoading} text="Loading patients..." imagePath="/images/loading-circle.gif"/>
         </section>
     );
 };
