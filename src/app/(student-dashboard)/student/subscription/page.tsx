@@ -500,7 +500,7 @@ const SubscriptionPage: NextPage = () => {
                                         <div>
                                             <h4 className="font-medium text-foreground">Daily Limit Warning</h4>
                                             <p className="text-sm text-muted-foreground">
-                                                You're approaching your daily analysis limit. Consider upgrading to
+                                                You&apos;re approaching your daily analysis limit. Consider upgrading to
                                                 continue learning without
                                                 interruption.
                                             </p>

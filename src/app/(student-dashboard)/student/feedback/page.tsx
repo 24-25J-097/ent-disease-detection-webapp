@@ -660,7 +660,7 @@ const FeedbackPage: NextPage = () => {
                             </div>
                             <h3 className="text-xl font-bold text-foreground mb-2">Feedback Submitted!</h3>
                             <p className="text-muted-foreground mb-6">
-                                Thank you for your feedback. We'll review it and get back to you soon.
+                                Thank you for your feedback. We&apos;ll review it and get back to you soon.
                             </p>
                             <button
                                 onClick={() => setShowSuccess(false)}

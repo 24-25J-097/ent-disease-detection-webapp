@@ -538,7 +538,7 @@ const HomePage: NextPage = () => {
                         <div>
                             <h3 className="text-xl font-semibold text-slate-800 mb-4">Get in Touch</h3>
                             <p className="text-slate-600 leading-relaxed mb-6">
-                                We're here to answer any questions you might have about ENT Insight,
+                                We&apos;re here to answer any questions you might have about ENT Insight,
                                 our technology, or how to get started with our platform. Feel free to
                                 reach out using any of the contact methods listed.
                             </p>

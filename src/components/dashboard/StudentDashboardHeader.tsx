@@ -116,9 +116,11 @@ export default function StudentDashboardHeader({user}: DashboardHeaderProps) {
                                 onClick={() => setShowUserMenu(!showUserMenu)}
                                 className="flex items-center space-x-2 p-2 rounded-lg hover:bg-blue-gray-900/50 transition-colors"
                             >
-                                <img
+                                <Image
                                     src={user?.profile_photo_url || "/images/profile.webp"}
-                                    alt={user?.name}
+                                    alt={user?.name || "User profile"}
+                                    width={32}
+                                    height={32}
                                     className="w-8 h-8 rounded-full border-2 border-primary/20"
                                 />
                                 <div className="hidden md:block text-left">

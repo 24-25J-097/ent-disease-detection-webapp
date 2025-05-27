@@ -366,11 +366,13 @@ const { notifySuccess, notifyError } = useToast();
               </button>
             </div>
             <div className="relative inline-block">
-              <img
+              <Image
                 ref={fullSizeImageRef}
                 src={imagePreview}
                 alt="Full Size X-Ray"
                 className="max-w-full"
+                width={1000}
+                height={1000}
                 onLoad={() => {
                   // Force a re-render to ensure bounding boxes are positioned correctly
                   if (fullSizeImageRef.current) {
