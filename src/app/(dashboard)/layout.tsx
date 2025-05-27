@@ -12,8 +12,12 @@ import AppReduxProvider from "@/providers/AppReduxProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "ENT Insight | Dashboard",
-    description: "ENT Insight",
+    title: "Dashboard",
+    description: "ENT Insight Dashboard - Professional tools for ENT diagnosis and analysis using AI technology",
+    openGraph: {
+        title: "ENT Insight - Professional Dashboard",
+        description: "Advanced diagnostic tools for healthcare professionals with AI-powered analysis",
+    },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
