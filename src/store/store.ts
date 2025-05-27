@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import themeReducer from './reducers/themeSlice';
 import authReducer from './reducers/authSlice';
 import usersReducer from './reducers/usersSlice';
+import filtersReducer from './reducers/filtersSlice';
 
 const persistThemeConfig = {
     key: 'theme',
@@ -30,6 +31,7 @@ export const store = configureStore({
         theme: persistedThemeReducer,
         auth: persistedAuthReducer,
         users: persistedUsersReducer,
+        filters: filtersReducer,
     },
     // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

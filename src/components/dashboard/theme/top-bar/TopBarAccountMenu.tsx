@@ -76,7 +76,7 @@ const TopBarAccountMenu: React.FC = () => {
                         text-white shadow-xl"
                     >
                         <div className="p-2 font-medium">
-                            <div className="font-medium">{role == Role.DOCTOR && "Dr. "} {user.name}</div>
+                            <div className="font-medium">{role == Role.DOCTOR && "Dr. "} {user?.name}</div>
                             <div className="mt-0.5 text-xs text-white/70">{toTitleCase(role)}</div>
                         </div>
                         <div className="h-px my-2 bg-white/[0.08]" />

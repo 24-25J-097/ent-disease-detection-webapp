@@ -34,9 +34,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                                     <>
                                         <div
                                             className="rubick px-2 sm:pr-8 sm:pl-3 py-5 before:content-['']
-                                            before:bg-gradient-to-b before:from-theme-1 before:to-theme-2
-                                            dark:before:from-darkmode-800 dark:before:to-darkmode-800 before:fixed
-                                            before:inset-0 before:z-[-1] w-full"
+                                                before:bg-gradient-to-b before:from-theme-1 before:to-theme-2
+                                                dark:before:from-darkmode-800 dark:before:to-darkmode-800 before:fixed
+                                                before:inset-0 before:z-[-1] w-full"
                                         >
                                             <DashboardMenus>
                                                 {children}

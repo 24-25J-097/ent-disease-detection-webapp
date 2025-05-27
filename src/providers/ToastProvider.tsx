@@ -8,6 +8,7 @@ import {useTheme} from "next-themes";
 interface ToastContextProps {
     notifySuccess: (message: string) => void;
     notifyError: (message: string) => void;
+    notifyWarn: (message: string) => void;
 }
 
 const ToastContext = createContext<ToastContextProps | undefined>(undefined);
@@ -38,8 +39,12 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         toast.error(message, toastOptions);
     };
 
+    const notifyWarn = (message: string) => {
+        toast.warn(message, toastOptions);
+    };
+
     return (
-        <ToastContext.Provider value={{ notifySuccess, notifyError }}>
+        <ToastContext.Provider value={{ notifySuccess, notifyError, notifyWarn }}>
             {children}
             <ToastContainer
                 position="top-right"

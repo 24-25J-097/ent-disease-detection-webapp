@@ -2,6 +2,7 @@ import {Role} from '@/enums/access';
 
 export interface User {
     id: number;
+    _id: string;
     name: string;
     email: string;
     email_verified_at: string | null;
@@ -20,4 +21,12 @@ export interface User {
     deleted_at: string | null;
     created_at: string | null;
     updated_at: string | null;
+
+    studentId?: string;
+    patientId?: string;
+    doctorId?: string;
+    radiologistId?: string;
+
+    progress?: number;
+    streak?: number;
 }

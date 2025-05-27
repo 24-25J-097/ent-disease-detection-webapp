@@ -1,13 +1,12 @@
 "use client";
 
 import React, {useRef, useState} from "react";
-import TextInput from "@/components/inputs/TextInput";
 import TextAreaInput from "@/components/inputs/TextAreaInput";
 import {NextPage} from "next";
 import {If} from "@/components/utils/If";
 import Image from 'next/image';
 import ReactModal from "react-modal";
-import {CholesteatomaDiagnosisData, DiagnosisAcceptance, DiagnosisResult} from '@/types/service/Diagnosis';
+import {CholesteatomaDiagnosisData, CholesteatomaDiagnosisAcceptance, CholesteatomaDiagnosisResult} from '@/types/service/CholesteatomaDiagnosis';
 import {CholesteatomaDiagnosisService} from '@/services/CholesteatomaDiagnosisService';
 import {useToast} from '@/providers/ToastProvider';
 import {motion} from "framer-motion";
@@ -18,17 +17,32 @@ import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
 import {URLBase} from '@/enums/navigation';
 import {Button} from '@/components/ui/button';
+import {SelectInputOption} from '@/types/FormInputs';
+import SelectInput from "@/components/inputs/SelectInput";
+import {useDebounce} from '@/hooks/useDebounce';
+import {useDispatch, useSelector} from 'react-redux';
+import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
+import {FilterService} from '@/services/FilterService';
+import CreatePatientModal from '@/app/(dashboard)/doctor/patients/CreatePatientModal';
+import TextButton from '@/components/buttons/TextButton';
+import StepsFlowCard from '@/components/cards/StepsFlowCard';
+import {identificationSteps} from '@/data/identifications/cholesteatoma';
 
 const IdentificationPage: NextPage = () => {
 
+    const dispatch = useDispatch();
+
+    const patientsList: SelectInputOption[] | null = useSelector((state: any) => state.filters.patientsList);
+
     const formRef = useRef<HTMLFormElement | null>(null);
 
-    const [diagnosisResult, setDiagnosisResult] = useState<DiagnosisResult | null>(null);
+    const [diagnosisResult, setDiagnosisResult] = useState<CholesteatomaDiagnosisResult | null>(null);
     const [patientId, setPatientId] = useState<string>("");
     const [additionalInfo, setAdditionalInfo] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const [createPatientModalOpen, setCreatePatientModalOpen] = useState<boolean>(false);
     const [hasValidationErr, setHasValidationErr] = useState<boolean[]>([false, false]);
     const [patientIdErrMsg, setPatientIdErrMsg] = useState<string>("");
     const [fileErrMsg, setFileErrMsg] = useState<string>("");
@@ -36,14 +50,60 @@ const IdentificationPage: NextPage = () => {
     const [errors, setErrors] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoading2, setIsLoading2] = useState<boolean>(false);
+    const [selectedPatient, setSelectedPatient] = useState<SelectInputOption | null>(null);
 
     const router = useRouterApp();
     const {notifySuccess, notifyError} = useToast();
 
+    const fetchPatients = async (inputValue: string): Promise<SelectInputOption[]> => {
+        const trimmedInput = inputValue.trim();
+
+        if (trimmedInput.length < 3) {
+            return [];
+        }
+        setIsLoading(true);
+        try {
+            const response = await FilterService.filterPatients({
+                search: trimmedInput
+            });
+            if (response.success) {
+                const patients = response.data;
+                const arrangePatients = patients.map((patient: { label: string; value: any; }) => {
+                    const userName = patient.label.split(' - ')[0].trim();
+                    return {
+                        value: patient.value,
+                        label: patient.label,
+                        avatar: `https://ui-avatars.com/api/?name=${userName}&background=random`
+                    };
+                });
+                dispatch(revalidateFilterPatients(arrangePatients));
+                return arrangePatients;
+            }
+        } catch (error) {
+            let errMsg;
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
+                errMsg = "An unexpected error occurred. Please try again.";
+            } else {
+                errMsg = (axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.");
+            }
+            console.error(`GET FILTERED PATIENTS: ${errMsg}`);
+            return [{
+                value: 'error',
+                label: 'Failed to load patients'
+            }];
+        } finally {
+            setIsLoading(false);
+        }
+        return [];
+    };
+
+    const [debouncedFetch] = useDebounce(fetchPatients, 1000);
+
     const validateFields = () => {
         setHasValidationErr([]);
         if (!patientId) {
-            const errorText = "Please enter the Patient ID.";
+            const errorText = "Please select the Patient.";
             setPatientIdErrMsg(errorText);
             setTimeout(() => setPatientIdErrMsg(""), 3000);
             hasValidationErr.push(true);
@@ -77,7 +137,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: CholesteatomaDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            endoscopyImage: file!
+            endoscopyImage: file!,
+            isLearningPurpose: false,
         };
 
         try {
@@ -99,11 +160,12 @@ const IdentificationPage: NextPage = () => {
         } catch (error: any) {
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         } finally {
             setIsLoading(false);
@@ -126,18 +188,19 @@ const IdentificationPage: NextPage = () => {
         try {
             setIsLoading2(true);
             setIsDisable(true);
-            const data: DiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
+            const data: CholesteatomaDiagnosisAcceptance = {diagnosisId: diagnosisResult?.diagnosisId!, accept: accept};
             const response = await CholesteatomaDiagnosisService.cholesteatomaDiagnosisAccept(data);
             if (response.success) {
                 notifySuccess(response.message);
             }
         } catch (error) {
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         } finally {
             setIsDisable(false);
@@ -186,7 +249,7 @@ const IdentificationPage: NextPage = () => {
                 </div>
                 <div className="flex items-start justify-between gap-10 pb-6">
                     <div
-                        className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-xl min-h-[700px]
+                        className="relative bg-white rounded-xl shadow-lg p-8 w-full max-w-xl min-h-[725px]
                         flex flex-col"
                     >
                         <h3 className="text-blue-500 text-2xl font-bold mb-8 text-start">
@@ -205,18 +268,45 @@ const IdentificationPage: NextPage = () => {
                                 </motion.div>
                             </If>
                             <div>
-                                <TextInput
+                                <SelectInput
+                                    label="Patient"
                                     name="patientId"
-                                    label="Patient Id *"
-                                    type="text"
-                                    value={patientId}
-                                    placeholder="Enter Patient ID"
-                                    inputClassName="w-full"
-                                    onTextChange={(e) => setPatientId(e.target.value)}
-                                    design="regular-form"
+                                    placeholder="Search by Patient Name, ID, or Email"
+                                    value={selectedPatient}
+                                    onChange={(selected) => {
+                                        const selectedOpt = selected as SelectInputOption;
+                                        setSelectedPatient(selectedOpt);
+                                        setPatientId(selectedOpt.value.toString());
+                                    }}
+                                    isAsync
+                                    loadOptions={
+                                        async (inputValue) => await debouncedFetch(inputValue)
+                                    }
+                                    defaultOptions={patientsList ?? true}
+                                    noOptionsMessage={({inputValue}) => (
+                                        inputValue.toLowerCase() === 'error'
+                                            ? 'Simulated error message'
+                                            : (inputValue.length > 0 && inputValue.length < 3)
+                                                ? 'Type at least 3 characters'
+                                                : inputValue
+                                                    ? `No patients found for: ${inputValue}`
+                                                    : 'Start typing to search patients'
+                                    )}
+                                    loadingMessage={() => "Loading patients..."}
                                     errorMessage={patientIdErrMsg}
                                     disabled={isDisable}
                                 />
+                                <div className="flex justify-end">
+                                    <TextButton
+                                        type="button"
+                                        onClick={() => setCreatePatientModalOpen(true)}
+                                        className="underline hover:text-blue-600 pb-0 sm:px-0"
+                                        title="Add new patient"
+                                        disabled={isDisable}
+                                    >
+                                        New Patient
+                                    </TextButton>
+                                </div>
                             </div>
                             <div>
                                 <TextAreaInput
@@ -352,26 +442,42 @@ const IdentificationPage: NextPage = () => {
                         </div>
                     </div>
 
-                    <div
-                        className="bg-white rounded-xl shadow-lg p-8 w-full min-h-[700px]
-                        flex flex-col items-center"
-                    >
-                        <h4 className="text-blue-500 text-xl font-bold mb-4">
-                            Endoscopy Preview
-                        </h4>
-                        {imagePreview ? (
-                            <Image
-                                src={imagePreview}
-                                alt="Selected Preview"
-                                className="max-w-[580px] max-h-[580px] rounded-md cursor-pointer"
-                                width={1000}
-                                height={1000}
-                                onClick={() => setModalIsOpen(true)}
-                                title="Open Image"
-                            />
-                        ) : (
-                            <p className="text-gray-500 text-sm">No image selected</p>
-                        )}
+                    <div className="relative w-full min-h-[725px]">
+                        {/* Steps Flow Card */}
+                        <StepsFlowCard
+                            title="Cholesteatoma Identification Process"
+                            steps={identificationSteps}
+                            isVisible={!imagePreview}
+                        />
+
+                        {/* Endoscopy Preview Card */}
+                        <motion.div
+                            className="absolute bg-white rounded-xl shadow-lg p-8 w-full min-h-[725px] flex flex-col items-center"
+                            initial={{opacity: 0, x: 100}}
+                            animate={{
+                                opacity: imagePreview ? 1 : 0,
+                                x: imagePreview ? 0 : -180,
+                                display: imagePreview ? 'flex' : 'none'
+                            }}
+                            transition={{duration: 1.0}}
+                        >
+                            <h4 className="text-blue-500 text-xl font-bold mb-4">
+                                Endoscopy Preview
+                            </h4>
+                            {imagePreview ? (
+                                <Image
+                                    src={imagePreview}
+                                    alt="Selected Preview"
+                                    className="max-w-[580px] max-h-[580px] rounded-md cursor-pointer"
+                                    width={1000}
+                                    height={1000}
+                                    onClick={() => setModalIsOpen(true)}
+                                    title="Open Image"
+                                />
+                            ) : (
+                                <p className="text-gray-500 text-sm">No image selected</p>
+                            )}
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -402,6 +508,19 @@ const IdentificationPage: NextPage = () => {
             </ReactModal>
             <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"}/>
             <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"}/>
+
+            <CreatePatientModal
+                isOpen={createPatientModalOpen}
+                onClose={() => setCreatePatientModalOpen(false)}
+                onSuccess={() => {
+                    // Refresh the patient list after creating a new patient
+                    if (selectedPatient) {
+                        fetchPatients(selectedPatient.label);
+                    } else {
+                        fetchPatients("");
+                    }
+                }}
+            />
         </>
     );
 };

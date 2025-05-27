@@ -6,6 +6,7 @@ import {Role} from "@/models/Role";
 const initialState: UsersState = {
     usersList: [],
     rolesList: [],
+    patientsList: [],
 };
 
 const usersSlice = createSlice({

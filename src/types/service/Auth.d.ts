@@ -19,8 +19,25 @@ export interface UserLoginData {
 export interface UserSignUpData {
     name: string;
     email: string;
+    licenseId: string;
     password: string;
     confirmPassword: string;
+    role: string;
+    remember?: boolean;
+}
+
+export interface StudentSignUpData {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    dateOfBirth: string;
+    country: string;
+    institution: string;
+    studyYear: string;
+    specialization: string;
+    agreeToTerms: boolean;
+    agreeToNewsletter: boolean;
     role: string;
     remember?: boolean;
 }
@@ -36,5 +53,3 @@ export interface ResetPswData {
     password: string;
     passwordConfirmation: string;
 }
-
-

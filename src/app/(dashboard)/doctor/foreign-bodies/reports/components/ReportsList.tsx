@@ -20,26 +20,31 @@ const ReportsList: React.FC<ReportsListProps> = ({
 }) => {
   const [localPatientFilter, setLocalPatientFilter] = useState('');
   const [localNoteFilter, setLocalNoteFilter] = useState('');
+  const [localNameFilter, setLocalNameFilter] = useState('');
 
   useEffect(() => {
     if (searchQuery) {
       setLocalPatientFilter('');
       setLocalNoteFilter('');
+      setLocalNameFilter('');
     }
   }, [searchQuery]);
 
   const filteredReports = reports.filter(report => {
     if (searchQuery) {
       return report.patientId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-             report.note.toLowerCase().includes(searchQuery.toLowerCase());
+             report.note.toLowerCase().includes(searchQuery.toLowerCase()) ||
+             (report.name?.toLowerCase() || '').includes(searchQuery.toLowerCase());
     }
 
     const matchesPatientId = !localPatientFilter || 
       report.patientId.toLowerCase().includes(localPatientFilter.toLowerCase());
     const matchesNote = !localNoteFilter || 
       report.note.toLowerCase().includes(localNoteFilter.toLowerCase());
+    const matchesName = !localNameFilter || 
+      (report.name?.toLowerCase() || '').includes(localNameFilter.toLowerCase());
     
-    return matchesPatientId && matchesNote;
+    return matchesPatientId && matchesNote && matchesName;
   });
 
   return (
@@ -47,8 +52,8 @@ const ReportsList: React.FC<ReportsListProps> = ({
       <h1 className="text-2xl font-bold mb-6">Reports List</h1>
 
       {!searchQuery && (
-        <div className="mb-4 flex gap-4">
-          <div className="flex-1">
+        <div className="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
             <input
               type="text"
               placeholder="Filter by Patient ID"
@@ -57,7 +62,16 @@ const ReportsList: React.FC<ReportsListProps> = ({
               className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <div className="flex-1">
+          <div>
+            <input
+              type="text"
+              placeholder="Filter by Patient Name"
+              value={localNameFilter}
+              onChange={(e) => setLocalNameFilter(e.target.value)}
+              className="w-full p-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
             <input
               type="text"
               placeholder="Filter by Note"
@@ -73,6 +87,7 @@ const ReportsList: React.FC<ReportsListProps> = ({
         <thead className="bg-gray-50">
           <tr>
             <th className="py-3 px-4 text-right">Patient ID</th>
+            <th className="py-3 px-4 text-right">Name</th>
             <th className="py-3 px-4 text-right">Note</th>
             <th className="py-3 px-4 text-right">X-Ray Image</th>
             <th className="py-3 px-4 text-right">Actions</th>
@@ -85,23 +100,25 @@ const ReportsList: React.FC<ReportsListProps> = ({
                 {report.patientId}
               </td>
               <td className="py-2 px-4 border-b border-gray-200 text-right">
+                {report.name || 'Not provided'}
+              </td>
+              <td className="py-2 px-4 border-b border-gray-200 text-right">
                 {report.note}
               </td>
               <td className="py-2 px-4 border-b border-gray-200">
-              <div
-                    className="relative w-20 h-20 cursor-pointer ml-auto"
-                    onClick={() => onView(report)}>
-                    <Image
-                      src={report.imageUrl}
-                      alt={`X-Ray for patient ${report.patientId}`}
-                      fill
-                      sizes="80px"
-                      className="object-cover rounded-md hover:opacity-75 transition-opacity"
-                    />
-                  </div>
+                <div
+                  className="relative w-20 h-20 cursor-pointer ml-auto"
+                  onClick={() => onView(report)}>
+                  <Image
+                    src={report.imageUrl}
+                    alt={`X-Ray for patient ${report.patientId}`}
+                    fill
+                    sizes="80px"
+                    className="object-cover rounded-md hover:opacity-75 transition-opacity"
+                  />
+                </div>
               </td>
               <td className="py-2 px-4 border-b border-gray-200 text-right">
-                
                 <button
                   onClick={() => onUpdate(report)}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"

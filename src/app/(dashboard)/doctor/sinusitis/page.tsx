@@ -129,7 +129,7 @@ const SinusitisListPage: NextPage = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-6 pb-6">
                             {filteredSinusitisList.map((item) => (
                                 <div key={item._id} className={`bg-white p-4 rounded-lg shadow-md ${ typeof item.accepted !== 'undefined' && !item.accepted ? '!bg-red-200 !text-white' : ''}`}>
-                                    <h2 className="text-lg font-semibold mb-2">Patient ID: P-{item.patientId}</h2>
+                                    <h2 className="text-lg font-semibold mb-2">Patient ID: {item.patientId}</h2>
                                     <div className="flex gap-2 text-gray-700">
                                         <SinusitisImage
                                             uploadId={item.watersViewXrayImage}

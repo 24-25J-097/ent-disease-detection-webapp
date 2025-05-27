@@ -1,10 +1,10 @@
 "use client";
 
-import { NextPage } from "next";
-import React, { useState } from "react";
+import {NextPage} from "next";
+import React, {useState} from "react";
 import Link from "next/link";
 import GoogleIcon from "@/components/icons/GoogleIcon";
-import { useAuthService } from "@/hooks/services/useAuthService";
+import {useAuthService} from "@/hooks/services/useAuthService";
 import debugLog from "@/utils/debug-console";
 import {UserLoginData} from "@/types/service/Auth";
 import {If} from "@/components/utils/If";
@@ -35,26 +35,26 @@ const LoginPage: NextPage = () => {
     const [errors, setErrors] = useState<any>(null);
     const [isDisable, setIsDisable] = useState<boolean>(false);
 
-    const { login } = useAuthService({
+    const {login} = useAuthService({
         middleware: 'guest',
         redirectIfAuthenticated: '/',
     });
 
     const router = useRouterApp();
-    const { notifySuccess, notifyError } = useToast();
+    const {notifySuccess, notifyError} = useToast();
 
     const validateData = (data: any): boolean[] => {
         setHasValidationErr([]);
         if (data.hasOwnProperty('email') && data.email == "") {
-            const errorText = 'Please enter the email.';
-            debugLog('Please enter email.');
+            const errorText = 'Please enter your official email.';
+            debugLog('Please enter your official email.');
             setEmailErrMsg(errorText);
             setTimeout(() => setEmailErrMsg(''), 3000);
             hasValidationErr.push(true);
 
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-            const errorText = 'Please enter valid email.';
-            debugLog('Please enter valid email.');
+            const errorText = 'Please enter a valid email.';
+            debugLog('Please enter a valid email.');
             setEmailErrMsg(errorText);
             setTimeout(() => setEmailErrMsg(''), 3000);
             hasValidationErr.push(true);
@@ -75,7 +75,7 @@ const LoginPage: NextPage = () => {
         }
         debugLog("validateData =>", data);
         return hasValidationErr;
-    }
+    };
 
     const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -88,40 +88,46 @@ const LoginPage: NextPage = () => {
                 notifySuccess(res!.message);
             } else {
                 setIsDisable(false);
-                console.error('SIGN IN FAILED: Please enter valid data :)');
+                console.error('LOGIN FAILED: Please enter valid data :)');
             }
         } catch (error) {
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
+            }
+            if (errMsg === "Student logins are not allowed through this form.") {
+                setTimeout(() => router.push(`/students/login`), 1500);
             }
         }
     };
 
     const emailChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserLoginData((prevState) => ({ ...prevState, email: trimmedValue }));
+        setUserLoginData((prevState) => ({...prevState, email: trimmedValue}));
     };
 
     const passwordChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const trimmedValue = trimText(event.target.value, true).toString();
-        setUserLoginData((prevState) => ({ ...prevState, password: trimmedValue }));
+        setUserLoginData((prevState) => ({...prevState, password: trimmedValue}));
     };
 
     return (
         <section className="bg-blue-50 min-h-screen flex items-center justify-center w-full">
             <div
-                className={`bg-gray-100 bg-gradient-to-r from-gray-100 via-gray-100 to-blue-200 flex rounded-2xl
+                className={`bg-gradient-to-r from-blue-50/80 via-gray-100 to-blue-200 flex rounded-2xl
                 shadow-lg max-w-5xl items-center ${isDisable && "pointer-events-none"}`}
             >
-                <div className="md:w-1/2 px-4 md:pr-10 md:pl-4 m-5">
-                    <h2 className="font-bold text-2xl md:text-3xl text-blue-600">Login</h2>
+                <div className="md:w-1/2 px-4 md:pr-10 md:pl-4 mx-5 my-10">
+                    <h2 className="font-bold text-2xl md:text-3xl text-blue-700 text-center">
+                        Healthcare Professional Login
+                    </h2>
                     <p className="text-sm mt-4 text-[#002D74]">
-                        If you&apos;re an authorized user, log in seamlessly.
+                        Access our advanced clinical decision support system with your healthcare credentials.
                     </p>
 
                     <If condition={!!errors}>
@@ -133,11 +139,11 @@ const LoginPage: NextPage = () => {
                         </div>
                     </If>
 
-                    <form className="flex flex-col gap-4 mt-8" onSubmit={handleLogin} >
+                    <form className="flex flex-col gap-4 mt-6" onSubmit={handleLogin}>
                         <TextInput
                             type="email"
                             name="email"
-                            placeholder="Email"
+                            placeholder="Official Email"
                             value={userLoginData.email}
                             onTextChange={emailChange}
                             errorMessage={emailErrMsg}
@@ -145,18 +151,35 @@ const LoginPage: NextPage = () => {
                         />
                         <PasswordInput
                             name="password"
-                            placeholder="Password"
+                            placeholder="Secure Password"
                             password={userLoginData.password}
                             onPasswordChange={passwordChange}
                             errorMessage={passwordErrMsg}
                             disabled={isDisable}
                         />
+                        <div className="flex items-center mt-2">
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                id="remember"
+                                checked={userLoginData.remember}
+                                onChange={(event) =>
+                                    setUserLoginData((prevState) => ({...prevState, remember: event.target.checked}))
+                                }
+                                disabled={isDisable}
+                                className={`h-4 w-4 shadow-sm rounded-md transition duration-200 ease-in-out
+                                focus:ring-4 focus:ring-primary focus:ring-opacity-20 focus:border-primary`}
+                            />
+                            <label htmlFor="remember" className="ml-2 text-sm text-gray-700">
+                                Remember Me
+                            </label>
+                        </div>
                         <button
                             className={`bg-blue-900 rounded-xl text-white py-3 hover:scale-105 duration-300 shadow-2xl 
                             ${isDisable && "pointer-events-none"}`}
                             disabled={isDisable}
                         >
-                            Login
+                            Login to Platform
                         </button>
                     </form>
 
@@ -171,7 +194,7 @@ const LoginPage: NextPage = () => {
                         text-sm hover:scale-105 duration-300 text-gray-700 shadow-md"
                     >
                         <GoogleIcon/>
-                        Login with Google
+                        Sign In with Google
                     </button>
 
                     <div className="mt-5 text-xs md:text-sm border-b md:border-none border-gray-400 dark:border-white
@@ -179,14 +202,16 @@ const LoginPage: NextPage = () => {
                         <Link href={"/forgot-password"}>Forgot your password?</Link>
                     </div>
 
-                    <div className="md:hidden mt-3 text-sm flex justify-between items-center text-gray-700">
-                        <p>Don&apos;t have an account?</p>
-                        <Link href={"/signup"}>
-                            <button className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300
-                            shadow-md">
-                                Register
-                            </button>
-                        </Link>
+                    <div className="md:hidden mt-6 border-t">
+                        <div className="mt-3 text-sm flex justify-between items-center text-gray-700">
+                            <p>Don&apos;t have an account?</p>
+                            <Link href={"/signup"}>
+                                <button className="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300
+                                shadow-md">
+                                    Register Institution
+                                </button>
+                            </Link>
+                        </div>
                     </div>
                 </div>
 
@@ -204,14 +229,14 @@ const LoginPage: NextPage = () => {
                                 onClick={() => router.push("/")}
                             />
                         </div>
-                        <h2 className="font-bold text-2xl md:text-4xl text-blue-600">New Here?</h2>
-                        <p className="text-base mx-10 mt-8 text-gray-500">
-                            Join and access advanced tools tailored for medical analysis!
+                        <h2 className="font-bold text-2xl md:text-4xl text-blue-600">Clinical Decision Support</h2>
+                        <p className="text-base mx-10 mt-8 text-gray-600">
+                            Access advanced diagnostic tools and clinical decision support for healthcare professionals.
                         </p>
                         <Link href={"/signup"}>
                             <button className="py-3 px-8 bg-white border-none shadow-lg rounded-xl hover:scale-110
                             mt-8 duration-300 text-gray-700">
-                                Register
+                                Register Institution
                             </button>
                         </Link>
                     </div>

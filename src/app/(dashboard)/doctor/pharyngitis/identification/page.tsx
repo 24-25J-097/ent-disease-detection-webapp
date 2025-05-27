@@ -11,7 +11,6 @@ import ReactModal from "react-modal";
 import LoadingModal from "@/components/loaders/LoadingModal";
 import {AxiosError} from 'axios';
 import {ErrorResponseData} from '@/types/Common';
-import TextInput from "@/components/inputs/TextInput";
 import TextAreaInput from "@/components/inputs/TextAreaInput";
 import {
     PharyngitisDiagnosisAcceptance,
@@ -20,18 +19,69 @@ import {
 } from "@/types/service/PharyngitisDiagnosisData";
 import {Pharyngitis} from "@/models/Pharyngitis";
 import useRouterApp from "@/hooks/useRouterApp";
+import SelectInput from "@/components/inputs/SelectInput";
+import {SelectInputOption} from '@/types/FormInputs';
+import {useDebounce} from '@/hooks/useDebounce';
+import {useDispatch, useSelector} from 'react-redux';
+import {revalidateFilterPatients} from '@/store/reducers/filtersSlice';
+import {FilterService} from '@/services/FilterService';
+import CreatePatientModal from '@/app/(dashboard)/doctor/patients/CreatePatientModal';
+import TextButton from '@/components/buttons/TextButton';
+import StepsFlowCard, {Step} from '@/components/cards/StepsFlowCard';
 
 
 const IdentificationPage: NextPage = () => {
+    const dispatch = useDispatch();
+
+    const patientsList: SelectInputOption[] | null = useSelector((state: any) => state.filters.patientsList);
+
+    // Define steps data for the Pharyngitis Identification Process
+    const identificationSteps: Step[] = [
+        {
+            number: 1,
+            title: "Patient Selection",
+            description: "Select an existing patient or create a new patient record."
+        },
+        {
+            number: 2,
+            title: "Additional Information",
+            description: "Provide any relevant clinical information about the patient's condition."
+        },
+        {
+            number: 3,
+            title: "Upload Throat Image",
+            description: "Upload a clear throat image for analysis."
+        },
+        {
+            number: 4,
+            title: "AI Analysis",
+            description: "Our AI system analyzes the image to detect pharyngitis and determine its severity."
+        },
+        {
+            number: 5,
+            title: "Review Results",
+            description: "Review the diagnosis results, including pharyngitis presence, severity, and confidence score."
+        },
+        {
+            number: 6,
+            title: "Update Results",
+            description: "Update the diagnostic results suggestions if have anything else to add."
+        },
+        {
+            number: 7,
+            title: "Accept or Reject",
+            description: "Confirm or reject the AI diagnosis based on your clinical judgment."
+        }
+    ];
 
     const formRef = useRef<HTMLFormElement | null>(null);
     const [analysisResult, setAnalysisResult] = useState<PharyngitisDiagnosisResult | null>(null);
     const [patientId, setPatientId] = useState<string>("");
     const [additionalInfo, setAdditionalInfo] = useState<string>("");
-
     const [file, setFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string>("");
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+    const [createPatientModalOpen, setCreatePatientModalOpen] = useState<boolean>(false);
     const [hasValidationErr, setHasValidationErr] = useState<boolean[]>([false, false]);
     const [patientIdErrMsg, setPatientIdErrMsg] = useState<string>("");
     const [fileErrMsg, setFileErrMsg] = useState<string>("");
@@ -39,23 +89,71 @@ const IdentificationPage: NextPage = () => {
     const [errors, setErrors] = useState<any>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isLoading2, setIsLoading2] = useState<boolean>(false);
+    const [selectedPatient, setSelectedPatient] = useState<SelectInputOption | null>(null);
 
     const {notifySuccess, notifyError} = useToast();
     const router = useRouterApp();
+
+    const fetchPatients = async (inputValue: string): Promise<SelectInputOption[]> => {
+        const trimmedInput = inputValue.trim();
+
+        if (trimmedInput.length < 3) {
+            return [];
+        }
+        setIsLoading(true);
+        try {
+            const response = await FilterService.filterPatients({
+                search: trimmedInput
+            });
+            if (response.success) {
+                const patients = response.data;
+                const arrangePatients = patients.map((patient: { label: string; value: any; }) => {
+                    const userName = patient.label.split(' - ')[0].trim();
+                    return {
+                        value: patient.value,
+                        label: patient.label,
+                        avatar: `https://ui-avatars.com/api/?name=${userName}&background=random`
+                    };
+                });
+                dispatch(revalidateFilterPatients(arrangePatients));
+                return arrangePatients;
+            }
+        } catch (error) {
+            let errMsg;
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
+                errMsg = "An unexpected error occurred. Please try again.";
+            } else {
+                errMsg = (axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.");
+            }
+            console.error(`GET FILTERED PATIENTS: ${errMsg}`);
+            return [{
+                value: 'error',
+                label: 'Failed to load patients'
+            }];
+        } finally {
+            setIsLoading(false);
+        }
+        return [];
+    };
+
+    const [debouncedFetch] = useDebounce(fetchPatients, 1000);
 
     const validateFields = () => {
         setHasValidationErr([]);
         const invalidImageTypes = ["image/avif"];
         if (!patientId) {
-            const errorText = "Please enter the Patient ID.";
+            const errorText = "Please select the Patient.";
             setPatientIdErrMsg(errorText);
             setTimeout(() => setPatientIdErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         } else if (patientId.length < 5) {
             const errorText = "Patient ID must be at least 5 characters long.";
             setPatientIdErrMsg(errorText);
             setTimeout(() => setPatientIdErrMsg(""), 3000);
             hasValidationErr.push(true);
+            return false;
         }
 
         if (!file) {
@@ -97,7 +195,8 @@ const IdentificationPage: NextPage = () => {
         const diagnosisData: PharyngitisDiagnosisData = {
             patientId: patientId,
             additionalInfo: additionalInfo,
-            throatImage: file!
+            throatImage: file!,
+            isLearningPurpose: false,
         };
 
         try {
@@ -117,11 +216,12 @@ const IdentificationPage: NextPage = () => {
         } catch (error: any) {
             setIsDisable(false);
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         } finally {
             setIsDisable(false)
@@ -156,11 +256,12 @@ const IdentificationPage: NextPage = () => {
             }
         } catch (error) {
             const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
             if (axiosError?.response?.status && axiosError.response.status >= 500) {
                 setErrors("An unexpected error occurred. Please try again.");
             } else {
-                setErrors(axiosError?.response?.data?.message || "An error occurred.");
-                notifyError(axiosError?.response?.data?.message || "An error occurred.");
+                setErrors(errMsg);
+                notifyError(errMsg);
             }
         } finally {
             setIsDisable(false);
@@ -219,18 +320,45 @@ const IdentificationPage: NextPage = () => {
                             </motion.div>
                         </If>
                         <div>
-                            <TextInput
+                            <SelectInput
+                                label="Patient"
                                 name="patientId"
-                                label="Patient Id *"
-                                type="text"
-                                value={patientId}
-                                placeholder="Enter Patient ID"
-                                inputClassName="w-full"
-                                onTextChange={(e) => setPatientId(e.target.value)}
-                                design="regular-form"
+                                placeholder="Search by Patient Name, ID, or Email"
+                                value={selectedPatient}
+                                onChange={(selected) => {
+                                    const selectedOpt = selected as SelectInputOption;
+                                    setSelectedPatient(selectedOpt);
+                                    setPatientId(selectedOpt.value.toString());
+                                }}
+                                isAsync
+                                loadOptions={
+                                    async (inputValue) => await debouncedFetch(inputValue)
+                                }
+                                defaultOptions={patientsList ?? true}
+                                noOptionsMessage={({inputValue}) => (
+                                    inputValue.toLowerCase() === 'error'
+                                        ? 'Simulated error message'
+                                        : (inputValue.length > 0 && inputValue.length < 3)
+                                            ? 'Type at least 3 characters'
+                                            : inputValue
+                                                ? `No patients found for: ${inputValue}`
+                                                : 'Start typing to search patients'
+                                )}
+                                loadingMessage={() => "Loading patients..."}
                                 errorMessage={patientIdErrMsg}
                                 disabled={isDisable}
                             />
+                            <div className="flex justify-end">
+                                <TextButton
+                                    type="button"
+                                    onClick={() => setCreatePatientModalOpen(true)}
+                                    className="underline hover:text-blue-600 pb-0 sm:px-0"
+                                    title="Add new patient"
+                                    disabled={isDisable}
+                                >
+                                    New Patient
+                                </TextButton>
+                            </div>
                         </div>
                         <div>
                             <TextAreaInput
@@ -362,24 +490,41 @@ const IdentificationPage: NextPage = () => {
                     </div>
                 </div>
 
-                <div
-                    className="bg-white rounded-xl shadow-lg p-8 w-full max-w-2xl min-h-[700px] h-[700px] flex flex-col items-center"
-                >
-                    <h4 className="text-blue-500 text-xl font-bold mb-4">
-                        Throat image Preview
-                    </h4>
-                    {imagePreview ? (
-                        <Image
-                            src={imagePreview}
-                            alt="Selected Preview"
-                            className="rounded-md cursor-pointer"
-                            width={400}
-                            height={700}
-                            onClick={() => setModalIsOpen(true)}
-                        />
-                    ) : (
-                        <p className="text-gray-500 text-sm">No image selected</p>
-                    )}
+                <div className="relative w-full min-h-[700px]">
+                    {/* Steps Flow Card */}
+                    <StepsFlowCard
+                        title="Pharyngitis Identification Process"
+                        steps={identificationSteps}
+                        isVisible={!imagePreview}
+                    />
+
+                    {/* Throat Image Preview Card */}
+                    <motion.div
+                        className="absolute bg-white rounded-xl shadow-lg p-8 w-full min-h-[700px] flex flex-col items-center"
+                        initial={{opacity: 0, x: 100}}
+                        animate={{
+                            opacity: imagePreview ? 1 : 0,
+                            x: imagePreview ? 0 : -180,
+                            display: imagePreview ? 'flex' : 'none'
+                        }}
+                        transition={{duration: 1.0}}
+                    >
+                        <h4 className="text-blue-500 text-xl font-bold mb-4">
+                            Throat Image Preview
+                        </h4>
+                        {imagePreview ? (
+                            <Image
+                                src={imagePreview}
+                                alt="Selected Preview"
+                                className="rounded-md cursor-pointer"
+                                width={400}
+                                height={700}
+                                onClick={() => setModalIsOpen(true)}
+                            />
+                        ) : (
+                            <p className="text-gray-500 text-sm">No image selected</p>
+                        )}
+                    </motion.div>
                 </div>
             </div>
 
@@ -409,6 +554,20 @@ const IdentificationPage: NextPage = () => {
                 </div>
             </ReactModal>
             <LoadingModal isOpen={isLoading} text={"Analyzing"} imagePath={"/images/medical-analyzing.gif"}/>
+            <LoadingModal isOpen={isLoading2} imagePath={"/images/loading-circle.gif"}/>
+
+            <CreatePatientModal
+                isOpen={createPatientModalOpen}
+                onClose={() => setCreatePatientModalOpen(false)}
+                onSuccess={() => {
+                    // Refresh the patient list after creating a new patient
+                    if (selectedPatient) {
+                        fetchPatients(selectedPatient.label);
+                    } else {
+                        fetchPatients("");
+                    }
+                }}
+            />
         </section>
     );
 };
