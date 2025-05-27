@@ -7,6 +7,7 @@ import {BookOpen, Clock, ExternalLink, Filter, Search, Users} from "lucide-react
 import {useSelector} from 'react-redux';
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {conditions, categories, severityLevels} from '@/data/student/conditions';
+import Image from 'next/image';
 
 const ConditionsPage: NextPage = () => {
 
@@ -166,9 +167,11 @@ const ConditionsPage: NextPage = () => {
                         >
                             {/* Image */}
                             <div className="relative h-48 bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20">
-                                <img
-                                    src={condition.image || "/placeholder.svg"}
+                                <Image
+                                    src={condition.image || "/images/placeholder.jpg"}
                                     alt={condition.name}
+                                    width={400}
+                                    height={300}
                                     className="w-full h-full object-cover"
                                 />
                                 <div className="absolute top-4 right-4">
