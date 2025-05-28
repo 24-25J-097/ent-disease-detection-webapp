@@ -3,9 +3,9 @@ import {Package} from './Package';
 
 export interface UserPlan {
     _id: string;
-    userId?: string;
+    user_id?: string;
     user?: User;
-    packageId?: string;
+    package_id?: string;
     package?: Package;
     startDate: string;
     endDate: string;

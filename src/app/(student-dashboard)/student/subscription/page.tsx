@@ -2,7 +2,8 @@
 
 import {NextPage} from "next";
 import {motion} from "framer-motion";
-import {useState} from "react";
+import React, {useEffect, useState} from 'react';
+
 import {
     AlertCircle,
     BookOpen,
@@ -22,20 +23,81 @@ import {
 import StudentDashboardHeader from '@/components/dashboard/StudentDashboardHeader';
 import {billingHistory, getUsageColor, getUsagePercentage, pricingTiers, usageData} from '@/data/student/subscription';
 import {useSelector} from 'react-redux';
+import StudentPackageService from '@/services/StudentPackageService';
+import {Package} from '@/models/Package';
+import {useToast} from '@/providers/ToastProvider';
+import {ErrorResponseData} from "@/types/Common";
+import {AxiosError} from "axios";
+import {UserPlan} from "@/models/UserPlan";
 
 const SubscriptionPage: NextPage = () => {
 
-    const [currentPlan] = useState("free");
     const [billingPeriod, setBillingPeriod] = useState<"month" | "year">("month");
     const [showUpgradeModal, setShowUpgradeModal] = useState(false);
     const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<"plans" | "usage" | "billing">("plans");
+    const [packages, setPackages] = useState<Package[]>([]);
+    const [currentPlan, setCurrentPlan] = useState<UserPlan | null>(null);
+    const [loadingPackages, setLoadingPackages] = useState(false);
+    const [packagesError, setPackagesError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [errors, setErrors] = useState<any>(null);
+
+    const {notifySuccess, notifyError} = useToast();
 
     const user = useSelector((state: any) => state.auth.user);
 
     const handleUpgrade = (planId: string) => {
         setSelectedPlan(planId);
         setShowUpgradeModal(true);
+    };
+
+    useEffect(() => {
+        if (activeTab !== 'plans') return;
+        setLoadingPackages(true);
+        setPackagesError(null);
+        StudentPackageService.getActivePackages()
+            .then((data) => setPackages(data))
+            .catch(() => setPackagesError('Failed to load packages. Please try again.'))
+            .finally(() => setLoadingPackages(false));
+
+        const fetchActivePlan = async () => {
+            const currentActivePlan = await StudentPackageService.getCurrentActivePlan();
+            setCurrentPlan(currentActivePlan);
+        }
+        fetchActivePlan()
+    }, [activeTab]);
+
+    const handlePurchase = async (event: React.MouseEvent) => {
+        event.preventDefault();
+        if (!selectedPlan) {
+            notifyError("Please select a plan first!");
+            return
+        }
+        setIsLoading(true);
+        try {
+            const response = await StudentPackageService.purchase(selectedPlan!);
+            if (response.success && response.data) {
+                setCurrentPlan(response.data)
+                notifySuccess(response.message);
+            } else {
+                setErrors(response.message || "Something went wrong.");
+            }
+        } catch (error: any) {
+            const axiosError = error as AxiosError<ErrorResponseData>;
+            const errMsg = axiosError?.response?.data?.message || axiosError?.response?.data?.error || "An error occurred.";
+            if (axiosError?.response?.status && axiosError.response.status >= 500) {
+                setErrors("An unexpected error occurred. Please try again.");
+            } else {
+                setErrors(errMsg);
+                notifyError(errMsg);
+            }
+            console.log(error)
+        } finally {
+            setShowUpgradeModal(false)
+            setIsLoading(false);
+        }
+
     };
 
     return (
@@ -137,9 +199,7 @@ const SubscriptionPage: NextPage = () => {
                                     }`}
                                 >
                                     <span>Yearly</span>
-                                    <span
-                                        className="px-2 py-1 bg-green-500 text-white text-xs rounded-full"
-                                    >
+                                    <span className="px-2 py-1 bg-green-500 text-white text-xs rounded-full">
                                         Save 20%
                                     </span>
                                 </button>
@@ -148,108 +208,102 @@ const SubscriptionPage: NextPage = () => {
 
                         {/* Pricing Cards */}
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                            {pricingTiers.map((tier, index) => (
-                                <motion.div
-                                    key={tier.id}
-                                    initial={{opacity: 0, y: 20}}
-                                    animate={{opacity: 1, y: 0}}
-                                    transition={{duration: 0.6, delay: index * 0.1}}
-                                    className={`glass-card rounded-2xl p-6 relative overflow-hidden ${
-                                        tier.popular ? "ring-2 ring-primary" : ""
-                                    } ${currentPlan === tier.id ? "ring-2 ring-green-500" : ""}`}
-                                >
-                                    {tier.popular && (
-                                        <div className="absolute top-4 right-4">
-                                          <span className="bg-primary text-primary-foreground px-3 py-1
-                                          rounded-full text-xs font-medium">
-                                            Most Popular
-                                          </span>
-                                        </div>
-                                    )}
+                            {loadingPackages && (
+                                <div className="text-center text-muted-foreground py-8">Loading packages...</div>
+                            )}
+                            {packagesError && (
+                                <div className="text-center text-red-500 py-8">{packagesError}</div>
+                            )}
+                            {!loadingPackages && !packagesError && (
+                                <>
+                                    {packages.length === 0 ? (
+                                        <div className="col-span-full text-center text-muted-foreground">No packages
+                                            available.</div>
+                                    ) : (
+                                        packages.map((pkg, index) => (
+                                            <motion.div
+                                                key={pkg._id}
+                                                initial={{opacity: 0, y: 20}}
+                                                animate={{opacity: 1, y: 0}}
+                                                transition={{duration: 0.6, delay: index * 0.1}}
+                                                className={`glass-card rounded-2xl p-6 relative overflow-hidden ${
+                                                    index === 1 ? "ring-2 ring-primary" : ""
+                                                } ${currentPlan?.package_id === pkg._id ? "ring-2 ring-green-500" : ""}`}
+                                            >
+                                                {index === 1 && (
+                                                    <div className="absolute top-4 right-4">
+                                                        <span className="bg-primary text-primary-foreground px-3 py-1rounded-full text-xs font-medium">Most Popular</span>
+                                                    </div>
+                                                )}
 
-                                    {currentPlan === tier.id && (
-                                        <div className="absolute top-4 right-4">
-                                          <span
-                                              className="bg-green-500 text-white px-2 py-1 rounded-full
-                                              text-xs font-medium"
-                                          >
-                                            Current
-                                          </span>
-                                        </div>
-                                    )}
+                                                {currentPlan?.package_id === pkg._id && (
+                                                    <div className="absolute top-4 right-4">
+                                                        <span
+                                                            className="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">Current</span>
+                                                    </div>
+                                                )}
 
-                                    <div className="text-center mb-6">
-                                        <div
-                                            className={`w-16 h-16 bg-gradient-to-r ${tier.color} rounded-2xl 
-                                            flex items-center justify-center mx-auto mb-4`}
-                                        >
-                                            <tier.icon className="w-8 h-8 text-white"/>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-foreground mb-2">{tier.name}</h3>
-                                        <p className="text-muted-foreground text-sm mb-4">{tier.description}</p>
-                                        <div className="flex items-baseline justify-center">
-                                          <span className="text-3xl font-bold text-foreground">
-                                            ${billingPeriod === "year" ? Math.round(tier.price * 12 * 0.8) : tier.price}
-                                          </span>
-                                            <span className="text-muted-foreground ml-1">
-                                                /{billingPeriod === "year" ? "year" : "month"}
-                                            </span>
-                                        </div>
-                                        {billingPeriod === "year" && tier.price > 0 && (
-                                            <p className="text-green-500 text-sm mt-1">
-                                                Save ${Math.round(tier.price * 12 * 0.2)}/year
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    <div className="space-y-3 mb-6">
-                                        {tier.features.map(
-                                            (feature, featureIndex) => (
-                                                <div key={featureIndex} className="flex items-start space-x-3">
-                                                    {feature.included ? (
-                                                        <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"/>
-                                                    ) : (
-                                                        <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5"/>
-                                                    )}
-                                                    <div className="flex-1">
-                                                      <span
-                                                          className={`text-sm ${
-                                                              feature.included
-                                                                  ? "text-foreground"
-                                                                  : "text-muted-foreground line-through"
-                                                          }`}
-                                                      >
-                                                        {feature.name}
+                                                <div className="text-center mb-6">
+                                                    <div
+                                                        className={`w-16 h-16 bg-gradient-to-r from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+                                                        <BookOpen className="w-8 h-8 text-white"/>
+                                                    </div>
+                                                    <h3 className="text-xl font-bold text-foreground mb-2">{pkg.name}</h3>
+                                                    <p className="text-muted-foreground text-sm mb-4">{pkg.description}</p>
+                                                    <div className="flex items-baseline justify-center">
+                                                      <span className="text-3xl font-bold text-foreground">
+                                                      ${billingPeriod === "year" ? Math.round(pkg.price * 12 * 0.8) : pkg.price}
                                                       </span>
-                                                        {feature.limit && (
-                                                            <span
-                                                                className="text-xs text-muted-foreground ml-2"
-                                                            >
-                                                            ({feature.limit})
-                                                        </span>
+                                                        <span
+                                                            className="text-muted-foreground ml-1"> /{billingPeriod === "year" ? "year" : "month"}
+                                                      </span>
+                                                    </div>
+                                                    {billingPeriod === "year" && pkg.price > 0 && (
+                                                        <p className="text-green-500 text-sm mt-1">
+                                                            Save ${Math.round(pkg.price * 12 * 0.2)}/year
+                                                        </p>
+                                                    )}
+                                                </div>
+                                                <div className="space-y-3 mb-6">
+                                                    <div className="flex items-start space-x-3">
+                                                        {pkg.isUnlimited ? (
+                                                            <Check
+                                                                className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"/>
+                                                        ) : (
+                                                            <X className="w-5 h-5 text-muted-foreground flex-shrink-0 mt-0.5"/>
                                                         )}
+                                                        <div className="flex-1">
+                                                      <span
+                                                          className={`text-sm ${pkg.isUnlimited ? "text-foreground" : "text-muted-foreground line-through"}`}>
+                                                        Unlimited
+                                                      </span>
+                                                            {!pkg.isUnlimited && (
+                                                                <span className="text-xs text-muted-foreground ml-2">
+                                                                    ({pkg.dailyRequestLimit})
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            ))}
-                                    </div>
+                                                <button
+                                                    onClick={() => currentPlan?.package_id !== pkg._id && handleUpgrade(pkg._id)}
+                                                    disabled={currentPlan?.package_id === pkg._id}
+                                                    className={`w-full py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
+                                                        currentPlan?.package_id === pkg._id
+                                                            ? "bg-green-500/10 text-green-500 cursor-not-allowed"
+                                                            : index === 1
+                                                                ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                                                                : "bg-blue-gray-900 hover:bg-blue-gray-900/80 text-foreground"
+                                                    }`}
+                                                >
+                                                    {currentPlan?.package_id === pkg._id ? "Current Plan" : pkg.price === 0 ? "Current Plan" : "Upgrade"}
+                                                </button>
+                                            </motion.div>
+                                        ))
+                                    )}
+                                </>
+                            )}
 
-                                    <button
-                                        onClick={() => currentPlan !== tier.id && handleUpgrade(tier.id)}
-                                        disabled={currentPlan === tier.id}
-                                        className={`w-full py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
-                                            currentPlan === tier.id
-                                                ? "bg-green-500/10 text-green-500 cursor-not-allowed"
-                                                : tier.popular
-                                                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                                                    : "bg-blue-gray-900 hover:bg-blue-gray-900/80 text-foreground"
-                                        }`}
-                                    >
-                                        {currentPlan === tier.id
-                                            ? "Current Plan" : tier.price === 0
-                                                ? "Current Plan" : "Upgrade"}
-                                    </button>
-                                </motion.div>
-                            ))}
                         </div>
 
                         {/* Enterprise Section */}
@@ -702,14 +756,13 @@ const SubscriptionPage: NextPage = () => {
                         exit={{opacity: 0}}
                         className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center
                         justify-center p-4"
-                        onClick={() => setShowUpgradeModal(false)}
                     >
                         <motion.div
                             initial={{opacity: 0, scale: 0.95}}
                             animate={{opacity: 1, scale: 1}}
                             exit={{opacity: 0, scale: 0.95}}
                             className="glass-card rounded-2xl p-8 max-w-md w-full"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={(e) => handlePurchase(e)}
                         >
                             <div className="text-center mb-6">
                                 <div
