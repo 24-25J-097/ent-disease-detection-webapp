@@ -86,7 +86,7 @@ const UsersListPage: NextPage = () => {
     const handleEditPlan = (userId: string) => {
         setEditingUserId(userId);
         const userPlan = getUserPlan(userId);
-        setSelectedPackageId(userPlan?.packageId || null);
+        setSelectedPackageId(userPlan?.package_id || null);
         setDuration(userPlan ? calculateRemainingDays(userPlan.endDate) : 30);
     };
 
@@ -113,7 +113,7 @@ const UsersListPage: NextPage = () => {
             if (existingPlan) {
                 // Update existing plan
                 await userPlanService.updateUserPlan(existingPlan._id, {
-                    packageId: selectedPackageId,
+                    package_id: selectedPackageId,
                     startDate,
                     endDate: endDate.toISOString(),
                     usageToday: 0 // Reset usage when updating plan
@@ -121,8 +121,8 @@ const UsersListPage: NextPage = () => {
             } else {
                 // Create new plan
                 await userPlanService.createUserPlan({
-                    userId: userId,
-                    packageId: selectedPackageId,
+                    user_id: userId,
+                    package_id: selectedPackageId,
                     startDate,
                     endDate: endDate.toISOString(),
                     usageToday: 0,
