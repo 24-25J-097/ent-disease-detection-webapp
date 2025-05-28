@@ -14,3 +14,15 @@ export interface ErrorResponseData<T = any> {
     error?: string;
     data?: T;
 }
+
+export interface ContactUsEmailData {
+    name: string;
+    email: string;
+    message: string;
+    phone?: string;
+    subject?: string;
+    additionalInfo?: string;
+    submissionTime: string;
+    ipAddress: string;
+    domain: string;
+}
